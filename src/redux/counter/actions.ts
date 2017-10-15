@@ -1,13 +1,27 @@
-import {DECREMENT, INCREMENT} from "./types"
+import * as types from "./types"
 
-export function increment() {
+export interface IncrementAction {
+    type: types.INCREMENT_TYPE
+    value: number
+}
+
+export interface DecrementAction {
+    type: types.DECREMENT_TYPE
+    amount: number
+}
+
+export type CounterAction = IncrementAction | DecrementAction;
+
+export function increment(amount: number): IncrementAction {
     return {
-        type: INCREMENT
+        type: types.INCREMENT,
+        value: amount
     }
 }
 
-export function decrement() {
+export function decrement(amount: number): DecrementAction {
     return {
-        type: DECREMENT
+        type: types.DECREMENT,
+        amount
     }
 }

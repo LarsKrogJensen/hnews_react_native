@@ -1,8 +1,9 @@
 import React, {Component} from "react"
 import Counter from "../components/Counter"
-import * as CounterActions from "../redux/counter/actions"
+import * as actions from "../redux/counter/actions"
 import {ComponentClass, connect} from "react-redux"
 import {AppState} from "../redux"
+import {Dispatch} from "redux"
 
 interface PropsIn {
     color: number
@@ -34,13 +35,18 @@ class CounterContainer extends Component<Props & PropsIn, {}> {
     }
 }
 
-const CounterWithData: ComponentClass<PropsIn> = connect<{}, {}, PropsIn>(
-    (state: AppState) => ({
+const mapStateToProps = (state: AppState) => (
+    {
         count: state.counter.count
-    }),
-    (dispatch) => ({
-        increment: () => dispatch(CounterActions.increment()),
-        decrement: () => dispatch(CounterActions.decrement())
-    }))(CounterContainer)
+    }
+)
+
+const mapDispatchToProps = (dispatch: Dispatch<actions.CounterAction>) => (
+    {
+        increment: () => dispatch(actions.increment(1)),
+        decrement: () => dispatch(actions.decrement(2))
+    }
+)
+const CounterWithData: ComponentClass<PropsIn> = connect<{}, {}, PropsIn>(mapStateToProps, mapDispatchToProps)(CounterContainer)
 
 export default CounterWithData
