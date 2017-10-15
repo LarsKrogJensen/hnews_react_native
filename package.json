@@ -1,0 +1,33 @@
+{
+  "name": "typescriptStarter",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "16.0.0",
+    "react-native": "0.49.3",
+    "react-navigation": "1.0.0-beta.11",
+    "react-redux": "^5.0.4",
+    "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.0.10",
+    "@types/react-native": "^0.49.2",
+    "@types/react-redux": "^5.0.10",
+    "@types/react-native-vector-icons": "^4.4.1",
+    "@types/react-navigation": "^1.0.21",
+    "babel-jest": "20.0.1",
+    "babel-preset-react-native": "1.9.2",
+    "jest": "21.2.1",
+    "react-native-typescript-transformer": "^1.0.5",
+    "react-test-renderer": "16.0.0",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
