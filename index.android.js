@@ -16,4 +16,4 @@ export default class typescriptStarter extends Component {
   }
 }
 
-AppRegistry.registerComponent('typescriptStarter', () => typescriptStarter);
+AppRegistry.registerComponent('hnews', () => typescriptStarter);
