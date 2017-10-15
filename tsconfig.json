@@ -15,5 +15,5 @@
     "node_modules",
     "__tests__"
   ],
-  "compileOnSave": true
+  "compileOnSave": false
 }

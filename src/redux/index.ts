@@ -1,5 +1,4 @@
 import {combineReducers, Reducer} from "redux"
-
 import counter, {CounterState} from "./counter/reducer"
 
 export interface AppState {

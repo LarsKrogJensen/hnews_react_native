@@ -24,7 +24,7 @@ class CounterContainer extends Component<Props & PropsIn, {}> {
 
     componentDidMount() {
         this.intervalId = setInterval(() => {
-            this.props.increment()
+            // this.props.increment()
         }, 1000)
     }
 

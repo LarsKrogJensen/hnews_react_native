@@ -4,14 +4,17 @@ import Button from "./Button"
 
 interface Props {
     count: number
+    color: number,
     increment: () => any
     decrement: () => any
 }
 
 export default class Counter extends Component<Props, {}> {
     render() {
+        // console.log(`Color prop ${this.props.color}`)
         return (
             <View style={styles.container}>
+                <Text>Lars Krogis</Text>
                 <Text style={styles.counterText}>{this.props.count}</Text>
                 <View style={styles.buttonContainer}>
                     <Button text="Decrement" onPress={this.props.decrement} backgroundColor="#F44336"/>
