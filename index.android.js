@@ -8,7 +8,7 @@ import {
 
 import App from './src';
 
-export default class typescriptStarter extends Component {
+export default class HackerNewsApp extends Component {
   render() {
     return (
       <App />
@@ -16,4 +16,4 @@ export default class typescriptStarter extends Component {
   }
 }
 
-AppRegistry.registerComponent('hnews', () => typescriptStarter);
+AppRegistry.registerComponent('hnews', () => HackerNewsApp);
