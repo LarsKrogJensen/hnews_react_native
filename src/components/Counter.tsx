@@ -24,6 +24,6 @@ export default class Counter extends Component<Props, {}> {
 
 const styles = StyleSheet.create({
     container: {flex: 1, alignItems: "center", justifyContent: "center"},
-    counterText: {fontSize: 12, fontWeight: "bold"},
+    counterText: {fontSize: 28, fontWeight: "bold"},
     buttonContainer: {flexDirection: "row"}
 })
