@@ -11,10 +11,10 @@ interface Props {
 
 export default class Counter extends Component<Props, {}> {
     render() {
-        // console.log(`Color prop ${this.props.color}`)
+         console.log(`Color prop ${this.props.color}`)
         return (
             <View style={styles.container}>
-                <Text>Lars Krogis</Text>
+                <Text>Lars</Text>
                 <Text style={styles.counterText}>{this.props.count}</Text>
                 <View style={styles.buttonContainer}>
                     <Button text="Decrement" onPress={this.props.decrement} backgroundColor="#F44336"/>

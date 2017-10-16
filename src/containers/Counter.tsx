@@ -1,9 +1,9 @@
 import React, {Component} from "react"
-import Counter from "../components/Counter"
-import * as actions from "../redux/counter/actions"
+import * as actions from "store/counter/actions"
 import {ComponentClass, connect} from "react-redux"
-import {AppState} from "../redux"
+import {AppState} from "store"
 import {Dispatch} from "redux"
+import Counter from "components/Counter"
 
 interface PropsIn {
     color: number

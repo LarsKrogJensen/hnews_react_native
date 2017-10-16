@@ -6,7 +6,10 @@
     "jsx": "react-native",
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "rootDir": "src"
+    "rootDir": "src",
+    "noEmit": true,
+    "importHelpers": true,
+    "baseUrl": "./src"
   },
   "exclude": [
     "index.android.js",

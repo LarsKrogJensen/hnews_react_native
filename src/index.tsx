@@ -2,8 +2,8 @@ import React from "react"
 import {compose, createStore} from "redux"
 import {Provider} from "react-redux"
 
-import Counter from "./containers/Counter"
-import rootReducer from "./redux"
+import Counter from "containers/Counter"
+import rootReducer from "store"
 
 const store = compose()(createStore)(rootReducer)
 
