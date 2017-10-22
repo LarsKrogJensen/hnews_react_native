@@ -68,8 +68,8 @@
 		"no-consecutive-blank-lines": [true],
 		"no-parameter-properties": false,
 		"one-line": [true, "check-open-brace", "check-catch", "check-else", "check-finally", "check-whitespace"],
-		"quotemark": [true, "double", "avoid-escape"],
-		"semicolon": [true, "never"],
+		"quotemark": [false, "double", "avoid-escape"],
+		"semicolon": [false, "never"],
 		"variable-name": [true, "check-format", "allow-leading-underscore", "allow-pascal-case", "ban-keywords"],
 		"whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"]
 	}
