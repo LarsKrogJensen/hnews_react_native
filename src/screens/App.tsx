@@ -3,6 +3,7 @@ import HomeScreen from "screens/HomeScreen"
 import SportScreen from "screens/SportScreen";
 import BetHistoryScreen from "screens/BetHistoryScreen";
 import EventScreen from "screens/EventScreen";
+import LiveEventsScreen from "containers/LiveEventsScreen";
 
 const HomeTab = StackNavigator({
     Home: {
@@ -10,6 +11,23 @@ const HomeTab = StackNavigator({
         path: '/',
         navigationOptions: {
             title: 'HOME'
+        }
+    },
+    Event: {
+        screen: EventScreen,
+        path: '/event/:name',
+        navigationOptions: ({navigation}) => ({
+            title: `${navigation.state.params.name}'s Event!`
+        })
+    }
+});
+
+const LiveTab = StackNavigator({
+    Sports: {
+        screen: LiveEventsScreen,
+        path: '/',
+        navigationOptions: {
+            title: 'LIVE'
         }
     },
     Event: {
@@ -61,6 +79,13 @@ const App = TabNavigator({
             path: "/",
             navigationOptions: {
                 tabBarLabel: "Home"
+            }
+        },
+        Live: {
+            screen: LiveTab,
+            path: "/live",
+            navigationOptions: {
+                tabBarLabel: "LIVE"
             }
         },
         Sport: {

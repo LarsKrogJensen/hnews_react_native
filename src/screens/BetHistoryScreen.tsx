@@ -13,7 +13,7 @@ export default class BetHistoryScreen extends React.Component<Props> {
         return (
             <View>
                 <Text>Bethistory screen</Text>
-                <Button title="Goto Event" onPress={() => navigation.navigate('Event', {name: 'Sport'})}/>
+                <Button title="Goto Event" onPress={() => navigation.navigate('Event', {name: 'BETS'})}/>
             </View>
         )
     }

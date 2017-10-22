@@ -49,7 +49,7 @@
 		"triple-equals": [true, "allow-undefined-check"],
 		"eofline": false,
 		"indent": [true, "spaces"],
-		"max-line-length": [true, 150],
+		"max-line-length": [true, 160],
 		"no-require-imports": false,
 		"no-trailing-whitespace": true,
 		"object-literal-sort-keys": false,

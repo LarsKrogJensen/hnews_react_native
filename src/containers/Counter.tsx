@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import * as actions from "store/counter/actions"
 import {ComponentClass, connect} from "react-redux"
-import {AppState} from "store"
+import {AppState} from "store/store"
 import {Dispatch} from "redux"
 import Counter from "components/Counter"
 

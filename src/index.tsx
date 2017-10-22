@@ -1,10 +1,8 @@
 import React from "react"
-import {compose, createStore} from "redux"
+import {applyMiddleware, compose, createStore} from "redux"
 import {Provider} from "react-redux"
-import rootReducer from "store"
 import App from "screens/App";
-
-const store = compose()(createStore)(rootReducer)
+import store from "store/store";
 
 export default function AppContainer() {
     return (
