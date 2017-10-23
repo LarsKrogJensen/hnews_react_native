@@ -1,4 +1,4 @@
-package com.typescriptstarter;
+package com.nativeplay;
 
 import android.app.Application;
 

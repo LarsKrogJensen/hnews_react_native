@@ -1,1 +1,1 @@
-hnews_react_native
+nativePlay

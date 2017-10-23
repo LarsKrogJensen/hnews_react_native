@@ -3,7 +3,7 @@ import {AppRegistry,} from 'react-native';
 
 import App from './src';
 
-export default class HackerNewsApp extends Component {
+export default class NativePlayApp extends Component {
     render() {
         return (
             <App/>
@@ -11,4 +11,4 @@ export default class HackerNewsApp extends Component {
     }
 }
 
-AppRegistry.registerComponent('hnews', () => HackerNewsApp);
+AppRegistry.registerComponent('nativePlay', () => NativePlayApp);
