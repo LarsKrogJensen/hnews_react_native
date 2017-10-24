@@ -16,10 +16,14 @@ interface GameSummary {
 }
 
 export default class LiveEventScoreItem extends React.Component<Props> {
-    private scoreStyle: TextStyle = {
+    private setStyle: TextStyle = {
         color: "#202020",
         fontSize: 16,
         fontWeight: "400"
+    }
+    private scoreStyle: TextStyle = {
+        ...this.setStyle,
+        color: "#00ADC9"
     }
     private timeStyle: TextStyle = {fontSize: 12, color: "#717171", marginTop: 4}
 
@@ -47,26 +51,26 @@ export default class LiveEventScoreItem extends React.Component<Props> {
     private renderFootball(score: Score, matchClock: MatchClock) {
         return (
             <View style={{...this.props.style, alignItems: "center"}}>
-                <Text style={this.scoreStyle}>{score.home}</Text>
-                <Text style={this.scoreStyle}>{score.away}</Text>
+                <Text style={this.setStyle}>{score.home}</Text>
+                <Text style={this.setStyle}>{score.away}</Text>
                 <Text style={this.timeStyle}>{matchClock.minute}:{this.leftPad(matchClock.second.toString(), 2)}</Text>
             </View>
         );
     }
 
     private renderSetBased(stats: Statistics, score: Score, hasGames: boolean) {
-        const summary = this.calculateSetSummary(stats, hasGames)
+        const summary = this.calculateGameSummary(stats, hasGames)
         return (
-            <View style={{...this.props.style, flexDirection: "row"}}>
-                <View>
-                    <Text style={this.scoreStyle}>{summary.homeSets}</Text>
-                    <Text style={this.scoreStyle}>{summary.awaySets}</Text>
+            <View style={{...this.props.style, flexDirection: "row", justifyContent: "center"}}>
+                <View style={{marginRight: 4, alignItems: "center"}}>
+                    <Text style={this.setStyle}>{summary.homeSets}</Text>
+                    <Text style={this.setStyle}>{summary.awaySets}</Text>
                 </View>
-                <View>
-                    <Text style={this.scoreStyle}>{summary.homeGames}</Text>
-                    <Text style={this.scoreStyle}>{summary.awayGames}</Text>
+                <View style={{marginRight: 4, alignItems: "center"}}>
+                    <Text style={this.setStyle}>{summary.homeGames}</Text>
+                    <Text style={this.setStyle}>{summary.awayGames}</Text>
                 </View>
-                <View>
+                <View style={{alignItems: "center"}}>
                     <Text style={this.scoreStyle}>{score.home}</Text>
                     <Text style={this.scoreStyle}>{score.away}</Text>
                 </View>
@@ -74,14 +78,14 @@ export default class LiveEventScoreItem extends React.Component<Props> {
         );
     }
 
-    private calculateSetSummary(stats: Statistics, hasGames: boolean): GameSummary {
+    private calculateGameSummary(stats: Statistics, hasGames: boolean): GameSummary {
         const summary: GameSummary = {homeSets: 0, awaySets: 0, homeGames: 0, awayGames: 0}
         if (stats && stats.sets) {
             const sets = stats.sets;
             const numberOfSets = sets.home.length;
             const firstUnplayedSetIndex = sets.home.indexOf(-1);
             let currentSet = (firstUnplayedSetIndex === -1) ? numberOfSets - 1 : firstUnplayedSetIndex;
-            for (let i = currentSet; i >= 0; i++) {
+            for (let i = currentSet; i >= 0; i--) {
                 const home: number = sets.home[i];
                 const away: number = sets.away[i];
 
