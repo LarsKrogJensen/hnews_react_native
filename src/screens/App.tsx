@@ -108,6 +108,7 @@ const App = TabNavigator({
         lazy: true,
         animationEnabled: false,
         swipeEnabled: false,
+        lazy: true,
         tabBarOptions: {
             tabStyle: {
                 backgroundColor: "#00ADC9"

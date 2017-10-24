@@ -12,21 +12,24 @@ export default class OutcomeItem extends React.Component<Props> {
         height: 38,
         flex: 1,
         flexDirection: 'row',
-        margin: 4,
+        marginRight: 4,
         padding: 8,
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        backgroundColor: '#00ADC9'
+        alignItems: 'center',
+        backgroundColor: '#00ADC9',
+        borderRadius: 3
     }
 
     private labelStyle: TextStyle = {
-        color: "white",
-        flex: 1
+        color: "#DEF5FA",
+        flex: 1,
+        fontSize: 12
     }
 
     private oddsStyle: TextStyle = {
         color: "white",
-        marginLeft: 8
+        marginLeft: 8,
+        fontSize: 12,
+        fontWeight: "bold"
     }
 
     public render() {
@@ -44,7 +47,7 @@ export default class OutcomeItem extends React.Component<Props> {
     // @autobind
     private formatOutcomeLabel(outcome: Outcome, event: Event): string {
         if (outcome.type === "OT_CROSS")
-            return "DRAAAW"
+            return "Draw"
         if (outcome.type === "OT_ONE")
             return event.homeName;
         if (outcome.type === "OT_TWO")
