@@ -4,11 +4,14 @@
     "module": "es2015",
     "moduleResolution": "node",
     "jsx": "react-native",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "rootDir": "src",
     "noEmit": true,
     "importHelpers": true,
+//    "allowJs": true,
     "baseUrl": "./src"
   },
   "exclude": [

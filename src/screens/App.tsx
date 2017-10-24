@@ -15,7 +15,7 @@ const HomeTab = StackNavigator({
     },
     Event: {
         screen: EventScreen,
-        path: '/event/:name',
+        path: '/liveEvent/:name',
         navigationOptions: ({navigation}) => ({
             title: `${navigation.state.params.name}'s Event!`
         })
@@ -32,7 +32,7 @@ const LiveTab = StackNavigator({
     },
     Event: {
         screen: EventScreen,
-        path: '/event/:name',
+        path: '/liveEvent/:name',
         navigationOptions: ({navigation}) => ({
             title: `${navigation.state.params.name}'s Event!`
         })
@@ -49,7 +49,7 @@ const SportsTab = StackNavigator({
     },
     Event: {
         screen: EventScreen,
-        path: '/event/:name',
+        path: '/liveEvent/:name',
         navigationOptions: ({navigation}) => ({
             title: `${navigation.state.params.name}'s Event!`
         })
@@ -66,7 +66,7 @@ const BetHistoryTab = StackNavigator({
     },
     Event: {
         screen: EventScreen,
-        path: '/event/:name',
+        path: '/liveEvent/:name',
         navigationOptions: ({navigation}) => ({
             title: `${navigation.state.params.name}'s Event!`
         })
@@ -109,7 +109,10 @@ const App = TabNavigator({
         animationEnabled: false,
         swipeEnabled: false,
         tabBarOptions: {
-            activeTintColor: "#e91e63"
+            tabStyle: {
+                backgroundColor: "#00ADC9"
+            }
+            // activeTintColor: "#e91e63"
         }
     })
 

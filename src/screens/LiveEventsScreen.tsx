@@ -1,7 +1,8 @@
 import * as React from "react"
-import {ActivityIndicator, FlatList, ListRenderItemInfo, Text, View} from "react-native"
+import {ActivityIndicator, FlatList, ListRenderItemInfo, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
+import LiveEventListItem from "components/LiveEventListItem";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>
@@ -42,8 +43,8 @@ export default class LiveEventsScreen extends React.Component<Props> {
     }
 
     private renderItem(info: ListRenderItemInfo<LiveEvent>) {
-        const event = info.item.event;
-        return <Text>{event.name}</Text>
+        const liveEvent: LiveEvent = info.item;
+        return <LiveEventListItem liveEvent={liveEvent}/>
     }
 
     private keyExctractor(liveEvent: LiveEvent): string {
