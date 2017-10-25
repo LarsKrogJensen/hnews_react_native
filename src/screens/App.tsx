@@ -6,6 +6,7 @@ import BetHistoryScreen from "screens/BetHistoryScreen";
 import EventScreen from "screens/EventScreen";
 import LiveEventsScreen from "containers/LiveEventsScreen";
 import {Image, Platform} from "react-native";
+import {isIos} from "lib/platform";
 
 function iconResolver(icon: string) {
     return ({focused, tintColor}) => {
@@ -118,7 +119,7 @@ const App = TabNavigator({
             screen: BetHistoryTab,
             path: "/bets",
             navigationOptions: {
-                tabBarLabel: "Bets",
+                tabBarLabel: "Bets"
             }
         }
     },
@@ -131,6 +132,11 @@ const App = TabNavigator({
             tabStyle: {
                 backgroundColor: "#00ADC9"
             },
+            style: {
+                backgroundColor: "black"
+            },
+            showIcon: true,
+            showLabel: isIos(),
             activeTintColor: Platform.select({ios: () => "#00ADC9", android: () => "white"})()
         }
     })

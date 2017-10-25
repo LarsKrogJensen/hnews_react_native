@@ -1,4 +1,4 @@
-import {Dimensions} from "react-native";
+import {Dimensions, Platform} from "react-native";
 
 export enum Orientation {
     Landscape = "landscape",
@@ -8,4 +8,8 @@ export enum Orientation {
 export function orientation(): Orientation {
     const scaledSize = Dimensions.get("window");
     return scaledSize.height > scaledSize.width ? Orientation.Portrait : Orientation.Landscape
+}
+
+export function isIos(): boolean {
+    return Platform.OS === "ios"
 }

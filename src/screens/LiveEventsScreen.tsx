@@ -57,7 +57,12 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
             data: events.filter(liveEvent => liveEvent.event.sport === group.sport)
         })).sort((a, b) => a.sortOrder - b.sortOrder);
 
-
+        sections.push({
+            title: "Empty group",
+            sport: "arne",
+            sortOrder: 100,
+            data: []
+        })
         return (
             <View>
                 <SectionList
@@ -83,8 +88,9 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
     private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {
         return (
             <View style={headerStyle}>
-                <Text style={{color: "red", fontSize: 14}}>Live</Text>
-                <Text style={{fontSize: 14, marginLeft: 8}}>{info.section.title}</Text>
+                <Text style={{color: "red", fontSize: 16, fontWeight: "bold"}}>Live</Text>
+                <Text style={{fontSize: 16, fontWeight: "bold", marginLeft: 8, flex: 1}}>{info.section.title}</Text>
+                <Text style={{fontSize: 16, fontWeight: "bold", marginRight: 8}}>{info.section.data.length}</Text>
             </View>
         )
     }
