@@ -15,17 +15,18 @@ interface GameSummary {
     awayGames: number
 }
 
+const setStyle: TextStyle = {
+    color: "#202020",
+    fontSize: 16,
+    fontWeight: "400"
+}
+const scoreStyle: TextStyle = {
+    ...setStyle,
+    color: "#00ADC9"
+}
+const timeStyle: TextStyle = {fontSize: 12, color: "#717171", marginTop: 4}
+
 export default class LiveEventScoreItem extends React.Component<Props> {
-    private setStyle: TextStyle = {
-        color: "#202020",
-        fontSize: 16,
-        fontWeight: "400"
-    }
-    private scoreStyle: TextStyle = {
-        ...this.setStyle,
-        color: "#00ADC9"
-    }
-    private timeStyle: TextStyle = {fontSize: 12, color: "#717171", marginTop: 4}
 
     constructor(props: Props, context: any) {
         super(props, context);
@@ -51,9 +52,10 @@ export default class LiveEventScoreItem extends React.Component<Props> {
     private renderFootball(score: Score, matchClock: MatchClock) {
         return (
             <View style={{...this.props.style, alignItems: "center"}}>
-                <Text style={this.setStyle}>{score.home}</Text>
-                <Text style={this.setStyle}>{score.away}</Text>
-                <Text style={this.timeStyle}>{matchClock.minute}:{this.leftPad(matchClock.second.toString(), 2)}</Text>
+                <Text style={setStyle}>{score.home}</Text>
+                <Text style={setStyle}>{score.away}</Text>
+                <Text
+                    style={timeStyle}>{matchClock.minute}:{this.leftPad(matchClock.second.toString(), 2)}</Text>
             </View>
         );
     }
@@ -63,16 +65,16 @@ export default class LiveEventScoreItem extends React.Component<Props> {
         return (
             <View style={{...this.props.style, flexDirection: "row", justifyContent: "center"}}>
                 <View style={{marginRight: 4, alignItems: "center"}}>
-                    <Text style={this.setStyle}>{summary.homeSets}</Text>
-                    <Text style={this.setStyle}>{summary.awaySets}</Text>
+                    <Text style={setStyle}>{summary.homeSets}</Text>
+                    <Text style={setStyle}>{summary.awaySets}</Text>
                 </View>
                 <View style={{marginRight: 4, alignItems: "center"}}>
-                    <Text style={this.setStyle}>{summary.homeGames}</Text>
-                    <Text style={this.setStyle}>{summary.awayGames}</Text>
+                    <Text style={setStyle}>{summary.homeGames}</Text>
+                    <Text style={setStyle}>{summary.awayGames}</Text>
                 </View>
                 <View style={{alignItems: "center"}}>
-                    <Text style={this.scoreStyle}>{score.home}</Text>
-                    <Text style={this.scoreStyle}>{score.away}</Text>
+                    <Text style={scoreStyle}>{score.home}</Text>
+                    <Text style={scoreStyle}>{score.away}</Text>
                 </View>
             </View>
         );
