@@ -15,17 +15,6 @@ interface GameSummary {
     awayGames: number
 }
 
-const setStyle: TextStyle = {
-    color: "#202020",
-    fontSize: 16,
-    fontWeight: "400"
-}
-const scoreStyle: TextStyle = {
-    ...setStyle,
-    color: "#00ADC9"
-}
-const timeStyle: TextStyle = {fontSize: 12, color: "#717171", marginTop: 4}
-
 export default class LiveEventScoreItem extends React.Component<Props> {
 
     constructor(props: Props, context: any) {
@@ -130,4 +119,19 @@ export default class LiveEventScoreItem extends React.Component<Props> {
         return len > 0 ?
             new Array(len).join(ch) + str : str;
     }
+}
+
+const setStyle: TextStyle = {
+    color: "#202020",
+    fontSize: 16,
+    fontWeight: "400"
+}
+const scoreStyle: TextStyle = {
+    ...setStyle,
+    color: "#00ADC9"
+}
+const timeStyle: TextStyle = {
+    fontSize: 12,
+    color: "#717171",
+    marginTop: 4
 }

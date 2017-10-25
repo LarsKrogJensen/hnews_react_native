@@ -1,22 +1,15 @@
 import * as React from "react"
 import {BetOffer, LiveEvent} from "api/typings";
-import {Text, View, ViewStyle} from "react-native";
+import {View, ViewStyle} from "react-native";
 import OutcomeItem from "components/OutcomeItem";
 import LiveEventInfoItem from "components/LiveEventInfoItem";
-
-// import {autobind} from "core-decorators";
+import {orientation, Orientation} from "lib/platform";
 
 interface Props {
     liveEvent: LiveEvent
 }
 
 export default class ListEventListItem extends React.Component<Props> {
-    private itemStyle: ViewStyle = {
-        padding: 8,
-        backgroundColor: "#F6F6F6",
-        borderBottomColor: "#D1D1D1",
-        borderBottomWidth: 1
-    }
 
     constructor() {
         super();
@@ -26,10 +19,14 @@ export default class ListEventListItem extends React.Component<Props> {
     public render() {
         const bo = this.props.liveEvent.mainBetOffer;
 
+        const orient = orientation();
+        const viewStyle = orient === Orientation.Portrait ? portraitStyle : landscapeStyle;
         return (
-            <View style={this.itemStyle}>
-                <LiveEventInfoItem liveEvent={this.props.liveEvent}/>
-                {this.renderOutcomes(bo)}
+            <View style={viewStyle}>
+                <LiveEventInfoItem liveEvent={this.props.liveEvent} viewStyle={{flex: 1, height: 68}}/>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
+                    {this.renderOutcomes(bo)}
+                </View>
             </View>
         );
     }
@@ -37,15 +34,27 @@ export default class ListEventListItem extends React.Component<Props> {
     // @autobind
     private renderOutcomes(bo: BetOffer) {
         if (!bo || !bo.outcomes) return undefined
-        return (
-            <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
-                {bo.outcomes.map(outcome => (
-                    <OutcomeItem
-                        key={outcome.id}
-                        outcome={outcome}
-                        event={this.props.liveEvent.event}/>
-                ))}
-            </View>
-        )
+        return bo.outcomes.map(outcome => (
+            <OutcomeItem
+                key={outcome.id}
+                outcome={outcome}
+                event={this.props.liveEvent.event}/>
+        ))
     }
+}
+
+const itemStyle: ViewStyle = {
+    padding: 8,
+    backgroundColor: "#F6F6F6",
+    borderBottomColor: "#D1D1D1",
+    borderBottomWidth: 1
+}
+const portraitStyle: ViewStyle = {
+    ...itemStyle,
+    flexDirection: "column"
+}
+
+const landscapeStyle: ViewStyle = {
+    ...itemStyle,
+    flexDirection: "row"
 }

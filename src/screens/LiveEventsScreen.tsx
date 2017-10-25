@@ -56,7 +56,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
             sport: group.sport,
             sortOrder: group.sortOrder && parseInt(group.sortOrder, 10) || 100,
             data: events.filter(liveEvent => liveEvent.event.sport === group.sport)
-        }));
+        })).sort((a, b) => a.sortOrder - b.sortOrder);
 
 
         return (
