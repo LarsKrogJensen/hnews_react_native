@@ -1,5 +1,14 @@
 import * as React from "react"
-import {ActivityIndicator, FlatList, ListRenderItemInfo, RefreshControl, View} from "react-native"
+import {
+    ActivityIndicator,
+    ListRenderItemInfo,
+    RefreshControl,
+    SectionList,
+    SectionListData,
+    Text,
+    View,
+    ViewStyle
+} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
@@ -15,6 +24,7 @@ interface Props {
 interface State {
     refreshing: boolean
 }
+
 
 export default class LiveEventsScreen extends React.Component<Props, State> {
 
@@ -33,20 +43,29 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
     }
 
     public render() {
-        const {loading, events} = this.props;
+        const {loading, events, groups} = this.props;
 
         if (loading) {
             return <View>
-                <ActivityIndicator size="large"/>
+                <ActivityIndicator style={{marginTop: 8}}/>
             </View>
         }
 
+        const sections: SectionListData<LiveEvent>[] = groups.map(group => ({
+            title: group.englishName,
+            sport: group.sport,
+            sortOrder: group.sortOrder && parseInt(group.sortOrder, 10) || 100,
+            data: events.filter(liveEvent => liveEvent.event.sport === group.sport)
+        }));
+
+
         return (
             <View>
-                <FlatList
+                <SectionList
                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh}/>}
-                    data={events}
+                    sections={sections}
                     keyExtractor={this.keyExctractor}
+                    renderSectionHeader={this.renderSectionHeader}
                     renderItem={this.renderItem}/>
             </View>
         )
@@ -61,7 +80,24 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
         return <LiveEventListItem liveEvent={liveEvent}/>
     }
 
+    private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {
+        return (
+            <View style={headerStyle}>
+                <Text style={{color: "red", fontSize: 14}}>Live</Text>
+                <Text style={{fontSize: 14, marginLeft: 8}}>{info.section.title}</Text>
+            </View>
+        )
+    }
+
     private keyExctractor(liveEvent: LiveEvent): string {
         return liveEvent.event.id.toString()
     }
+}
+
+const headerStyle: ViewStyle = {
+    padding: 8,
+    backgroundColor: "white",
+    borderBottomColor: "#D1D1D1",
+    borderBottomWidth: 1,
+    flexDirection: "row"
 }

@@ -68,10 +68,13 @@ export default class LiveEventScoreItem extends React.Component<Props> {
                     <Text style={setStyle}>{summary.homeSets}</Text>
                     <Text style={setStyle}>{summary.awaySets}</Text>
                 </View>
-                <View style={{marginRight: 4, alignItems: "center"}}>
-                    <Text style={setStyle}>{summary.homeGames}</Text>
-                    <Text style={setStyle}>{summary.awayGames}</Text>
-                </View>
+                {
+                    hasGames && (
+                        <View style={{marginRight: 4, alignItems: "center"}}>
+                            <Text style={setStyle}>{summary.homeGames}</Text>
+                            <Text style={setStyle}>{summary.awayGames}</Text>
+                        </View>)
+                }
                 <View style={{alignItems: "center"}}>
                     <Text style={scoreStyle}>{score.home}</Text>
                     <Text style={scoreStyle}>{score.away}</Text>
@@ -87,6 +90,24 @@ export default class LiveEventScoreItem extends React.Component<Props> {
             const numberOfSets = sets.home.length;
             const firstUnplayedSetIndex = sets.home.indexOf(-1);
             let currentSet = (firstUnplayedSetIndex === -1) ? numberOfSets - 1 : firstUnplayedSetIndex;
+
+            // in tennis, the current set is the last one with a score, not the first one without
+            if (hasGames && sets.home[currentSet] === -1 && sets.away[currentSet] === -1) {
+                currentSet -= 1;
+            }
+
+            // if the score in the previous set is level, that set has not yet ended. it is likely a tie-break
+            if (currentSet > 0 && sets.home[currentSet - 1] === sets.away[currentSet - 1]) {
+                currentSet -= 1;
+            } else if (hasGames &&
+                currentSet > 0 &&
+                (sets.home[currentSet] + sets.away[currentSet] === 0) &&
+                Math.abs(sets.home[currentSet - 1] - sets.away[currentSet - 1]) === 1 &&
+                Math.max(sets.home[currentSet - 1], sets.away[currentSet - 1]) === 6) {
+                // DUE to NLS BUG
+                currentSet -= 1;
+            }
+
             for (let i = currentSet; i >= 0; i--) {
                 const home: number = sets.home[i];
                 const away: number = sets.away[i];
