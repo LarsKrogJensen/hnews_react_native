@@ -22,9 +22,12 @@ export function load(): Dispatch<LiveLoadAction> {
         dispatch({type: types.LIVE_START_LOADING})
 
         try {
+            const start = new Date().getTime();
             const response =
-                await fetch('https://e1-api.aws.kambicdn.com/offering/api/v2/ub/event/live/open.json?lang=sv_SE&market=SE&client_id=2&channel_id=1');
+                await fetch('https://e4-api.kambi.com/offering/api/v2/ub/event/live/open.json?lang=sv_SE&market=SE&client_id=2&channel_id=1');
             const responseJson = await response.json();
+            const end = new Date().getTime();
+            console.log("Fetch data took " + (end - start) + " ms.")
             dispatch({
                 type: types.LIVE_LOAD_SUCCESS,
                 data: responseJson

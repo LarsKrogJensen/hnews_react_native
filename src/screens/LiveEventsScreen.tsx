@@ -25,7 +25,6 @@ interface State {
     refreshing: boolean
 }
 
-
 export default class LiveEventsScreen extends React.Component<Props, State> {
 
     constructor() {
@@ -62,7 +61,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
         return (
             <View>
                 <SectionList
-                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh}/>}
+                    refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                     sections={sections}
                     keyExtractor={this.keyExctractor}
                     renderSectionHeader={this.renderSectionHeader}
@@ -72,6 +71,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
     }
 
     private onRefresh() {
+        console.log("Refreshing")
         this.props.load()
     }
 

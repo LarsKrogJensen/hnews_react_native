@@ -24,7 +24,7 @@ export default class ListEventListItem extends React.Component<Props> {
         return (
             <View style={viewStyle}>
                 <LiveEventInfoItem liveEvent={this.props.liveEvent} viewStyle={{flex: 1, height: 68}}/>
-                <View style={{flex: 1, flexDirection: 'row', marginTop: 8}}>
+                <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                     {this.renderOutcomes(bo)}
                 </View>
             </View>

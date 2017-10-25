@@ -1,16 +1,34 @@
+import * as React from "react"
 import {StackNavigator, TabNavigator} from "react-navigation"
 import HomeScreen from "screens/HomeScreen"
 import SportScreen from "screens/SportScreen";
 import BetHistoryScreen from "screens/BetHistoryScreen";
 import EventScreen from "screens/EventScreen";
 import LiveEventsScreen from "containers/LiveEventsScreen";
+import {Image, Platform} from "react-native";
+
+function iconResolver(icon: string) {
+    return ({focused, tintColor}) => {
+        // BUG in RN: https://github.com/realm/realm-js/issues/1342
+        // const imageName = focused ?  `../images/${icon}_filled.png` : `../images/${icon}_outline.png`
+        // const image = require(imageName)
+        let image: any
+        if (icon === "home")
+            image = focused ? require("../images/home_filled.png") : require("../images/home_outline.png")
+        else if (icon === "live")
+            image = focused ? require("../images/clock_filled.png") : require("../images/clock_outline.png")
+
+        return <Image source={image} style={{tintColor}}/>
+    }
+}
 
 const HomeTab = StackNavigator({
     Home: {
         screen: HomeScreen,
         path: '/',
         navigationOptions: {
-            title: 'HOME'
+            title: 'HOME',
+            tabBarIcon: iconResolver("home")
         }
     },
     Event: {
@@ -27,7 +45,8 @@ const LiveTab = StackNavigator({
         screen: LiveEventsScreen,
         path: '/',
         navigationOptions: {
-            title: 'LIVE'
+            title: 'LIVE RIGHT NOW',
+            tabBarIcon: iconResolver("live")
         }
     },
     Event: {
@@ -99,21 +118,20 @@ const App = TabNavigator({
             screen: BetHistoryTab,
             path: "/bets",
             navigationOptions: {
-                tabBarLabel: "Bets"
+                tabBarLabel: "Bets",
             }
         }
     },
     {
         tabBarPosition: "bottom",
-        lazy: true,
         animationEnabled: false,
         swipeEnabled: false,
         lazy: true,
         tabBarOptions: {
             tabStyle: {
                 backgroundColor: "#00ADC9"
-            }
-            // activeTintColor: "#e91e63"
+            },
+            activeTintColor: Platform.select({ios: () => "#00ADC9", android: () => "white"})()
         }
     })
 

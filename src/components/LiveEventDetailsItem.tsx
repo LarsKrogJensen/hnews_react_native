@@ -64,6 +64,7 @@ const participantStyle: TextStyle = {
 }
 
 const pathStyle: TextStyle = {
+    flex: 1,
     paddingLeft: 16,
     flexDirection: "row",
     marginTop: 4
