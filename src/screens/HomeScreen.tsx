@@ -13,7 +13,7 @@ export default class HomeScreen extends React.Component<Props> {
         return (
             <View>
                 <Text>Home screeEEEEn</Text>
-                <Button title="Goto Event" onPress={() => navigation.navigate('Event', { name: 'Home' })}/>
+                <Button title="Goto cEvent" onPress={() => navigation.navigate('Event', { name: 'Home' })}/>
             </View>
         )
     }

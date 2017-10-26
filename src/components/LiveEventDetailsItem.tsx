@@ -17,7 +17,7 @@ export default class LiveEventDetailsItem extends React.Component<Props> {
     public render() {
         const {liveEvent, style} = this.props;
         const viewStyle: ViewStyle = {
-            ...this.props.style,
+            ...style,
             flexDirection: "column"
         }
         return (
@@ -43,8 +43,8 @@ export default class LiveEventDetailsItem extends React.Component<Props> {
         )
     }
 
-    private renderPath(liveEvent: LiveEvent) {
-        const pathArray = []
+    private renderPath(liveEvent: LiveEvent): JSX.Element[] {
+        const pathArray: JSX.Element[] = []
         liveEvent.event.path.forEach((path, index) => {
             if (index > 0) {
                 pathArray.push(<Text key={index + "sep"} style={pathSeparatorStyle}>/</Text>)
