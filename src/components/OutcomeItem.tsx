@@ -1,6 +1,6 @@
 import * as React from "react"
 import {Event, Outcome} from "api/typings";
-import {Text, TextStyle, TouchableHighlight, View, ViewStyle} from "react-native";
+import {Text, TextStyle, TouchableHighlight, TouchableNativeFeedback, View, ViewStyle} from "react-native";
 import {orientation, Orientation} from "lib/platform";
 
 interface Props {
@@ -17,12 +17,12 @@ export default class OutcomeItem extends React.Component<Props> {
         const height = orien === Orientation.Portrait ? 38 : 48
         const viewStyle = orien === Orientation.Portrait ? portraitViewStyle : landscapeViewStyle
         return (
-            <TouchableHighlight key={outcome.id} style={{...touchStyle, height}} onPress={() => console.log("Pressed")}>
+            <TouchableNativeFeedback key={outcome.id} onPress={() => console.log("Pressed")}>
                 <View style={viewStyle}>
                     <Text numberOfLines={1} ellipsizeMode="tail" style={labelStyle}>{outcomeLabel}</Text>
                     <Text style={oddsStyle}>{outcome.odds / 1000}</Text>
                 </View>
-            </TouchableHighlight>
+            </TouchableNativeFeedback>
         )
     }
 
@@ -51,12 +51,14 @@ const touchStyle: ViewStyle = {
 }
 
 const portraitViewStyle: ViewStyle = {
+    ...touchStyle,
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center'
 }
 
 const landscapeViewStyle: ViewStyle = {
+    ...touchStyle,
     flex: 1,
     flexDirection: "column-reverse",
     alignItems: 'center'

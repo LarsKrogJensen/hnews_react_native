@@ -36,7 +36,7 @@ const HomeTab = StackNavigator({
         screen: EventScreen,
         path: '/liveEvent/:name',
         navigationOptions: ({navigation}) => ({
-            title: `${navigation.state.params.name}'s Event!`
+            title: `Event`
         })
     }
 });
@@ -54,7 +54,7 @@ const LiveTab = StackNavigator({
         screen: EventScreen,
         path: '/liveEvent/:name',
         navigationOptions: ({navigation}) => ({
-            title: `${navigation.state.params.name}'s Event!`
+            title: `EVENT`
         })
     }
 });

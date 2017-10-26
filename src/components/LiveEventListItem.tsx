@@ -1,11 +1,13 @@
 import * as React from "react"
 import {BetOffer, LiveEvent} from "api/typings";
-import {View, ViewStyle} from "react-native";
+import {TouchableNativeFeedback, View, ViewStyle} from "react-native";
 import OutcomeItem from "components/OutcomeItem";
 import LiveEventInfoItem from "components/LiveEventInfoItem";
 import {orientation, Orientation} from "lib/platform";
+import {NavigationScreenProp} from "react-navigation";
 
 interface Props {
+    navigation: NavigationScreenProp<{}, {}>,
     liveEvent: LiveEvent
 }
 
@@ -14,6 +16,8 @@ export default class ListEventListItem extends React.Component<Props> {
     constructor() {
         super();
         this.renderOutcomes = this.renderOutcomes.bind(this)
+        this.handleItemClick = this.handleItemClick.bind(this)
+
     }
 
     public render() {
@@ -22,12 +26,14 @@ export default class ListEventListItem extends React.Component<Props> {
         const orient = orientation();
         const viewStyle = orient === Orientation.Portrait ? portraitStyle : landscapeStyle;
         return (
-            <View style={viewStyle}>
-                <LiveEventInfoItem liveEvent={this.props.liveEvent} viewStyle={{flex: 1, height: 68}}/>
-                <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
-                    {this.renderOutcomes(bo)}
+            <TouchableNativeFeedback onPress={this.handleItemClick}>
+                <View style={viewStyle}>
+                    <LiveEventInfoItem liveEvent={this.props.liveEvent} viewStyle={{flex: 1, height: 68}}/>
+                    <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
+                        {this.renderOutcomes(bo)}
+                    </View>
                 </View>
-            </View>
+            </TouchableNativeFeedback>
         );
     }
 
@@ -40,6 +46,10 @@ export default class ListEventListItem extends React.Component<Props> {
                 outcome={outcome}
                 event={this.props.liveEvent.event}/>
         ))
+    }
+
+    private handleItemClick() {
+        this.props.navigation.navigate('Event', {event: this.props.liveEvent})
     }
 }
 

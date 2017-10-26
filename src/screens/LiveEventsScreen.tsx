@@ -6,6 +6,7 @@ import {
     SectionList,
     SectionListData,
     Text,
+    TextStyle,
     View,
     ViewStyle
 } from "react-native"
@@ -57,12 +58,12 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
             data: events.filter(liveEvent => liveEvent.event.sport === group.sport)
         })).sort((a, b) => a.sortOrder - b.sortOrder);
 
-        sections.push({
-            title: "Empty group",
-            sport: "arne",
-            sortOrder: 100,
-            data: []
-        })
+        // sections.push({
+        //     title: "Empty group",
+        //     sport: "arne",
+        //     sortOrder: 100,
+        //     data: []
+        // })
         return (
             <View>
                 <SectionList
@@ -82,15 +83,15 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
 
     private renderItem(info: ListRenderItemInfo<LiveEvent>) {
         const liveEvent: LiveEvent = info.item;
-        return <LiveEventListItem liveEvent={liveEvent}/>
+        return <LiveEventListItem liveEvent={liveEvent} navigation={this.props.navigation}/>
     }
 
     private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {
         return (
             <View style={headerStyle}>
-                <Text style={{color: "red", fontSize: 16, fontWeight: "bold"}}>Live</Text>
-                <Text style={{fontSize: 16, fontWeight: "bold", marginLeft: 8, flex: 1}}>{info.section.title}</Text>
-                <Text style={{fontSize: 16, fontWeight: "bold", marginRight: 8}}>{info.section.data.length}</Text>
+                <Text style={liveTextStyle}>Live</Text>
+                <Text style={sportTextStyle}>{info.section.title}</Text>
+                <Text style={countTextStyle}>{info.section.data.length}</Text>
             </View>
         )
     }
@@ -102,8 +103,29 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
 
 const headerStyle: ViewStyle = {
     padding: 8,
+    height: 44,
     backgroundColor: "white",
     borderBottomColor: "#D1D1D1",
     borderBottomWidth: 1,
-    flexDirection: "row"
+    flexDirection: "row",
+    alignItems: "center"
+}
+
+const liveTextStyle: TextStyle = {
+    color: "red",
+    fontSize: 16,
+    fontWeight: "bold"
+}
+
+const sportTextStyle: TextStyle = {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 8,
+    flex: 1
+}
+
+const countTextStyle: TextStyle = {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginRight: 8
 }
