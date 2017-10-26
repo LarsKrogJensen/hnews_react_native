@@ -1,28 +1,33 @@
 import * as React from "react"
 import {Event, Outcome} from "api/typings";
-import {Text, TextStyle, TouchableHighlight, TouchableNativeFeedback, View, ViewStyle} from "react-native";
-import {orientation, Orientation} from "lib/platform";
+import {Text, TextStyle, TouchableHighlight, View, ViewStyle} from "react-native";
+import {isIos, Orientation} from "lib/platform";
+import Touchable from "components/Touchable";
 
 interface Props {
     outcome: Outcome,
-    event: Event
+    event: Event,
+    orientation: Orientation
 }
 
 export default class OutcomeItem extends React.Component<Props> {
 
     public render() {
-        const {outcome, event} = this.props;
+        const {outcome, event, orientation} = this.props;
         const outcomeLabel = this.formatOutcomeLabel(outcome, event);
-        const orien = orientation();
-        const height = orien === Orientation.Portrait ? 38 : 48
-        const viewStyle = orien === Orientation.Portrait ? portraitViewStyle : landscapeViewStyle
+
+        const height = orientation === Orientation.Portrait ? 38 : 48
+        const viewStyle = orientation === Orientation.Portrait ? portraitViewStyle : landscapeViewStyle
+        const touchStyle: ViewStyle = {...touchBaseStyle, height}
+
+        console.log("oritentation - " + orientation)
         return (
-            <TouchableNativeFeedback key={outcome.id} onPress={() => console.log("Pressed")}>
+            <Touchable key={outcome.id} style={touchStyle} onPress={() => console.log("Pressed")}>
                 <View style={viewStyle}>
                     <Text numberOfLines={1} ellipsizeMode="tail" style={labelStyle}>{outcomeLabel}</Text>
                     <Text style={oddsStyle}>{outcome.odds / 1000}</Text>
                 </View>
-            </TouchableNativeFeedback>
+            </Touchable>
         )
     }
 
@@ -39,11 +44,16 @@ export default class OutcomeItem extends React.Component<Props> {
     }
 }
 
-const touchStyle: ViewStyle = {
+const touchBaseStyle: ViewStyle = {
+    marginRight: 4,
+    flex: 1,
+    borderRadius: 3
+}
+
+const viewBaseStyle: ViewStyle = {
     height: 38,
     flex: 1,
     flexDirection: 'row',
-    marginRight: 4,
     padding: 8,
     alignItems: 'center',
     backgroundColor: '#00ADC9',
@@ -51,14 +61,14 @@ const touchStyle: ViewStyle = {
 }
 
 const portraitViewStyle: ViewStyle = {
-    ...touchStyle,
+    ...viewBaseStyle,
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center'
 }
 
 const landscapeViewStyle: ViewStyle = {
-    ...touchStyle,
+    ...viewBaseStyle,
     flex: 1,
     flexDirection: "column-reverse",
     alignItems: 'center'

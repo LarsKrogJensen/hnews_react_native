@@ -13,6 +13,7 @@ import {
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
+import {orientation} from "lib/platform";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>
@@ -83,7 +84,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
 
     private renderItem(info: ListRenderItemInfo<LiveEvent>) {
         const liveEvent: LiveEvent = info.item;
-        return <LiveEventListItem liveEvent={liveEvent} navigation={this.props.navigation}/>
+        return <LiveEventListItem liveEvent={liveEvent} navigation={this.props.navigation} orientation={orientation()}/>
     }
 
     private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {
