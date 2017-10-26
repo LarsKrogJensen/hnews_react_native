@@ -3,7 +3,6 @@ import {Event, Outcome} from "api/typings";
 import {Text, TextStyle, TouchableHighlight, View, ViewStyle} from "react-native";
 import {isIos, Orientation} from "lib/platform";
 import Touchable from "components/Touchable";
-// import {autobind} from "core-decorators";
 
 interface Props {
     outcome: Outcome,

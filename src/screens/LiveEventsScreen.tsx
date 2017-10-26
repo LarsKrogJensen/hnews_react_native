@@ -1,6 +1,6 @@
 import * as React from "react"
 import {
-    ActivityIndicator,
+    ActivityIndicator, Dimensions,
     ListRenderItemInfo,
     RefreshControl,
     SectionList,
@@ -13,7 +13,7 @@ import {
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
-import {orientation} from "lib/platform";
+import {orientation, Orientation} from "lib/platform";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>
@@ -57,12 +57,13 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
         // this.setState({orientation: orientation()})
     }
 
+
     public render() {
         const {loading, events, groups} = this.props;
 
         if (loading) {
             return <View>
-                <ActivityIndicator style={{marginTop: 18}}/>
+                <ActivityIndicator style={{marginTop: 8}}/>
             </View>
         }
 
@@ -79,7 +80,7 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
         //     sortOrder: 100,
         //     data: []
         // })
-        // console.log("ORIENTATION: " + orientation())
+        console.log("ORIENTATION: " + orientation())
         return (
             <View>
                 <SectionList
