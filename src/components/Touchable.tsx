@@ -16,8 +16,8 @@ export default class Touchable extends React.Component<Props> {
 
         // TouchableNativeFeedback does not accept styles so we need to wrap it
         return (
-            <View  {...this.props}>
-                <TouchableNativeFeedback>
+            <View  style={this.props.style}>
+                <TouchableNativeFeedback onPress={this.props.onPress}>
                     {this.props.children}
                 </TouchableNativeFeedback>
             </View>
