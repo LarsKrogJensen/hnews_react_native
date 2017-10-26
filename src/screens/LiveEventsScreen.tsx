@@ -1,6 +1,6 @@
 import * as React from "react"
 import {
-    ActivityIndicator,
+    ActivityIndicator, Dimensions,
     ListRenderItemInfo,
     RefreshControl,
     SectionList,
@@ -13,7 +13,7 @@ import {
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
-import {orientation} from "lib/platform";
+import {orientation, Orientation} from "lib/platform";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>
@@ -24,7 +24,8 @@ interface Props {
 }
 
 interface State {
-    refreshing: boolean
+    refreshing: boolean,
+    // orientation: Orientation
 }
 
 export default class LiveEventsScreen extends React.PureComponent<Props, State> {
@@ -32,17 +33,31 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
     constructor() {
         super();
         this.state = {
-            refreshing: false
+            refreshing: false // ,
+            // orientation: orientation()
         }
         this.renderItem = this.renderItem.bind(this);
         this.keyExctractor = this.keyExctractor.bind(this);
         this.onRefresh = this.onRefresh.bind(this)
+        this.orientationDidChange = this.orientationDidChange.bind(this)
     }
 
     componentDidMount(): void {
         this.props.load()
+        // Orientation.addOrientationListener(this._orientationDidChange)
+        // Dimensions.addEventListener("change", this.orientationDidChange)
     }
-    
+
+    componentWillUnmount() {
+        // Orientation.removeOrientationListener(this._orientationDidChange)
+    }
+
+    orientationDidChange() {
+        console.log("orientation change")
+        // this.setState({orientation: orientation()})
+    }
+
+
     public render() {
         const {loading, events, groups} = this.props;
 
