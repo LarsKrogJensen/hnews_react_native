@@ -133,7 +133,7 @@ const App = TabNavigator({
                 backgroundColor: "#00ADC9"
             },
             style: {
-                backgroundColor: "black"
+                backgroundColor: Platform.select({android: () => "black", ios: () => undefined})()
             },
             showIcon: true,
             showLabel: isIos(),
