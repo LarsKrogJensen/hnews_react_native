@@ -27,7 +27,7 @@ interface State {
     refreshing: boolean
 }
 
-export default class LiveEventsScreen extends React.Component<Props, State> {
+export default class LiveEventsScreen extends React.PureComponent<Props, State> {
 
     constructor() {
         super();
@@ -42,7 +42,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
     componentDidMount(): void {
         this.props.load()
     }
-
+    
     public render() {
         const {loading, events, groups} = this.props;
 
@@ -65,6 +65,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
         //     sortOrder: 100,
         //     data: []
         // })
+        console.log("ORIENTATION: " + orientation())
         return (
             <View>
                 <SectionList
@@ -84,7 +85,8 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
 
     private renderItem(info: ListRenderItemInfo<LiveEvent>) {
         const liveEvent: LiveEvent = info.item;
-        return <LiveEventListItem liveEvent={liveEvent} navigation={this.props.navigation} orientation={orientation()}/>
+        let orient = orientation();
+        return <LiveEventListItem liveEvent={liveEvent} navigation={this.props.navigation} orientation={orient}/>
     }
 
     private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {

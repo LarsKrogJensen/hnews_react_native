@@ -20,7 +20,7 @@ export default class OutcomeItem extends React.Component<Props> {
         const viewStyle = orientation === Orientation.Portrait ? portraitViewStyle : landscapeViewStyle
         const touchStyle: ViewStyle = {...touchBaseStyle, height}
 
-        console.log("oritentation - " + orientation)
+        // console.log("oritentation - " + orientation)
         return (
             <Touchable key={outcome.id} style={touchStyle} onPress={() => console.log("Pressed")}>
                 <View style={viewStyle}>
