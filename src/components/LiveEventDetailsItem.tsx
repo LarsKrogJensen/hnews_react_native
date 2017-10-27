@@ -1,6 +1,7 @@
 import * as React from "react"
 import {LiveEvent} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
+import autobind from "autobind-decorator";
 
 interface Props {
     style: ViewStyle,
@@ -8,11 +9,6 @@ interface Props {
 }
 
 export default class LiveEventDetailsItem extends React.Component<Props> {
-
-    constructor(props: Props, context: any) {
-        super(props, context);
-        this.renderPath = this.renderPath.bind(this);
-    }
 
     public render() {
         const {liveEvent, style} = this.props;
@@ -43,6 +39,7 @@ export default class LiveEventDetailsItem extends React.Component<Props> {
         )
     }
 
+    @autobind
     private renderPath(liveEvent: LiveEvent): JSX.Element[] {
         const pathArray: JSX.Element[] = []
         liveEvent.event.path.forEach((path, index) => {

@@ -1,6 +1,7 @@
 import * as React from "react"
 import {LiveData, MatchClock, Score, Statistics} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
+import autobind from "autobind-decorator";
 
 interface Props {
     style: ViewStyle,
@@ -17,12 +18,6 @@ interface GameSummary {
 
 export default class LiveEventScoreItem extends React.Component<Props> {
 
-    constructor(props: Props, context: any) {
-        super(props, context);
-        this.renderFootball = this.renderFootball.bind(this);
-        this.renderSetBased = this.renderSetBased.bind(this);
-    }
-
     public render() {
         const {statistics: stats, score, matchClock} = this.props.liveData
         const sport = this.props.sport
@@ -38,6 +33,7 @@ export default class LiveEventScoreItem extends React.Component<Props> {
         return <View style={this.props.style}/>
     }
 
+    @autobind
     private renderFootball(score: Score, matchClock: MatchClock) {
         return (
             <View style={{...this.props.style, alignItems: "center"}}>
@@ -49,6 +45,7 @@ export default class LiveEventScoreItem extends React.Component<Props> {
         );
     }
 
+    @autobind
     private renderSetBased(stats: Statistics, score: Score, hasGames: boolean) {
         const summary = this.calculateGameSummary(stats, hasGames)
         return (
