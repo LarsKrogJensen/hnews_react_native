@@ -1,6 +1,7 @@
 import * as React from "react"
 import {LiveEvent} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
+import Icon from 'react-native-vector-icons/Ionicons';
 import autobind from "autobind-decorator";
 
 interface Props {
@@ -28,7 +29,7 @@ export default class LiveEventDetailsItem extends React.Component<Props> {
                               style={participantStyle}>{liveEvent.event.awayName}</Text>
                     </View>
                     <View style={{justifyContent: "center"}}>
-                        <Text style={{padding: 8, color: "#717171"}}>FAV</Text>
+                        <Icon style={{padding: 0}} name="ios-star-outline" size={30} color="#717171" />
                     </View>
                     <View style={{justifyContent: "center"}}>
                         <Text style={{fontSize: 12, padding: 8, color: "#717171"}}>+{liveEvent.event.liveBoCount}</Text>
