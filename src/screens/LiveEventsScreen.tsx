@@ -1,6 +1,6 @@
 import * as React from "react"
 import {
-    ActivityIndicator, Dimensions,
+    ActivityIndicator,
     ListRenderItemInfo,
     RefreshControl,
     SectionList,
@@ -13,7 +13,8 @@ import {
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
-import {orientation, Orientation} from "lib/platform";
+import {orientation} from "lib/platform";
+import autobind from "autobind-decorator";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>
@@ -36,9 +37,7 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
             refreshing: false // ,
             // orientation: orientation()
         }
-        this.renderItem = this.renderItem.bind(this);
-        this.keyExctractor = this.keyExctractor.bind(this);
-        this.onRefresh = this.onRefresh.bind(this)
+
         this.orientationDidChange = this.orientationDidChange.bind(this)
     }
 
@@ -52,11 +51,11 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
         // Orientation.removeOrientationListener(this._orientationDidChange)
     }
 
+    @autobind
     orientationDidChange() {
         console.log("orientation change")
         // this.setState({orientation: orientation()})
     }
-
 
     public render() {
         const {loading, events, groups} = this.props;
@@ -93,17 +92,20 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
         )
     }
 
+    @autobind
     private onRefresh() {
         console.log("Refreshing")
         this.props.load()
     }
 
+    @autobind
     private renderItem(info: ListRenderItemInfo<LiveEvent>) {
         const liveEvent: LiveEvent = info.item;
         let orient = orientation();
         return <LiveEventListItem liveEvent={liveEvent} navigation={this.props.navigation} orientation={orient}/>
     }
 
+    @autobind
     private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {
         return (
             <View style={headerStyle}>

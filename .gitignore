@@ -4,3 +4,4 @@ node_modules
 gen/
 .tmp/
 android/.gradle
+yarn-error.log

@@ -6,6 +6,7 @@ import BetHistoryScreen from "screens/BetHistoryScreen";
 import EventScreen from "screens/EventScreen";
 import LiveEventsScreen from "containers/LiveEventsScreen";
 import {Image, Platform} from "react-native";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {isIos} from "lib/platform";
 
 function iconResolver(icon: string) {
@@ -64,7 +65,11 @@ const SportsTab = StackNavigator({
         screen: SportScreen,
         path: '/',
         navigationOptions: {
-            title: 'SPORTS'
+            title: 'SPORTS',
+            tabBarIcon: ({focused, tintColor}) => {
+                return <Icon name="ios-beer-outline" size={30} color={tintColor} />
+            }
+
         }
     },
     Event: {
