@@ -13,7 +13,7 @@ interface Props {
     orientation: Orientation
 }
 
-export default class ListEventListItem extends React.Component<Props> {
+export default class ListEventListItem extends React.PureComponent<Props> {
 
     constructor() {
         super();
