@@ -2,8 +2,7 @@ import {applyMiddleware, combineReducers, createStore, Reducer} from "redux"
 import counterReducer, {CounterState} from "./counter/reducer"
 import liveReducer, {LiveEventsState} from "./live/reducer"
 import thunk from "redux-thunk";
-// import { composeWithDevTools } from 'remote-redux-devtools';
-// import logger from "redux-logger"
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 export interface AppState {
     counter: CounterState,
@@ -15,11 +14,11 @@ const rootReducer: Reducer<AppState> = combineReducers<AppState>({
     live: liveReducer
 })
 
+// const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 const store = createStore(
     rootReducer,
-    applyMiddleware(thunk)
-    // composeWithDevTools(applyMiddleware(thunk))
-    // applyMiddleware(thunk, logger)
+    // applyMiddleware(thunk) // , reduxDevTools)
+    composeWithDevTools(applyMiddleware(thunk))
 )
 
 export default store

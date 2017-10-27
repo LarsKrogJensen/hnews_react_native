@@ -6,6 +6,7 @@ import {Orientation} from "lib/platform";
 import {NavigationScreenProp} from "react-navigation";
 import Touchable from "components/Touchable";
 import {View, ViewStyle} from "react-native";
+import autobind from "autobind-decorator";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>,
@@ -13,13 +14,7 @@ interface Props {
     orientation: Orientation
 }
 
-export default class ListEventListItem extends React.Component<Props> {
-
-    constructor() {
-        super();
-        this.renderOutcomes = this.renderOutcomes.bind(this)
-        this.handleItemClick = this.handleItemClick.bind(this)
-    }
+export default class ListEventListItem extends React.PureComponent<Props> {
 
     public render() {
         const bo = this.props.liveEvent.mainBetOffer;
@@ -39,7 +34,7 @@ export default class ListEventListItem extends React.Component<Props> {
         );
     }
 
-    // @autobind
+    @autobind
     private renderOutcomes(bo: BetOffer) {
         if (!bo || !bo.outcomes) return undefined
         return bo.outcomes.map(outcome => (
@@ -51,6 +46,7 @@ export default class ListEventListItem extends React.Component<Props> {
         ))
     }
 
+    @autobind
     private handleItemClick() {
         this.props.navigation.navigate('Event', {event: this.props.liveEvent})
     }

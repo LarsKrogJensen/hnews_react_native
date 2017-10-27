@@ -130,7 +130,7 @@ const App = TabNavigator({
         lazy: true,
         tabBarOptions: {
             tabStyle: {
-                backgroundColor: "#00ADC9"
+                backgroundColor: Platform.select({android: () => "#00ADC9", ios: () => undefined})()
             },
             style: {
                 backgroundColor: Platform.select({android: () => "black", ios: () => undefined})()

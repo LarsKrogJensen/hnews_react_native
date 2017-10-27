@@ -3,6 +3,7 @@ import {Event, Outcome} from "api/typings";
 import {Text, TextStyle, TouchableHighlight, View, ViewStyle} from "react-native";
 import {isIos, Orientation} from "lib/platform";
 import Touchable from "components/Touchable";
+import autobind from "autobind-decorator";
 
 interface Props {
     outcome: Outcome,
@@ -31,7 +32,7 @@ export default class OutcomeItem extends React.Component<Props> {
         )
     }
 
-    // @autobind
+    @autobind
     private formatOutcomeLabel(outcome: Outcome, event: Event): string {
         if (outcome.type === "OT_CROSS")
             return "Draw"
