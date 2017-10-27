@@ -18,7 +18,7 @@ export default class LiveEventDetailsItem extends React.Component<Props> {
         }
         return (
             <View style={viewStyle}>
-                <View style={{flexDirection: "row"}}>
+                <View style={{flexDirection: "row"}}>                                               
                     <View style={{flexDirection: "column", flex: 1}}>
                         <Text numberOfLines={1}
                               ellipsizeMode={"tail"}

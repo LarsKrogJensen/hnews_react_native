@@ -11,9 +11,9 @@ interface Props {
 
 export default class LiveEventInfoItem extends React.Component<Props> {
     public render() {
-        const liveEvent = this.props.liveEvent;
+        const {liveEvent, viewStyle} = this.props;
         return (
-            <View style={{...this.props.viewStyle, flexDirection: "row", flex: 1, height: 68}}>
+            <View style={{...viewStyle, flexDirection: "row", flex: 1, height: 68}}>
                 <LiveEventScoreItem style={{width: 68}}
                                     sport={liveEvent.event.sport}
                                     liveData={liveEvent.liveData}/>
