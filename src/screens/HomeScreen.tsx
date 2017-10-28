@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Button, Text, View} from "react-native"
+import {Button, StatusBar, Text, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 
 interface Props {

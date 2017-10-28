@@ -157,14 +157,17 @@ function iconResolver(icon: string) {
 
 const ImageHeader = props => (
     <View style={{backgroundColor: '#eee'}}>
+        <StatusBar translucent backgroundColor="transparent"/>
         <Image
             style={absoluteFill}
             source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Hopetoun_falls.jpg'}}
         />
-        <Header {...props} style={{backgroundColor: 'transparent'}}/>
+        <Header {...props} style={{backgroundColor: 'transparent', marginTop: 24}}/>
     </View>
 );
 
 StatusBar.setBarStyle("light-content")
+// StatusBar.setTranslucent(true);
+
 
 export default App
