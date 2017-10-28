@@ -83,6 +83,7 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
         return (
             <View>
                 <SectionList
+                    stickySectionHeadersEnabled={true}
                     refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                     sections={sections}
                     keyExtractor={this.keyExctractor}
