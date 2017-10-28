@@ -1,44 +1,53 @@
 import * as React from "react"
-import {StackNavigator, TabNavigator} from "react-navigation"
+import {Header, StackNavigator, TabNavigator} from "react-navigation"
 import HomeScreen from "screens/HomeScreen"
 import SportScreen from "screens/SportScreen";
 import BetHistoryScreen from "screens/BetHistoryScreen";
 import EventScreen from "screens/EventScreen";
 import LiveEventsScreen from "containers/LiveEventsScreen";
-import {Image, Platform} from "react-native";
+import {Image, Platform, StyleSheet, View} from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import {isIos} from "lib/platform";
+import absoluteFill = StyleSheet.absoluteFill;
 
 function iconResolver(icon: string) {
     return ({focused, tintColor}) => {
-        // BUG in RN: https://github.com/realm/realm-js/issues/1342
-        // const imageName = focused ?  `../images/${icon}_filled.png` : `../images/${icon}_outline.png`
-        // const image = require(imageName)
-        let image: any
-        if (icon === "home")
-            image = focused ? require("../images/home_filled.png") : require("../images/home_outline.png")
-        else if (icon === "live")
-            image = focused ? require("../images/clock_filled.png") : require("../images/clock_outline.png")
+        let iconName = icon;
+        if (!focused) {
+            iconName += "-outline"
+        }
 
-        return <Image source={image} style={{tintColor}}/>
+        return <Icon name={iconName} size={30} color={tintColor}/>
     }
 }
+
+const ImageHeader = props => (
+    <View style={{backgroundColor: '#eee'}}>
+        <Image
+            style={absoluteFill}
+            source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Hopetoun_falls.jpg'}}
+        />
+        <Header {...props} style={{backgroundColor: 'transparent'}}/>
+    </View>
+);
 
 const HomeTab = StackNavigator({
     Home: {
         screen: HomeScreen,
         path: '/',
         navigationOptions: {
-            title: 'HOME',
-            tabBarIcon: iconResolver("home")
+            title: "Home",
+            headerTitleStyle: {color: '#fff'},
+            header: (props) => <ImageHeader {...props} />
         }
     },
     Event: {
         screen: EventScreen,
         path: '/liveEvent/:name',
-        navigationOptions: ({navigation}) => ({
-            title: `Event`
-        })
+        navigationOptions: {
+            headerTitleStyle: {color: '#fff'},
+            header: (props) => <ImageHeader {...props} />,
+        }
     }
 });
 
@@ -47,8 +56,9 @@ const LiveTab = StackNavigator({
         screen: LiveEventsScreen,
         path: '/',
         navigationOptions: {
-            title: 'LIVE RIGHT NOW',
-            tabBarIcon: iconResolver("live")
+            title: "Live",
+            headerTitleStyle: {color: '#fff'},
+            header: (props) => <ImageHeader {...props} />,
         }
     },
     Event: {
@@ -65,10 +75,7 @@ const SportsTab = StackNavigator({
         screen: SportScreen,
         path: '/',
         navigationOptions: {
-            title: 'SPORTS',
-            tabBarIcon: ({focused, tintColor}) => {
-                return <Icon name="ios-beer-outline" size={30} color={tintColor} />
-            }
+            title: 'SPORTS'
 
         }
     },
@@ -103,28 +110,32 @@ const App = TabNavigator({
             screen: HomeTab,
             path: "/",
             navigationOptions: {
-                tabBarLabel: "Home"
+                tabBarLabel: "Home",
+                tabBarIcon: iconResolver("ios-home")
             }
         },
         Live: {
             screen: LiveTab,
             path: "/live",
             navigationOptions: {
-                tabBarLabel: "LIVE"
+                tabBarLabel: "Live",
+                tabBarIcon: iconResolver("ios-timer")
             }
         },
         Sport: {
             screen: SportsTab,
             path: "/sports",
             navigationOptions: {
-                tabBarLabel: "Sports"
+                tabBarLabel: "Sports",
+                tabBarIcon: iconResolver("ios-home")
             }
         },
         BetHistory: {
             screen: BetHistoryTab,
             path: "/bets",
             navigationOptions: {
-                tabBarLabel: "Bets"
+                tabBarLabel: "Bets",
+                tabBarIcon: iconResolver("ios-home")
             }
         }
     },
