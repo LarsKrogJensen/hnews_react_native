@@ -97,7 +97,8 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
                     sections={sections}
                     renderSectionHeader={this.renderSectionHeader}
                     keyExtractor={this.keyExctractor}
-                    renderItem={this.renderItem}/>
+                    renderItem={this.renderItem}
+                />
                 {/*<FlatList*/}
                     {/*data={events}*/}
                     {/*keyExtractor={this.keyExctractor}*/}

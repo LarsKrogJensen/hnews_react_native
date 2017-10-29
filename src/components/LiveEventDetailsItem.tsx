@@ -1,10 +1,10 @@
 import * as React from "react"
 import {LiveEvent} from "api/typings";
-import {Animated, Text, TextStyle, View, ViewStyle} from "react-native";
-import Icon from 'react-native-vector-icons/Ionicons';
+import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
 import ActionDelegate from "store/ActionDelegate";
 import Touchable from "components/Touchable";
+import CrossPlatformIcon from "components/CrossPlatformIcon";
 
 interface Props {
     style: ViewStyle,
@@ -33,15 +33,23 @@ export default class LiveEventDetailsItem extends React.PureComponent<Props> {
                               style={participantStyle}>{liveEvent.event.awayName}</Text>
                     </View>
                     <View style={{justifyContent: "center"}}>
-                        <Touchable onPress={() => requestAnimationFrame(() => actions.toggleFavorite(liveEvent.event.id))}>
-                            <Icon style={{padding: 0}}
-                                  name={isFav ? "ios-star" : "ios-star-outline"}
-                                  size={30}
-                                  color={isFav ? "darkorange" : "#717171"} />
+                        <Touchable
+                            onPress={() => requestAnimationFrame(() => actions.toggleFavorite(liveEvent.event.id))}
+                            style={{borderRadius: 5}}>
+                            <CrossPlatformIcon
+                                name={"star"}
+                                size={30}
+                                color={isFav ? "darkorange" : "#717171"}
+                                outline={!isFav}/>
                         </Touchable>
                     </View>
                     <View style={{justifyContent: "center", minWidth: 48}}>
-                        <Text style={{fontSize: 12, padding: 8, color: "#717171", textAlign: "right"}}>+{liveEvent.event.liveBoCount}</Text>
+                        <Text style={{
+                            fontSize: 12,
+                            padding: 8,
+                            color: "#717171",
+                            textAlign: "right"
+                        }}>+{liveEvent.event.liveBoCount}</Text>
                     </View>
                 </View>
                 <View style={pathStyle}>{this.renderPath(liveEvent)}</View>
@@ -56,7 +64,9 @@ export default class LiveEventDetailsItem extends React.PureComponent<Props> {
             if (index > 0) {
                 pathArray.push(<Text key={index + "sep"} style={pathSeparatorStyle}>/</Text>)
             }
-            pathArray.push(<Text key={index} numberOfLines={1} ellipsizeMode="tail"
+            pathArray.push(<Text key={index}
+                                 numberOfLines={1}
+                                 ellipsizeMode="tail"
                                  style={pathEntryStyle}>{path.name}</Text>)
         })
         return pathArray;
