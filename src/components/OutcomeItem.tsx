@@ -11,7 +11,7 @@ interface Props {
     orientation: Orientation
 }
 
-export default class OutcomeItem extends React.Component<Props> {
+export default class OutcomeItem extends React.PureComponent<Props> {
 
     public render() {
         const {outcome, event, orientation} = this.props;

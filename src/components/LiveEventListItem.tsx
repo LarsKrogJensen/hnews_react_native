@@ -16,7 +16,7 @@ interface Props {
     actions: ActionDelegate
 }
 
-export default class ListEventListItem extends React.PureComponent<Props> {
+export default class ListEventListItem extends React.Component<Props> {
 
     public render() {
         const bo = this.props.liveEvent.mainBetOffer;
@@ -24,6 +24,7 @@ export default class ListEventListItem extends React.PureComponent<Props> {
 
         const viewStyle = orient === Orientation.Portrait ? portraitStyle : landscapeStyle;
 
+        // console.log("Render list item: " + this.props.liveEvent.event.id)
         return (
             <Touchable onPress={this.handleItemClick}>
                 <View style={viewStyle}>
@@ -36,6 +37,16 @@ export default class ListEventListItem extends React.PureComponent<Props> {
                 </View>
             </Touchable>
         );
+    }
+
+    componentDidMount(): void {
+        // console.log("compoent did mount" + this.props.liveEvent.event.id)
+    }
+
+    public shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
+        const shouldUpdate = this.props.actions.isFavorite(this.props.liveEvent.event.id) !== nextProps.actions.isFavorite(nextProps.liveEvent.event.id)
+        // console.log("shouldUpdate: " + shouldUpdate)
+        return shouldUpdate
     }
 
     @autobind

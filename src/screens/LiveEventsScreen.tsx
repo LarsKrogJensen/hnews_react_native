@@ -1,6 +1,6 @@
 import * as React from "react"
 import {
-    ActivityIndicator,
+    ActivityIndicator, FlatList,
     ListRenderItemInfo,
     RefreshControl,
     SectionList,
@@ -35,7 +35,7 @@ interface State {
     // orientation: Orientation
 }
 
-export default class LiveEventsScreen extends React.PureComponent<Props, State> {
+export default class LiveEventsScreen extends React.Component<Props, State> {
 
     constructor() {
         super();
@@ -88,22 +88,28 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
             })
         }
 
+        console.log("LitScreen render")
         return (
             <View>
                 <SectionList
                     stickySectionHeadersEnabled={true}
                     refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                     sections={sections}
-                    keyExtractor={this.keyExctractor}
                     renderSectionHeader={this.renderSectionHeader}
+                    keyExtractor={this.keyExctractor}
                     renderItem={this.renderItem}/>
+                {/*<FlatList*/}
+                    {/*data={events}*/}
+                    {/*keyExtractor={this.keyExctractor}*/}
+                    {/*renderItem={this.renderItem}*/}
+                    {/*extraData={this.props.favorites.count()}*/}
+                    {/*/>*/}
             </View>
         )
     }
 
     @autobind
     private onRefresh() {
-        console.log("Refreshing")
         this.props.loadData()
     }
 

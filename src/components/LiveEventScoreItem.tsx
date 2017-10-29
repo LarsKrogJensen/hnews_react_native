@@ -16,7 +16,7 @@ interface GameSummary {
     awayGames: number
 }
 
-export default class LiveEventScoreItem extends React.Component<Props> {
+export default class LiveEventScoreItem extends React.PureComponent<Props> {
 
     public render() {
         const {statistics: stats, score, matchClock} = this.props.liveData

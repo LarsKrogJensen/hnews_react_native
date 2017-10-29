@@ -11,7 +11,7 @@ interface Props {
     actions: ActionDelegate
 }
 
-export default class LiveEventInfoItem extends React.Component<Props> {
+export default class LiveEventInfoItem extends React.PureComponent<Props> {
     public render() {
         const {liveEvent, viewStyle} = this.props;
         return (

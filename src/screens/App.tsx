@@ -13,8 +13,8 @@ import SearchScreen from "screens/SearchScreen";
 
 const defaultNavOptions: NavigationStackScreenOptions = {
     headerTintColor: 'white',
-    headerTitleStyle: {color: '#fff'},
-    headerBackTitleStyle: {color: '#fff'},
+    headerTitleStyle: {color: 'white'},
+    headerBackTitleStyle: {color: 'white'},
     header: (props) => <ImageHeader {...props} />
 }
 const HomeTab = StackNavigator({
@@ -99,16 +99,14 @@ const BetHistoryTab = StackNavigator({
         screen: BetHistoryScreen,
         path: '/n',
         navigationOptions: {
-            ...defaultNavOptions,
-            title: "Bets"
+            headerMode: "none"
         }
     },
     Event: {
         screen: EventScreen,
         path: '/liveEvent/:name',
         navigationOptions: {
-            ...defaultNavOptions,
-            title: "Event"
+            headerMode: "none"
         }
     }
 });

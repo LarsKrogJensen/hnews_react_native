@@ -1,6 +1,6 @@
 import * as React from "react"
 import {LiveEvent} from "api/typings";
-import {Text, TextStyle, View, ViewStyle} from "react-native";
+import {Animated, Text, TextStyle, View, ViewStyle} from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import autobind from "autobind-decorator";
 import ActionDelegate from "store/ActionDelegate";
@@ -12,7 +12,7 @@ interface Props {
     actions: ActionDelegate
 }
 
-export default class LiveEventDetailsItem extends React.Component<Props> {
+export default class LiveEventDetailsItem extends React.PureComponent<Props> {
 
     public render() {
         const {liveEvent, style, actions} = this.props;
@@ -33,15 +33,15 @@ export default class LiveEventDetailsItem extends React.Component<Props> {
                               style={participantStyle}>{liveEvent.event.awayName}</Text>
                     </View>
                     <View style={{justifyContent: "center"}}>
-                        <Touchable onPress={() => actions.toggleFavorite(liveEvent.event.id)}>
+                        <Touchable onPress={() => requestAnimationFrame(() => actions.toggleFavorite(liveEvent.event.id))}>
                             <Icon style={{padding: 0}}
                                   name={isFav ? "ios-star" : "ios-star-outline"}
                                   size={30}
                                   color={isFav ? "darkorange" : "#717171"} />
                         </Touchable>
                     </View>
-                    <View style={{justifyContent: "center"}}>
-                        <Text style={{fontSize: 12, padding: 8, color: "#717171"}}>+{liveEvent.event.liveBoCount}</Text>
+                    <View style={{justifyContent: "center", minWidth: 48}}>
+                        <Text style={{fontSize: 12, padding: 8, color: "#717171", textAlign: "right"}}>+{liveEvent.event.liveBoCount}</Text>
                     </View>
                 </View>
                 <View style={pathStyle}>{this.renderPath(liveEvent)}</View>
