@@ -13,15 +13,17 @@ import {
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
-import {orientation} from "lib/platform";
+import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
+import ActionDelegate from "store/ActionDelegate";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>
     loading: boolean,
     events: LiveEvent[]
     groups: EventGroup[]
-    load: () => void
+    loadData: () => void
+    actions: ActionDelegate
 }
 
 interface State {
@@ -42,7 +44,7 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
     }
 
     componentDidMount(): void {
-        this.props.load()
+        this.props.loadData()
         // Orientation.addOrientationListener(this._orientationDidChange)
         // Dimensions.addEventListener("change", this.orientationDidChange)
     }
@@ -96,14 +98,17 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
     @autobind
     private onRefresh() {
         console.log("Refreshing")
-        this.props.load()
+        this.props.loadData()
     }
 
     @autobind
     private renderItem(info: ListRenderItemInfo<LiveEvent>) {
         const liveEvent: LiveEvent = info.item;
         let orient = orientation();
-        return <LiveEventListItem liveEvent={liveEvent} navigation={this.props.navigation} orientation={orient}/>
+        return <LiveEventListItem liveEvent={liveEvent}
+                                  navigation={this.props.navigation}
+                                  orientation={orient}
+                                  actions={this.props.actions}/>
     }
 
     @autobind

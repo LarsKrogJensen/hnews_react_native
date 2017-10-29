@@ -2,19 +2,19 @@ import {LIVE_LOAD_FAILED, LIVE_LOAD_SUCCESS, LIVE_START_LOADING} from "./types"
 import {LiveLoadAction} from "./actions"
 import {EventGroup, LiveEvent} from "api/typings";
 
-export interface LiveEventsState {
+export interface LiveEventsStore {
     liveEvents: LiveEvent[]
     groups: EventGroup[]
     loading: boolean
 }
 
-const initialState: LiveEventsState = {
+const initialState: LiveEventsStore = {
     loading: false,
     liveEvents: [],
     groups: []
 }
 
-export default function liveReducer(state: LiveEventsState = initialState, action: LiveLoadAction): LiveEventsState {
+export default function liveReducer(state: LiveEventsStore = initialState, action: LiveLoadAction): LiveEventsStore {
     switch (action.type) {
         case LIVE_START_LOADING:
             return {

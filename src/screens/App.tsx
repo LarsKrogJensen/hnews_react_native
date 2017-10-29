@@ -7,7 +7,7 @@ import EventScreen from "screens/EventScreen";
 import LiveEventsScreen from "containers/LiveEventsScreen";
 import {Image, Platform, StatusBar, StyleSheet, View} from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import {isIos} from "lib/platform";
+import {isIos} from "lib/device";
 import absoluteFill = StyleSheet.absoluteFill;
 import SearchScreen from "screens/SearchScreen";
 

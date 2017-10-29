@@ -2,16 +2,18 @@ import * as React from "react"
 import {BetOffer, LiveEvent} from "api/typings";
 import OutcomeItem from "components/OutcomeItem";
 import LiveEventInfoItem from "components/LiveEventInfoItem";
-import {Orientation} from "lib/platform";
+import {Orientation} from "lib/device";
 import {NavigationScreenProp} from "react-navigation";
 import Touchable from "components/Touchable";
 import {View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
+import ActionDelegate from "store/ActionDelegate";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>,
     liveEvent: LiveEvent,
-    orientation: Orientation
+    orientation: Orientation,
+    actions: ActionDelegate
 }
 
 export default class ListEventListItem extends React.PureComponent<Props> {
@@ -21,11 +23,13 @@ export default class ListEventListItem extends React.PureComponent<Props> {
         const orient = this.props.orientation
 
         const viewStyle = orient === Orientation.Portrait ? portraitStyle : landscapeStyle;
-        
+
         return (
             <Touchable onPress={this.handleItemClick}>
                 <View style={viewStyle}>
-                    <LiveEventInfoItem liveEvent={this.props.liveEvent} viewStyle={{flex: 1, height: 68}}/>
+                    <LiveEventInfoItem liveEvent={this.props.liveEvent}
+                                       actions={this.props.actions}
+                                       viewStyle={{flex: 1, height: 68}}/>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                         {this.renderOutcomes(bo)}
                     </View>

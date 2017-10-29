@@ -1,17 +1,17 @@
 import {applyMiddleware, combineReducers, createStore, Reducer} from "redux"
-import counterReducer, {CounterState} from "./counter/reducer"
-import liveReducer, {LiveEventsState} from "./live/reducer"
+import favoriteReducer, {FavoriteStore} from "./favorite/reducer"
+import liveReducer, {LiveEventsStore} from "./live/reducer"
 import thunk from "redux-thunk";
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-export interface AppState {
-    counter: CounterState,
-    live: LiveEventsState
+export interface AppStore {
+    favoriteStore: FavoriteStore,
+    liveStore: LiveEventsStore
 }
 
-const rootReducer: Reducer<AppState> = combineReducers<AppState>({
-    counter: counterReducer,
-    live: liveReducer
+const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
+    favoriteStore: favoriteReducer,
+    liveStore: liveReducer
 })
 
 // const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

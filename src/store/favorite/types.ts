@@ -1,0 +1,6 @@
+
+export const ADD_FAVORITE = "ADD_FAVORITE"
+export type ADD_FAVORITE_TYPE = typeof ADD_FAVORITE
+
+export const REMOVE_FAVORITE = "REMOVE_FAVORITE"
+export type REMOVE_FAVORITE_TYPE = typeof REMOVE_FAVORITE

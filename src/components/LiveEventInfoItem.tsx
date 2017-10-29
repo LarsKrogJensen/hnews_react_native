@@ -3,10 +3,12 @@ import {LiveEvent} from "api/typings";
 import {View, ViewStyle} from "react-native";
 import LiveEventScoreItem from "components/LiveEventScoreItem";
 import LiveEventDetailsItem from "components/LiveEventDetailsItem";
+import ActionDelegate from "store/ActionDelegate";
 
 interface Props {
     liveEvent: LiveEvent,
-    viewStyle: ViewStyle
+    viewStyle: ViewStyle,
+    actions: ActionDelegate
 }
 
 export default class LiveEventInfoItem extends React.Component<Props> {
@@ -18,6 +20,7 @@ export default class LiveEventInfoItem extends React.Component<Props> {
                                     sport={liveEvent.event.sport}
                                     liveData={liveEvent.liveData}/>
                 <LiveEventDetailsItem style={{flex: 1}}
+                                      actions={this.props.actions}
                                       liveEvent={liveEvent}/>
             </View>
         )

@@ -1,6 +1,6 @@
 import * as React from "react"
 import {TouchableHighlight, TouchableNativeFeedback, View, ViewStyle} from "react-native";
-import {isIos} from "lib/platform";
+import {isIos} from "lib/device";
 
 interface Props {
     style?: ViewStyle,

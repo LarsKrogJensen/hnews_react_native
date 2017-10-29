@@ -1,7 +1,7 @@
 import * as React from "react"
 import {Event, Outcome} from "api/typings";
 import {Text, TextStyle, TouchableHighlight, View, ViewStyle} from "react-native";
-import {isIos, Orientation} from "lib/platform";
+import {isIos, Orientation} from "lib/device";
 import Touchable from "components/Touchable";
 import autobind from "autobind-decorator";
 

@@ -3,23 +3,27 @@ import {LiveEvent} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import autobind from "autobind-decorator";
+import ActionDelegate from "store/ActionDelegate";
+import Touchable from "components/Touchable";
 
 interface Props {
     style: ViewStyle,
-    liveEvent: LiveEvent
+    liveEvent: LiveEvent,
+    actions: ActionDelegate
 }
 
 export default class LiveEventDetailsItem extends React.Component<Props> {
 
     public render() {
-        const {liveEvent, style} = this.props;
+        const {liveEvent, style, actions} = this.props;
         const viewStyle: ViewStyle = {
             ...style,
             flexDirection: "column"
         }
+        const isFav = actions.isFavorite(liveEvent.event.id)
         return (
             <View style={viewStyle}>
-                <View style={{flexDirection: "row"}}>                                               
+                <View style={{flexDirection: "row"}}>
                     <View style={{flexDirection: "column", flex: 1}}>
                         <Text numberOfLines={1}
                               ellipsizeMode={"tail"}
@@ -29,7 +33,12 @@ export default class LiveEventDetailsItem extends React.Component<Props> {
                               style={participantStyle}>{liveEvent.event.awayName}</Text>
                     </View>
                     <View style={{justifyContent: "center"}}>
-                        <Icon style={{padding: 0}} name="ios-star-outline" size={30} color="#717171" />
+                        <Touchable onPress={() => actions.toggleFavorite(liveEvent.event.id)}>
+                            <Icon style={{padding: 0}}
+                                  name={isFav ? "ios-star" : "ios-star-outline"}
+                                  size={30}
+                                  color={isFav ? "darkorange" : "#717171"} />
+                        </Touchable>
                     </View>
                     <View style={{justifyContent: "center"}}>
                         <Text style={{fontSize: 12, padding: 8, color: "#717171"}}>+{liveEvent.event.liveBoCount}</Text>
