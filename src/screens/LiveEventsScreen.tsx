@@ -1,6 +1,6 @@
 import * as React from "react"
 import {
-    ActivityIndicator, FlatList,
+    ActivityIndicator,
     ListRenderItemInfo,
     RefreshControl,
     SectionList,
@@ -18,7 +18,6 @@ import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
 import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
-import ActionDelegate from "store/ActionDelegate";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>
@@ -26,13 +25,11 @@ interface Props {
     events: LiveEvent[]
     groups: EventGroup[]
     loadData: () => void
-    actions: ActionDelegate,
     favorites: Set<number>
 }
 
 interface State {
-    refreshing: boolean,
-    // orientation: Orientation
+    refreshing: boolean
 }
 
 export default class LiveEventsScreen extends React.Component<Props, State> {
@@ -40,11 +37,16 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
     constructor() {
         super();
         this.state = {
-            refreshing: false // ,
-            // orientation: orientation()
+            refreshing: false
         }
 
         this.orientationDidChange = this.orientationDidChange.bind(this)
+    }
+
+    shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
+        return nextProps.loading !== this.props.loading ||
+            nextProps.favorites.count() !== this.props.favorites.count() ||
+            nextProps.events.length !== this.props.events.length
     }
 
     componentDidMount(): void {
@@ -88,7 +90,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
             })
         }
 
-        console.log("LitScreen render")
+        // console.log("LitScreen render")
         return (
             <View>
                 <SectionList
@@ -96,15 +98,15 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
                     refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                     sections={sections}
                     renderSectionHeader={this.renderSectionHeader}
-                    keyExtractor={this.keyExctractor}
+                    keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
                 />
                 {/*<FlatList*/}
-                    {/*data={events}*/}
-                    {/*keyExtractor={this.keyExctractor}*/}
-                    {/*renderItem={this.renderItem}*/}
-                    {/*extraData={this.props.favorites.count()}*/}
-                    {/*/>*/}
+                {/*data={events}*/}
+                {/*keyExtractor={this.keyExctractor}*/}
+                {/*renderItem={this.renderItem}*/}
+                {/*extraData={this.props.favorites.count()}*/}
+                {/*/>*/}
             </View>
         )
     }
@@ -120,8 +122,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
         let orient = orientation();
         return <LiveEventListItem liveEvent={liveEvent}
                                   navigation={this.props.navigation}
-                                  orientation={orient}
-                                  actions={this.props.actions}/>
+                                  orientation={orient}/>
     }
 
     @autobind
@@ -147,7 +148,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
         )
     }
 
-    private keyExctractor(liveEvent: LiveEvent): string {
+    private keyExtractor(liveEvent: LiveEvent): string {
         return liveEvent.event.id.toString()
     }
 }

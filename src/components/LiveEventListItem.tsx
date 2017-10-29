@@ -12,11 +12,10 @@ import ActionDelegate from "store/ActionDelegate";
 interface Props {
     navigation: NavigationScreenProp<{}, {}>,
     liveEvent: LiveEvent,
-    orientation: Orientation,
-    actions: ActionDelegate
+    orientation: Orientation
 }
 
-export default class ListEventListItem extends React.Component<Props> {
+export default class ListEventListItem extends React.PureComponent<Props> {
 
     public render() {
         const bo = this.props.liveEvent.mainBetOffer;
@@ -29,7 +28,6 @@ export default class ListEventListItem extends React.Component<Props> {
             <Touchable onPress={this.handleItemClick}>
                 <View style={viewStyle}>
                     <LiveEventInfoItem liveEvent={this.props.liveEvent}
-                                       actions={this.props.actions}
                                        viewStyle={{flex: 1, height: 68}}/>
                     <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                         {this.renderOutcomes(bo)}
@@ -41,12 +39,6 @@ export default class ListEventListItem extends React.Component<Props> {
 
     componentDidMount(): void {
         // console.log("compoent did mount" + this.props.liveEvent.event.id)
-    }
-
-    public shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
-        const shouldUpdate = this.props.actions.isFavorite(this.props.liveEvent.event.id) !== nextProps.actions.isFavorite(nextProps.liveEvent.event.id)
-        // console.log("shouldUpdate: " + shouldUpdate)
-        return shouldUpdate
     }
 
     @autobind

@@ -20,18 +20,11 @@ const mapStateToProps = (state: AppStore) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, store: AppStore) => (
     {
-        loadData: () => dispatch(LiveActions.load()),
-        dispatch
+        loadData: () => dispatch(LiveActions.load())
     }
 )
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-    ...ownProps,
-    ...stateProps,
-    ...dispatchProps,
-    actions: new ActionDelegate(dispatchProps.dispatch, stateProps.favorites)
-})
-
-const LiveEventsWithData: ComponentClass<PropsIn> = connect<{}, {}, PropsIn>(mapStateToProps, mapDispatchToProps, mergeProps)(LiveEventsScreen)
+const LiveEventsWithData: ComponentClass<PropsIn> =
+    connect<{}, {}, PropsIn>(mapStateToProps, mapDispatchToProps)(LiveEventsScreen)
 
 export default LiveEventsWithData

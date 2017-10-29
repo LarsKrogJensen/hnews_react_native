@@ -5,22 +5,21 @@ import autobind from "autobind-decorator";
 import ActionDelegate from "store/ActionDelegate";
 import Touchable from "components/Touchable";
 import CrossPlatformIcon from "components/CrossPlatformIcon";
+import FavoriteItem from "components/containers/FavoriteItemContainer";
 
 interface Props {
     style: ViewStyle,
-    liveEvent: LiveEvent,
-    actions: ActionDelegate
+    liveEvent: LiveEvent
 }
 
 export default class LiveEventDetailsItem extends React.PureComponent<Props> {
 
     public render() {
-        const {liveEvent, style, actions} = this.props;
+        const {liveEvent, style} = this.props;
         const viewStyle: ViewStyle = {
             ...style,
             flexDirection: "column"
         }
-        const isFav = actions.isFavorite(liveEvent.event.id)
         return (
             <View style={viewStyle}>
                 <View style={{flexDirection: "row"}}>
@@ -33,15 +32,7 @@ export default class LiveEventDetailsItem extends React.PureComponent<Props> {
                               style={participantStyle}>{liveEvent.event.awayName}</Text>
                     </View>
                     <View style={{justifyContent: "center"}}>
-                        <Touchable
-                            onPress={() => requestAnimationFrame(() => actions.toggleFavorite(liveEvent.event.id))}
-                            style={{borderRadius: 5}}>
-                            <CrossPlatformIcon
-                                name={"star"}
-                                size={30}
-                                color={isFav ? "darkorange" : "#717171"}
-                                outline={!isFav}/>
-                        </Touchable>
+                        <FavoriteItem eventId={liveEvent.event.id}/>
                     </View>
                     <View style={{justifyContent: "center", minWidth: 48}}>
                         <Text style={{

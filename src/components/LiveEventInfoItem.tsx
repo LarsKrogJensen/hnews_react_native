@@ -7,8 +7,7 @@ import ActionDelegate from "store/ActionDelegate";
 
 interface Props {
     liveEvent: LiveEvent,
-    viewStyle: ViewStyle,
-    actions: ActionDelegate
+    viewStyle: ViewStyle
 }
 
 export default class LiveEventInfoItem extends React.PureComponent<Props> {
@@ -20,7 +19,6 @@ export default class LiveEventInfoItem extends React.PureComponent<Props> {
                                     sport={liveEvent.event.sport}
                                     liveData={liveEvent.liveData}/>
                 <LiveEventDetailsItem style={{flex: 1}}
-                                      actions={this.props.actions}
                                       liveEvent={liveEvent}/>
             </View>
         )
