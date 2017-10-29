@@ -10,6 +10,9 @@ import {
     View,
     ViewStyle
 } from "react-native"
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import {Set} from "immutable"
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
@@ -23,7 +26,8 @@ interface Props {
     events: LiveEvent[]
     groups: EventGroup[]
     loadData: () => void
-    actions: ActionDelegate
+    actions: ActionDelegate,
+    favorites: Set<number>
 }
 
 interface State {
@@ -60,7 +64,7 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
     }
 
     public render() {
-        const {loading, events, groups} = this.props;
+        const {loading, events, groups, favorites} = this.props;
 
         if (loading) {
             return <View>
@@ -75,13 +79,15 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
             data: events.filter(liveEvent => liveEvent.event.sport === group.sport)
         })).sort((a, b) => a.sortOrder - b.sortOrder);
 
-        // sections.push({
-        //     title: "Empty group",
-        //     sport: "arne",
-        //     sortOrder: 100,
-        //     data: []
-        // })
-        console.log("ORIENTATION: " + orientation())
+        if (!favorites.isEmpty()) {
+            sections.unshift({
+                title: "Favorites",
+                sport: "arne",
+                sortOrder: 0,
+                data: events.filter(liveEvent => favorites.contains(liveEvent.event.id))
+            })
+        }
+
         return (
             <View>
                 <SectionList
@@ -113,6 +119,18 @@ export default class LiveEventsScreen extends React.PureComponent<Props, State> 
 
     @autobind
     private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {
+        if (info.section.title === "Favorites") {
+            return (
+                <View style={headerStyle}>
+                    <Icon style={{padding: 0}}
+                          name="ios-star"
+                          size={30}
+                          color="darkorange"/>
+                    <Text style={sportTextStyle}>{info.section.title}</Text>
+                    <Text style={countTextStyle}>{info.section.data.length}</Text>
+                </View>
+            )
+        }
         return (
             <View style={headerStyle}>
                 <Text style={liveTextStyle}>Live</Text>
