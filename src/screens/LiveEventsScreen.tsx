@@ -128,6 +128,9 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
     @autobind
     private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {
         if (info.section.title === "Favorites") {
+            if (info.section.data.length === 0) {
+                return null
+            }
             return (
                 <View style={headerStyle}>
                     <Icon style={{padding: 0}}
