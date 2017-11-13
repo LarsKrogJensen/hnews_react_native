@@ -6,17 +6,19 @@ import BetHistoryScreen from "screens/BetHistoryScreen";
 import EventScreen from "screens/EventScreen";
 import LiveEventsScreen from "containers/LiveEventsScreen";
 import {Image, Platform, StatusBar, StyleSheet, View} from "react-native";
-import Icon from 'react-native-vector-icons/Ionicons';
 import {isIos} from "lib/device";
 import SearchScreen from "screens/SearchScreen";
-import absoluteFill = StyleSheet.absoluteFill;
 import CrossPlatformIcon from "components/CrossPlatformIcon";
 import banner from "images/banner";
+import absoluteFill = StyleSheet.absoluteFill;
 
 const defaultNavOptions: NavigationStackScreenOptions = {
     headerTintColor: 'white',
     headerTitleStyle: {color: 'white'},
     headerBackTitleStyle: {color: 'white'},
+    headerStyle: {
+        backgroundColor: "transparent"
+    },
     header: (props) => <ImageHeader {...props} />
 }
 const HomeTab = StackNavigator({

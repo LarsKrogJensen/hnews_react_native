@@ -12,7 +12,7 @@ export default class HomeScreen extends React.Component<Props> {
         const {navigation} = this.props
         return (
             <View>
-                <Text>Home screeEEEEn</Text>
+                <Text>Home screeEn</Text>
                 <Button title="Goto Event" onPress={() => navigation.navigate('Event', { name: 'Home' })}/>
             </View>
         )
