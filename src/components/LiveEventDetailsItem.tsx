@@ -2,9 +2,6 @@ import * as React from "react"
 import {LiveEvent} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
-import ActionDelegate from "store/ActionDelegate";
-import Touchable from "components/Touchable";
-import CrossPlatformIcon from "components/CrossPlatformIcon";
 import FavoriteItem from "components/containers/FavoriteItemContainer";
 
 interface Props {

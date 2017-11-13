@@ -1,5 +1,5 @@
 import * as React from "react"
-import {LiveData, MatchClock, Score, Statistics} from "api/typings";
+import {LiveData, MatchClock, Score, SetStats, Statistics} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
 
@@ -72,9 +72,9 @@ export default class LiveEventScoreItem extends React.PureComponent<Props> {
     private calculateGameSummary(stats: Statistics, hasGames: boolean): GameSummary {
         const summary: GameSummary = {homeSets: 0, awaySets: 0, homeGames: 0, awayGames: 0}
         if (stats && stats.sets) {
-            const sets = stats.sets;
+            const sets: SetStats = stats.sets;
             const numberOfSets = sets.home.length;
-            const firstUnplayedSetIndex = sets.home.indexOf(-1);
+            const firstUnplayedSetIndex: number = sets.home.indexOf(-1);
             let currentSet = (firstUnplayedSetIndex === -1) ? numberOfSets - 1 : firstUnplayedSetIndex;
 
             // in tennis, the current set is the last one with a score, not the first one without

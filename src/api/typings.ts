@@ -5,19 +5,15 @@ export interface Path {
     termKey: string;
 }
 
-export interface Home {
+export interface ShirtColors {
     shirtColor1: string;
     shirtColor2: string;
 }
 
-export interface Away {
-    shirtColor1: string;
-    shirtColor2: string;
-}
 
 export interface TeamColors {
-    home: Home;
-    away: Away;
+    home: ShirtColors;
+    away: ShirtColors;
 }
 
 export interface Stream {
@@ -65,32 +61,27 @@ export interface Score {
     who: string;
 }
 
-export interface Home2 {
+export interface FootballStat {
     yellowCards: number;
     redCards: number;
     corners: number;
 }
 
-export interface Away2 {
-    yellowCards: number;
-    redCards: number;
-    corners: number;
+
+export interface FootballStats {
+    home: FootballStat;
+    away: FootballStat;
 }
 
-export interface Football {
-    home: Home2;
-    away: Away2;
-}
-
-export interface Sets {
+export interface SetStats {
     home: number[];
     away: number[];
     homeServe: boolean;
 }
 
 export interface Statistics {
-    football: Football;
-    sets: Sets;
+    football: FootballStats;
+    sets: SetStats;
 }
 
 export interface LiveStatistic {
@@ -127,7 +118,7 @@ export interface Pba {
 }
 
 export interface Outcome {
-    id: any;
+    id: number;
     label: string;
     englishLabel: string;
     odds: number;
@@ -173,15 +164,6 @@ export interface LiveEvent {
     event: Event;
     liveData: LiveData;
     mainBetOffer: BetOffer;
-}
-
-export interface Group4 {
-    id: number;
-    name: string;
-    englishName: string;
-    sortOrder: string;
-    sport: string;
-    termKey: string;
 }
 
 export interface EventGroup {
