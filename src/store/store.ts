@@ -1,13 +1,14 @@
 import {applyMiddleware, combineReducers, createStore, Reducer} from "redux"
 import favoriteReducer, {FavoriteStore} from "./favorite/reducer"
 import liveReducer, {LiveEventsStore} from "./live/reducer"
-import entityReducer from "./entites/reducer";
+import entityReducer, {EntityStore} from "./entity/reducer";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 export interface AppStore {
     favoriteStore: FavoriteStore,
-    liveStore: LiveEventsStore
+    liveStore: LiveEventsStore,
+    entityStore: EntityStore
 }
 
 const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({

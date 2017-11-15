@@ -1,17 +1,21 @@
 import * as React from "react"
-import {Event, Outcome} from "api/typings";
-import {Text, TextStyle, TouchableHighlight, View, ViewStyle} from "react-native";
-import {isIos, Orientation} from "lib/device";
+import {Text, TextStyle, View, ViewStyle} from "react-native";
+import {Orientation} from "lib/device";
 import Touchable from "components/Touchable";
 import autobind from "autobind-decorator";
+import {OutcomeEntity} from "model/OutcomeEntity";
+import {EventEntity} from "model/EventEntity";
+import {AppStore} from "store/store";
+import {ComponentClass} from "react";
+import {connect} from "react-redux";
 
 interface Props {
-    outcome: Outcome,
-    event: Event,
+    outcome: OutcomeEntity,
+    event: EventEntity,
     orientation: Orientation
 }
 
-export default class OutcomeItem extends React.PureComponent<Props> {
+class OutcomeItem extends React.PureComponent<Props> {
 
     public render() {
         const {outcome, event, orientation} = this.props;
@@ -33,7 +37,7 @@ export default class OutcomeItem extends React.PureComponent<Props> {
     }
 
     @autobind
-    private formatOutcomeLabel(outcome: Outcome, event: Event): string {
+    private formatOutcomeLabel(outcome: OutcomeEntity, event: EventEntity): string {
         if (outcome.type === "OT_CROSS")
             return "Draw"
         if (outcome.type === "OT_ONE")
@@ -87,3 +91,22 @@ const oddsStyle: TextStyle = {
     fontSize: 12,
     fontWeight: "bold"
 }
+
+
+interface PropsIn {
+    outcomeId: number
+    eventId: number
+    orientation: Orientation
+}
+
+const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
+    outcome: state.entityStore.outcomes.get(inputProps.outcomeId),
+    event: state.entityStore.events.get(inputProps.eventId),
+    orientation: inputProps.orientation
+})
+
+
+const OutcomeItemWithData: ComponentClass<PropsIn> =
+    connect<Props, {}, PropsIn>(mapStateToProps)(OutcomeItem)
+
+export default OutcomeItemWithData

@@ -7,7 +7,6 @@ import {NavigationScreenProp} from "react-navigation";
 import Touchable from "components/Touchable";
 import {View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
-import ActionDelegate from "store/ActionDelegate";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>,
@@ -48,8 +47,8 @@ export default class ListEventListItem extends React.PureComponent<Props> {
             <OutcomeItem
                 key={outcome.id}
                 orientation={this.props.orientation}
-                outcome={outcome}
-                event={this.props.liveEvent.event}/>
+                outcomeId={outcome.id}
+                eventId={this.props.liveEvent.event.id}/>
         ))
     }
 
