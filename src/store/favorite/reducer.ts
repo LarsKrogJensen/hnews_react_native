@@ -6,7 +6,7 @@ export interface FavoriteStore {
     favorites: Set<number>
 }
 const initialState: FavoriteStore = {
-    favorites: Set()
+    favorites: Set<number>()
 }
 
 export default function favoriteReducer(state: FavoriteStore = initialState, action: FavoriteAction): FavoriteStore {
