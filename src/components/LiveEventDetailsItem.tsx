@@ -3,16 +3,17 @@ import {LiveEvent} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
 import FavoriteItem from "components/containers/FavoriteItemContainer";
+import {EventEntity} from "model/EventEntity";
 
 interface Props {
     style: ViewStyle,
-    liveEvent: LiveEvent
+    event: EventEntity
 }
 
 export default class LiveEventDetailsItem extends React.PureComponent<Props> {
 
     public render() {
-        const {liveEvent, style} = this.props;
+        const {event, style} = this.props;
         const viewStyle: ViewStyle = {
             ...style,
             flexDirection: "column"
@@ -23,13 +24,13 @@ export default class LiveEventDetailsItem extends React.PureComponent<Props> {
                     <View style={{flexDirection: "column", flex: 1}}>
                         <Text numberOfLines={1}
                               ellipsizeMode={"tail"}
-                              style={participantStyle}>{liveEvent.event.homeName}</Text>
+                              style={participantStyle}>{event.homeName}</Text>
                         <Text numberOfLines={1}
                               ellipsizeMode={"tail"}
-                              style={participantStyle}>{liveEvent.event.awayName}</Text>
+                              style={participantStyle}>{event.awayName}</Text>
                     </View>
                     <View style={{justifyContent: "center"}}>
-                        <FavoriteItem eventId={liveEvent.event.id}/>
+                        <FavoriteItem eventId={event.id}/>
                     </View>
                     <View style={{justifyContent: "center", minWidth: 48}}>
                         <Text style={{
@@ -37,18 +38,18 @@ export default class LiveEventDetailsItem extends React.PureComponent<Props> {
                             padding: 8,
                             color: "#717171",
                             textAlign: "right"
-                        }}>+{liveEvent.event.liveBoCount}</Text>
+                        }}>+{event.liveBoCount}</Text>
                     </View>
                 </View>
-                <View style={pathStyle}>{this.renderPath(liveEvent)}</View>
+                <View style={pathStyle}>{this.renderPath(event)}</View>
             </View>
         )
     }
 
     @autobind
-    private renderPath(liveEvent: LiveEvent): JSX.Element[] {
+    private renderPath(event: EventEntity): JSX.Element[] {
         const pathArray: JSX.Element[] = []
-        liveEvent.event.path.forEach((path, index) => {
+        event.path.forEach((path, index) => {
             if (index > 0) {
                 pathArray.push(<Text key={index + "sep"} style={pathSeparatorStyle}>/</Text>)
             }

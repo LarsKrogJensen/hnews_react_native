@@ -4,7 +4,7 @@ import HomeScreen from "screens/HomeScreen"
 import SportScreen from "screens/SportScreen";
 import BetHistoryScreen from "screens/BetHistoryScreen";
 import EventScreen from "screens/EventScreen";
-import LiveEventsScreen from "containers/LiveEventsScreen";
+import LiveEventsScreen from "screens/LiveEventsScreen";
 import {Image, Platform, StatusBar, StyleSheet, View} from "react-native";
 import {isIos} from "lib/device";
 import SearchScreen from "screens/SearchScreen";
@@ -164,10 +164,10 @@ const App = TabNavigator({
         lazy: true,
         tabBarOptions: {
             tabStyle: {
-                backgroundColor: Platform.select({android: () => "#00ADC9", ios: () => undefined})()
+                backgroundColor: Platform.select({android: () => "#00ADC9"})()
             },
             style: {
-                backgroundColor: Platform.select({android: () => "black", ios: () => undefined})()
+                backgroundColor: Platform.select({android: () => "black"})()
             },
             showIcon: true,
             showLabel: isIos(),

@@ -1,36 +1,36 @@
 import * as React from "react"
-import {BetOffer, LiveEvent} from "api/typings";
-import OutcomeItem from "components/OutcomeItem";
+import {ComponentClass} from "react"
+import BetOfferItem from "components/BetOfferItem";
 import LiveEventInfoItem from "components/LiveEventInfoItem";
+import Touchable from "components/Touchable";
 import {Orientation} from "lib/device";
 import {NavigationScreenProp} from "react-navigation";
-import Touchable from "components/Touchable";
 import {View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
+import {EventEntity} from "model/EventEntity";
+import {AppStore} from "store/store";
+import {connect} from "react-redux";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>,
-    liveEvent: LiveEvent,
+    event: EventEntity,
     orientation: Orientation
 }
 
-export default class ListEventListItem extends React.PureComponent<Props> {
+class ListEventListItem extends React.PureComponent<Props> {
 
     public render() {
-        const bo = this.props.liveEvent.mainBetOffer;
         const orient = this.props.orientation
-
+        const event = this.props.event
         const viewStyle = orient === Orientation.Portrait ? portraitStyle : landscapeStyle;
 
         // console.log("Render list item: " + this.props.liveEvent.event.id)
         return (
             <Touchable onPress={this.handleItemClick}>
                 <View style={viewStyle}>
-                    <LiveEventInfoItem liveEvent={this.props.liveEvent}
+                    <LiveEventInfoItem eventId={event.id}
                                        viewStyle={{flex: 1, height: 68}}/>
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
-                        {this.renderOutcomes(bo)}
-                    </View>
+                    <BetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>
                 </View>
             </Touchable>
         );
@@ -40,21 +40,11 @@ export default class ListEventListItem extends React.PureComponent<Props> {
         // console.log("compoent did mount" + this.props.liveEvent.event.id)
     }
 
-    @autobind
-    private renderOutcomes(bo: BetOffer) {
-        if (!bo || !bo.outcomes) return undefined
-        return bo.outcomes.map(outcome => (
-            <OutcomeItem
-                key={outcome.id}
-                orientation={this.props.orientation}
-                outcomeId={outcome.id}
-                eventId={this.props.liveEvent.event.id}/>
-        ))
-    }
+
 
     @autobind
     private handleItemClick() {
-        this.props.navigation.navigate('Event', {event: this.props.liveEvent})
+        this.props.navigation.navigate('Event', {event: this.props.event})
     }
 }
 
@@ -73,3 +63,21 @@ const landscapeStyle: ViewStyle = {
     ...itemStyle,
     flexDirection: "row"
 }
+
+interface PropsIn {
+    eventId: number
+    orientation: Orientation
+    navigation: NavigationScreenProp<{}, {}>,
+}
+
+const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
+    event: state.entityStore.events.get(inputProps.eventId),
+    orientation: inputProps.orientation,
+    navigation: inputProps.navigation
+})
+
+
+const WithData: ComponentClass<PropsIn> =
+    connect<Props, {}, PropsIn>(mapStateToProps)(ListEventListItem)
+
+export default WithData

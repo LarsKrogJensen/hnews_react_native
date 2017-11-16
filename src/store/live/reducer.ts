@@ -1,9 +1,10 @@
 import {LIVE_LOAD_FAILED, LIVE_LOAD_SUCCESS, LIVE_START_LOADING} from "./types"
 import {LiveLoadAction} from "./actions"
-import {EventGroup, LiveEvent} from "api/typings";
+import {EventGroup, LiveData} from "api/typings";
+import {Map} from "immutable"
 
 export interface LiveEventsStore {
-    liveEvents: LiveEvent[]
+    liveEvents: number[]
     groups: EventGroup[]
     loading: boolean
 }
@@ -22,10 +23,11 @@ export default function liveReducer(state: LiveEventsStore = initialState, actio
                 loading: true
             }
         case LIVE_LOAD_SUCCESS:
+
             return {
                 ...state,
                 loading: false,
-                liveEvents: action.data.liveEvents,
+                liveEvents: action.data.liveEvents.map(liveEvent => liveEvent.event.id),
                 groups: action.data.group.groups
             }
         case LIVE_LOAD_FAILED:

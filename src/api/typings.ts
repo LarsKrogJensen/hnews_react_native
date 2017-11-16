@@ -163,7 +163,7 @@ export interface BetOffer {
 export interface LiveEvent {
     event: Event;
     liveData: LiveData;
-    mainBetOffer: BetOffer;
+    mainBetOffer?: BetOffer;
 }
 
 export interface EventGroup {

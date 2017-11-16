@@ -23,6 +23,7 @@
     "sourceMap": true,
     "rootDir": "src",
     "noImplicitAny": false,
+    "strictNullChecks": true,
     "baseUrl": "./src"
   },
   "exclude": [

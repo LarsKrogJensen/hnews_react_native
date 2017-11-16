@@ -1,4 +1,5 @@
 import * as React from "react"
+import {ComponentClass} from "react"
 import {
     ActivityIndicator,
     ListRenderItemInfo,
@@ -11,18 +12,22 @@ import {
     ViewStyle
 } from "react-native"
 import Icon from 'react-native-vector-icons/Ionicons';
-
 import {Set} from "immutable"
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
 import LiveEventListItem from "components/LiveEventListItem";
 import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
+import {AppStore} from "store/store";
+import {Dispatch} from "redux";
+import {connect} from "react-redux";
+import * as LiveActions from "store/live/actions"
+import {EventEntity} from "model/EventEntity";
 
 interface Props {
     navigation: NavigationScreenProp<{}, {}>
     loading: boolean,
-    events: LiveEvent[]
+    events: EventEntity[]
     groups: EventGroup[]
     loadData: () => void
     favorites: Set<number>
@@ -32,7 +37,7 @@ interface State {
     refreshing: boolean
 }
 
-export default class LiveEventsScreen extends React.Component<Props, State> {
+class LiveEventsScreen extends React.Component<Props, State> {
 
     constructor() {
         super();
@@ -74,11 +79,11 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
             </View>
         }
 
-        const sections: SectionListData<LiveEvent>[] = groups.map(group => ({
+        const sections: SectionListData<EventEntity>[] = groups.map(group => ({
             title: group.englishName,
             sport: group.sport,
             sortOrder: group.sortOrder && parseInt(group.sortOrder, 10) || 100,
-            data: events.filter(liveEvent => liveEvent.event.sport === group.sport)
+            data: events.filter(event => event.sport === group.sport)
         })).sort((a, b) => a.sortOrder - b.sortOrder);
 
         if (!favorites.isEmpty()) {
@@ -86,7 +91,7 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
                 title: "Favorites",
                 sport: "arne",
                 sortOrder: 0,
-                data: events.filter(liveEvent => favorites.contains(liveEvent.event.id))
+                data: events.filter(event => favorites.contains(event.id))
             })
         }
 
@@ -117,10 +122,10 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
     }
 
     @autobind
-    private renderItem(info: ListRenderItemInfo<LiveEvent>) {
-        const liveEvent: LiveEvent = info.item;
+    private renderItem(info: ListRenderItemInfo<EventEntity>) {
+        const event: EventEntity = info.item;
         let orient = orientation();
-        return <LiveEventListItem liveEvent={liveEvent}
+        return <LiveEventListItem eventId={event.id}
                                   navigation={this.props.navigation}
                                   orientation={orient}/>
     }
@@ -151,8 +156,8 @@ export default class LiveEventsScreen extends React.Component<Props, State> {
         )
     }
 
-    private keyExtractor(liveEvent: LiveEvent): string {
-        return liveEvent.event.id.toString()
+    private keyExtractor(event: EventEntity): string {
+        return event.id.toString()
     }
 }
 
@@ -184,3 +189,43 @@ const countTextStyle: TextStyle = {
     fontWeight: "bold",
     marginRight: 8
 }
+
+
+interface PropsIn {
+    navigation: NavigationScreenProp<{}, {}>
+}
+
+interface DispatchProps {
+    loadData: () => void
+}
+
+function mapEvents(state: AppStore): EventEntity[] {
+    const events: EventEntity[] = []
+    for (let eventId of state.liveStore.liveEvents) {
+        let eventEntity = state.entityStore.events.get(eventId);
+        if (eventEntity) {
+            events.push(eventEntity)
+        }
+    }
+
+    return events
+}
+
+const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
+    loading: state.liveStore.loading,
+    events: mapEvents(state),
+    groups: state.liveStore.groups,
+    favorites: state.favoriteStore.favorites,
+    navigation: inputProps.navigation
+})
+
+const mapDispatchToProps = (dispatch: Dispatch<any>, store: AppStore) => (
+    {
+        loadData: () => dispatch(LiveActions.load())
+    }
+)
+
+const LiveEventsWithData: ComponentClass<PropsIn> =
+    connect<{}, {}, PropsIn>(mapStateToProps, mapDispatchToProps)(LiveEventsScreen)
+
+export default LiveEventsWithData

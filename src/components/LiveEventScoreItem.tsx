@@ -19,15 +19,17 @@ interface GameSummary {
 export default class LiveEventScoreItem extends React.PureComponent<Props> {
 
     public render() {
-        const {statistics: stats, score, matchClock} = this.props.liveData
-        const sport = this.props.sport
+        if (this.props.liveData) {
+            const {statistics: stats, score, matchClock} = this.props.liveData
+            const sport = this.props.sport
 
-        if (stats && stats.football && score) {
-            return this.renderFootball(score, matchClock)
-        } else if (stats && stats.sets && score) {
-            return this.renderSetBased(stats, score, sport === "TENNIS")
-        } else if (score) {
-            return this.renderFootball(score, matchClock)
+            if (stats && stats.football && score) {
+                return this.renderFootball(score, matchClock)
+            } else if (stats && stats.sets && score) {
+                return this.renderSetBased(stats, score, sport === "TENNIS")
+            } else if (score) {
+                return this.renderFootball(score, matchClock)
+            }
         }
 
         return <View style={this.props.style}/>
