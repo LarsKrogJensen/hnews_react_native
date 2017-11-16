@@ -44,8 +44,6 @@ class LiveEventsScreen extends React.Component<Props, State> {
         this.state = {
             refreshing: false
         }
-
-        this.orientationDidChange = this.orientationDidChange.bind(this)
     }
 
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
@@ -56,19 +54,8 @@ class LiveEventsScreen extends React.Component<Props, State> {
 
     componentDidMount(): void {
         this.props.loadData()
-        // Orientation.addOrientationListener(this._orientationDidChange)
-        // Dimensions.addEventListener("change", this.orientationDidChange)
     }
 
-    componentWillUnmount() {
-        // Orientation.removeOrientationListener(this._orientationDidChange)
-    }
-
-    @autobind
-    orientationDidChange() {
-        console.log("orientation change")
-        // this.setState({orientation: orientation()})
-    }
 
     public render() {
         const {loading, events, groups, favorites} = this.props;

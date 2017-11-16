@@ -44,6 +44,41 @@ export interface Event {
     teamColors: TeamColors;
     streamed?: boolean;
     streams: Stream[];
+    participants?: Participant[];
+    distance?: string;
+    eventNumber?: number;
+    editorial?: string;
+    originalStartTime?: string;
+    raceType?: string;
+    trackType?: string;
+    raceClass?: string;
+    going?: string;
+}
+
+
+export interface Participant {
+    participanyId: number;
+    name: string;
+    scratched?: boolean;
+    nonRunner?: boolean;
+    startNumber?: 9;
+    extended?: ExtendedInfo
+}
+
+export interface ExtendedInfo {
+    startNumber: number,
+    driverName: string,
+    age: string,
+    weight: string
+    editorial: string,
+    hasIcon: boolean,
+    trainerName: string
+    formFigures: FormFigures[]
+}
+
+export interface FormFigures {
+    type: string,
+    figures: string
 }
 
 export interface MatchClock {
@@ -185,4 +220,25 @@ export interface RootGroup {
 export interface LiveEvents {
     liveEvents: LiveEvent[];
     group: RootGroup;
+}
+
+export interface LandingEvent {
+    event: Event,
+    betOffers?: BetOffer[],
+    liveData?: LiveData
+}
+
+export interface Range {
+    start: number;
+    size: number;
+    total: number;
+}
+
+export interface LandingPageSection {
+    name: string;
+    events?: LandingEvent[];
+    range?: Range
+}
+export interface LandingPage {
+    result: LandingPageSection[]
 }

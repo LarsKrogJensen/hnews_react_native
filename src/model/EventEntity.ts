@@ -1,4 +1,4 @@
-import {Path, Stream, TeamColors} from "api/typings";
+import {Participant, Path, Stream, TeamColors} from "api/typings";
 
 export interface EventEntity {
     readonly id: number;
@@ -25,4 +25,13 @@ export interface EventEntity {
     readonly teamColors: TeamColors;
     readonly streamed?: boolean;
     readonly streams: Stream[];
+    participants?: Participant[];
+    distance?: string;
+    eventNumber?: number;
+    editorial?: string;
+    originalStartTime?: string;
+    raceType?: string;
+    trackType?: string;
+    raceClass?: string;
+    going?: string;
 }

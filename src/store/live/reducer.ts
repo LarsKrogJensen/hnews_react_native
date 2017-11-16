@@ -1,7 +1,6 @@
 import {LIVE_LOAD_FAILED, LIVE_LOAD_SUCCESS, LIVE_START_LOADING} from "./types"
 import {LiveLoadAction} from "./actions"
-import {EventGroup, LiveData} from "api/typings";
-import {Map} from "immutable"
+import {EventGroup} from "api/typings";
 
 export interface LiveEventsStore {
     liveEvents: number[]
