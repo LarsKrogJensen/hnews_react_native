@@ -45,6 +45,21 @@ interface PropsIn {
     navigation: NavigationScreenProp<{}, {}>
 }
 
+interface StateProps {
+    navigation: NavigationScreenProp<{}, {}>
+    liveRightNow: number[]
+    popular: number[]
+    highlights: number[]
+    shocker: number[]
+    nextOff: number[]
+    startingSoon: number[]
+    loading: boolean
+}
+
+interface DispatchProps {
+    loadData: () => any
+}
+
 const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
     loading: state.landingStore.loading,
     liveRightNow: state.landingStore.liveRightNow,
@@ -56,13 +71,13 @@ const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
     navigation: inputProps.navigation
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, store: AppStore) => (
+const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: Props): DispatchProps => (
     {
         loadData: () => dispatch(load())
     }
 )
 
 const LiveEventsWithData: ComponentClass<PropsIn> =
-    connect<{}, {}, PropsIn>(mapStateToProps, mapDispatchToProps)(HomeScreen)
+    connect<StateProps, DispatchProps, PropsIn>(mapStateToProps, mapDispatchToProps)(HomeScreen)
 
 export default LiveEventsWithData

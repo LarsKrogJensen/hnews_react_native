@@ -186,6 +186,14 @@ interface DispatchProps {
     loadData: () => void
 }
 
+interface StateProps {
+    navigation: NavigationScreenProp<{}, {}>
+    loading: boolean,
+    events: EventEntity[]
+    groups: EventGroup[]
+    favorites: Set<number>
+}
+
 function mapEvents(state: AppStore): EventEntity[] {
     const events: EventEntity[] = []
     for (let eventId of state.liveStore.liveEvents) {
@@ -198,7 +206,7 @@ function mapEvents(state: AppStore): EventEntity[] {
     return events
 }
 
-const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
+const mapStateToProps = (state: AppStore, inputProps: PropsIn): StateProps => ({
     loading: state.liveStore.loading,
     events: mapEvents(state),
     groups: state.liveStore.groups,
@@ -206,13 +214,13 @@ const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
     navigation: inputProps.navigation
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, store: AppStore) => (
+const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: PropsIn): DispatchProps => (
     {
-        loadData: () => dispatch(LiveActions.load())
+        loadData: (): any => dispatch(LiveActions.load())
     }
 )
 
 const LiveEventsWithData: ComponentClass<PropsIn> =
-    connect<{}, {}, PropsIn>(mapStateToProps, mapDispatchToProps)(LiveEventsScreen)
+    connect<StateProps, DispatchProps, PropsIn>(mapStateToProps, mapDispatchToProps)(LiveEventsScreen)
 
 export default LiveEventsWithData

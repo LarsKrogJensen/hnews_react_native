@@ -32,11 +32,12 @@ export default function entityReducer(state: EntityStore = initialState, action:
             }
         case LANDING_LOAD_SUCCESS:
             let landingEvents: LandingEvent[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
+            let betoffers: BetOffer[] = _.flatMap(landingEvents.map(e => e.betOffers).filter(bo => bo));
 
             return {
                 events: mergeLandingEvents(state.events, landingEvents),
-                betoffers: state.betoffers,  // mergeBetOffers(state.betoffers, liveEvents.map(e => e.mainBetOffer)),
-                outcomes: state.outcomes // mergeOutcomes(state.outcomes, flatMapOutcomes(liveEvents.map(e => e.mainBetOffer)))
+                betoffers: mergeBetOffers(state.betoffers, betoffers),
+                outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers.map(bo => bo.outcomes)))
             }
         default:
             return state
