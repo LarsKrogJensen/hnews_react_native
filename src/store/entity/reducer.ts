@@ -1,10 +1,13 @@
 import {LIVE_LOAD_SUCCESS} from "store/live/types"
 import {LiveLoadAction} from "store/live/actions"
-import {BetOffer, Event, LiveEvent, Outcome} from "api/typings";
+import {BetOffer, LandingEvent, LiveEvent, Outcome} from "api/typings";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {BetOfferEntity} from "model/BetOfferEntity";
 import {Map} from "immutable"
+import {LANDING_LOAD_SUCCESS} from "store/landing/types";
+import {LandingLoadAction} from "store/landing/actions";
+import * as _ from "lodash"
 
 export interface EntityStore {
     events: Map<number, EventEntity>
@@ -18,24 +21,47 @@ const initialState: EntityStore = {
     outcomes: Map<number, OutcomeEntity>()
 }
 
-export default function entityReducer(state: EntityStore = initialState, action: LiveLoadAction): EntityStore {
+export default function entityReducer(state: EntityStore = initialState, action: LiveLoadAction | LandingLoadAction): EntityStore {
     switch (action.type) {
         case LIVE_LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;
             return {
-                events: mergeEvents(state.events, liveEvents),
+                events: mergeLiveEvents(state.events, liveEvents),
                 betoffers: mergeBetOffers(state.betoffers, liveEvents.map(e => e.mainBetOffer)),
                 outcomes: mergeOutcomes(state.outcomes, flatMapOutcomes(liveEvents.map(e => e.mainBetOffer)))
+            }
+        case LANDING_LOAD_SUCCESS:
+            let landingEvents: LandingEvent[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
+
+            return {
+                events: mergeLandingEvents(state.events, landingEvents),
+                betoffers: state.betoffers,  // mergeBetOffers(state.betoffers, liveEvents.map(e => e.mainBetOffer)),
+                outcomes: state.outcomes // mergeOutcomes(state.outcomes, flatMapOutcomes(liveEvents.map(e => e.mainBetOffer)))
             }
         default:
             return state
     }
 }
 
-function mergeEvents(state: Map<number, EventEntity>, events: LiveEvent[]): Map<number, EventEntity> {
+function mergeLiveEvents(state: Map<number, EventEntity>, events: LiveEvent[]): Map<number, EventEntity> {
     for (let liveEvent of events) {
         // TODO: should merge in changes
-        state = state.set(liveEvent.event.id, {...liveEvent.event, mainBetOfferId: liveEvent.mainBetOffer && liveEvent.mainBetOffer.id})
+        state = state.set(liveEvent.event.id, {
+            ...liveEvent.event,
+            mainBetOfferId: liveEvent.mainBetOffer && liveEvent.mainBetOffer.id
+        })
+    }
+
+    return state
+}
+
+function mergeLandingEvents(state: Map<number, EventEntity>, events: LandingEvent[]): Map<number, EventEntity> {
+    for (let landingEvent of events) {
+        // TODO: should merge in changes
+        state = state.set(landingEvent.event.id, {
+            ...landingEvent.event,
+            mainBetOfferId: landingEvent.betOffers && landingEvent.betOffers[0].id
+        })
     }
 
     return state

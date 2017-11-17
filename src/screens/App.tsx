@@ -103,6 +103,17 @@ const BetHistoryTab = StackNavigator({
         screen: BetHistoryScreen,
         path: '/n',
         navigationOptions: {
+            ...defaultNavOptions,
+            title: "Coupon"
+        }
+    }
+});
+
+const CouponTab = StackNavigator({
+    Bets: {
+        screen: BetHistoryScreen,
+        path: '/n',
+        navigationOptions: {
             headerMode: "none"
         }
     },
@@ -155,6 +166,14 @@ const App = TabNavigator({
                 tabBarLabel: "Bets",
                 tabBarIcon: iconResolver("home")
             }
+        },
+        Coupon: {
+            screen: CouponTab,
+            path: "/coupon",
+            navigationOptions: {
+                tabBarLabel: "Coupon",
+                tabBarIcon: iconResolver("home")
+            }
         }
     },
     {
@@ -164,10 +183,10 @@ const App = TabNavigator({
         lazy: true,
         tabBarOptions: {
             tabStyle: {
-                backgroundColor: Platform.select({android: () => "#00ADC9"})()
+                backgroundColor: Platform.select({android: () => "#00ADC9", ios: () => ""})()
             },
             style: {
-                backgroundColor: Platform.select({android: () => "black"})()
+                backgroundColor: Platform.select({android: () => "black", ios: () => ""})()
             },
             showIcon: true,
             showLabel: isIos(),

@@ -21,7 +21,7 @@ export default class CrossPlatformIcon extends React.PureComponent<Props> {
         const {name, size, color, outline} = this.props
         const ios = isIos()
         let iconName = !ios ? `md-${name}` : `ios-${name}`;
-        if (ios && outline) {
+        if (ios && !outline) {
             iconName = `${iconName}-outline`;
         }
         return <Icon name={iconName} size={size} color={color} ref={component => this._root = component}/>;
