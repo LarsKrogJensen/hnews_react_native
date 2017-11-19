@@ -8,9 +8,17 @@ import {connect} from "react-redux";
 import {load} from "store/landing/actions";
 import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/containers/AppStateRefresh";
+import CrossPlatformIcon from "components/CrossPlatformIcon";
 
 type ComponentProps = StateProps & DispatchProps
+
 class HomeScreen extends React.Component<ComponentProps> {
+    // static navigationOptions = {
+    //     drawerLabel: 'Home',
+    //     drawerIcon: ({tintColor}) => (
+    //         <CrossPlatformIcon name="home" size={30} color={tintColor} outline={false}/>
+    //     )
+    // };
 
     componentDidMount(): void {
         this.props.loadData()
