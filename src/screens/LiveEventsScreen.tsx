@@ -25,6 +25,22 @@ import * as LiveActions from "store/live/actions"
 import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/containers/AppStateRefresh";
 
+interface ExternalProps {
+    navigation: NavigationScreenProp<{}, {}>
+}
+
+interface DispatchProps {
+    loadData: () => void
+}
+
+interface StateProps {
+    navigation: NavigationScreenProp<{}, {}>
+    loading: boolean,
+    events: EventEntity[]
+    groups: EventGroup[]
+    favorites: Set<number>
+}
+
 type ComponentProps = StateProps & DispatchProps
 
 interface State {
@@ -165,21 +181,9 @@ const countTextStyle: TextStyle = {
 }
 
 
-interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>
-}
+// Connect compoentn to store and appstate
 
-interface DispatchProps {
-    loadData: () => void
-}
 
-interface StateProps {
-    navigation: NavigationScreenProp<{}, {}>
-    loading: boolean,
-    events: EventEntity[]
-    groups: EventGroup[]
-    favorites: Set<number>
-}
 
 function mapEvents(state: AppStore): EventEntity[] {
     const events: EventEntity[] = []
