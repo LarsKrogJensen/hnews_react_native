@@ -6,20 +6,11 @@ import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {load} from "store/landing/actions";
+import {EventCollection} from "store/landing/reducer";
+import connectAppState from "components/containers/AppStateRefresh";
 
-interface Props {
-    navigation: NavigationScreenProp<{}, {}>
-    liveRightNow: number[]
-    popular: number[]
-    highlights: number[]
-    shocker: number[]
-    nextOff: number[]
-    startingSoon: number[]
-    loading: boolean,
-    loadData: () => void
-}
-
-class HomeScreen extends React.Component<Props> {
+type ComponentProps = StateProps & DispatchProps
+class HomeScreen extends React.Component<ComponentProps> {
 
     componentDidMount(): void {
         this.props.loadData()
@@ -41,18 +32,18 @@ class HomeScreen extends React.Component<Props> {
     }
 }
 
-interface PropsIn {
+interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
 }
 
 interface StateProps {
     navigation: NavigationScreenProp<{}, {}>
-    liveRightNow: number[]
-    popular: number[]
-    highlights: number[]
-    shocker: number[]
-    nextOff: number[]
-    startingSoon: number[]
+    liveRightNow: EventCollection
+    popular: EventCollection
+    highlights: EventCollection
+    shocker: EventCollection
+    nextOff: EventCollection
+    startingSoon: EventCollection
     loading: boolean
 }
 
@@ -60,7 +51,7 @@ interface DispatchProps {
     loadData: () => any
 }
 
-const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps) => ({
     loading: state.landingStore.loading,
     liveRightNow: state.landingStore.liveRightNow,
     popular: state.landingStore.popular,
@@ -71,13 +62,17 @@ const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
     navigation: inputProps.navigation
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: Props): DispatchProps => (
+const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
         loadData: () => dispatch(load())
     }
 )
 
-const LiveEventsWithData: ComponentClass<PropsIn> =
-    connect<StateProps, DispatchProps, PropsIn>(mapStateToProps, mapDispatchToProps)(HomeScreen)
+const WithAppStateRefresh: ComponentClass<ComponentProps> =
+    connectAppState((props: ComponentProps) => props.loadData())(HomeScreen)
 
-export default LiveEventsWithData
+const WithData: ComponentClass<ExternalProps> =
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
+
+
+export default WithData

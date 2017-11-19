@@ -1,25 +1,31 @@
 import {LANDING_LOAD_FAILED, LANDING_LOAD_SUCCESS, LANDING_START_LOADING} from "./types"
 import {LandingLoadAction} from "./actions"
 import {LandingPageSection} from "api/typings";
+import {Range} from "api/typings";
+
+export interface EventCollection {
+    events: number[]
+    range: Range
+}
 
 export interface LandingStore {
-    liveRightNow: number[]
-    popular: number[]
-    highlights: number[]
-    shocker: number[]
-    nextOff: number[]
-    startingSoon: number[]
+    liveRightNow: EventCollection
+    popular: EventCollection
+    highlights: EventCollection
+    shocker: EventCollection
+    nextOff: EventCollection
+    startingSoon: EventCollection
     loading: boolean
 }
 
 const initialState: LandingStore = {
     loading: false,
-    liveRightNow: [],
-    popular: [],
-    highlights: [],
-    shocker: [],
-    nextOff: [],
-    startingSoon: []
+    liveRightNow: {events: [], range: {}},
+    popular: {events: [], range: {}},
+    highlights: {events: [], range: {}},
+    shocker: {events: [], range: {}},
+    nextOff: {events: [], range: {}},
+    startingSoon: {events: [], range: {}}
 }
 
 export default function landingReducer(state: LandingStore = initialState, action: LandingLoadAction): LandingStore {
@@ -50,12 +56,15 @@ export default function landingReducer(state: LandingStore = initialState, actio
     }
 }
 
-function mapEvents(sectionName: string, sections: LandingPageSection[]): number[] {
+function mapEvents(sectionName: string, sections: LandingPageSection[]): EventCollection {
     let section = sections.find(value => value.name === sectionName);
     if (section && section.events) {
-        return section.events.map(value => value.event.id)
+        return {
+            events: section.events.map(value => value.event.id),
+            range: section.range || {}
+        }
     }
 
-    return []
+    return { events: [], range: {}}
 
 }

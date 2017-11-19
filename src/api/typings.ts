@@ -229,9 +229,9 @@ export interface LandingEvent {
 }
 
 export interface Range {
-    start: number;
-    size: number;
-    total: number;
+    start?: number;
+    size?: number;
+    total?: number;
 }
 
 export interface LandingPageSection {

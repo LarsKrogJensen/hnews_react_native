@@ -8,6 +8,7 @@ import {Map} from "immutable"
 import {LANDING_LOAD_SUCCESS} from "store/landing/types";
 import {LandingLoadAction} from "store/landing/actions";
 import * as _ from "lodash"
+import {Omit} from "react-redux";
 
 export interface EntityStore {
     events: Map<number, EventEntity>
@@ -76,6 +77,9 @@ function mergeBetOffers(state: Map<number, BetOfferEntity>, betoffers: (BetOffer
 
         const {outcomes, criterion, oddsStats, betOfferType, pba, ...rest} = bo
         let outcomesIds = outcomes && outcomes.map(oc => oc.id) || [];
+
+        
+        // const boss: Omit<BetOffer, {outcomes: any, criterion: any, oddsStats: any, betOfferType: any, pba: any}> = bo
 
         // TODO: should merge in changes
         state = state.set(bo.id, {...rest, outcomes: outcomesIds})

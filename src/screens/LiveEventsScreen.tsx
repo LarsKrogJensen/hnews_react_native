@@ -23,21 +23,15 @@ import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import * as LiveActions from "store/live/actions"
 import {EventEntity} from "model/EventEntity";
+import connectAppState from "components/containers/AppStateRefresh";
 
-interface Props {
-    navigation: NavigationScreenProp<{}, {}>
-    loading: boolean,
-    events: EventEntity[]
-    groups: EventGroup[]
-    loadData: () => void
-    favorites: Set<number>
-}
+type ComponentProps = StateProps & DispatchProps
 
 interface State {
     refreshing: boolean
 }
 
-class LiveEventsScreen extends React.Component<Props, State> {
+class LiveEventsScreen extends React.Component<ComponentProps, State> {
 
     constructor() {
         super();
@@ -46,7 +40,7 @@ class LiveEventsScreen extends React.Component<Props, State> {
         }
     }
 
-    shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
+    shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
         return nextProps.loading !== this.props.loading ||
             nextProps.favorites.count() !== this.props.favorites.count() ||
             nextProps.events.length !== this.props.events.length
@@ -82,7 +76,6 @@ class LiveEventsScreen extends React.Component<Props, State> {
             })
         }
 
-        // console.log("LitScreen render")
         return (
             <View>
                 <SectionList
@@ -93,12 +86,6 @@ class LiveEventsScreen extends React.Component<Props, State> {
                     keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
                 />
-                {/*<FlatList*/}
-                {/*data={events}*/}
-                {/*keyExtractor={this.keyExctractor}*/}
-                {/*renderItem={this.renderItem}*/}
-                {/*extraData={this.props.favorites.count()}*/}
-                {/*/>*/}
             </View>
         )
     }
@@ -178,7 +165,7 @@ const countTextStyle: TextStyle = {
 }
 
 
-interface PropsIn {
+interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
 }
 
@@ -206,7 +193,7 @@ function mapEvents(state: AppStore): EventEntity[] {
     return events
 }
 
-const mapStateToProps = (state: AppStore, inputProps: PropsIn): StateProps => ({
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     loading: state.liveStore.loading,
     events: mapEvents(state),
     groups: state.liveStore.groups,
@@ -214,13 +201,16 @@ const mapStateToProps = (state: AppStore, inputProps: PropsIn): StateProps => ({
     navigation: inputProps.navigation
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: PropsIn): DispatchProps => (
+const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
         loadData: (): any => dispatch(LiveActions.load())
     }
 )
 
-const LiveEventsWithData: ComponentClass<PropsIn> =
-    connect<StateProps, DispatchProps, PropsIn>(mapStateToProps, mapDispatchToProps)(LiveEventsScreen)
+const WithAppStateRefresh: ComponentClass<ComponentProps> =
+    connectAppState((props: ComponentProps) => props.loadData())(LiveEventsScreen)
+
+export const LiveEventsWithData: ComponentClass<ExternalProps> =
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 
 export default LiveEventsWithData
