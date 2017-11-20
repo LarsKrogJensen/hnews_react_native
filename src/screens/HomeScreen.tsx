@@ -9,9 +9,26 @@ import {load} from "store/landing/actions";
 import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/containers/AppStateRefresh";
 
+interface ExternalProps {
+    navigation: NavigationScreenProp<{}, {}>
+}
+
+interface StateProps {
+    navigation: NavigationScreenProp<{}, {}>
+    liveRightNow: EventCollection
+    popular: EventCollection
+    highlights: EventCollection
+    shocker: EventCollection
+    nextOff: EventCollection
+    startingSoon: EventCollection
+    loading: boolean
+}
+
+interface DispatchProps {
+    loadData: () => any
+}
+
 type ComponentProps = StateProps & DispatchProps
-
-
 
 class Hamburger extends React.Component {
     render() {
@@ -53,24 +70,7 @@ class HomeScreen extends React.Component<ComponentProps> {
     }
 }
 
-interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>
-}
 
-interface StateProps {
-    navigation: NavigationScreenProp<{}, {}>
-    liveRightNow: EventCollection
-    popular: EventCollection
-    highlights: EventCollection
-    shocker: EventCollection
-    nextOff: EventCollection
-    startingSoon: EventCollection
-    loading: boolean
-}
-
-interface DispatchProps {
-    loadData: () => any
-}
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps) => ({
     loading: state.landingStore.loading,

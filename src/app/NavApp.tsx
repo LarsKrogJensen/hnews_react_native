@@ -1,19 +1,13 @@
 import * as React from "react"
-import {
-    DrawerNavigator,
-    Header,
-    NavigationScreenProp,
-    NavigationStackScreenOptions,
-    StackNavigator
-} from "react-navigation";
+import {DrawerNavigator, Header, NavigationStackScreenOptions, StackNavigator} from "react-navigation";
 import HomeScreen from "screens/HomeScreen"
 import LiveScreen from "screens/LiveEventsScreen"
-import {Button, Image, Platform, StatusBar, StyleSheet, View} from "react-native";
+import {Image, Platform, StatusBar, StyleSheet, View} from "react-native";
 import EventScreen from "screens/EventScreen";
 import banner from "images/banner";
-import CrossPlatformIcon from "components/CrossPlatformIcon";
+import Hamburger from "app/Hamburger";
+import Drawer from "app/Drawer";
 import absoluteFill = StyleSheet.absoluteFill;
-import autobind from "autobind-decorator";
 
 const defaultNavOptions: NavigationStackScreenOptions = {
     headerTintColor: 'white',
@@ -25,33 +19,15 @@ const defaultNavOptions: NavigationStackScreenOptions = {
     header: (props) => <ImageHeader {...props} />
 }
 
-
-class Hamburger extends React.Component {
-    render() {
-        return (
-            <Button title="menu" onPress={this.onClick}/>
-        )
-        {/*<Touchable onPress={() => console.log(this.props)} style={{paddingLeft: 16}}>*/
-        }
-        {/*<CrossPlatformIcon name="menu" size={30} color="white"/>*/
-        }
-        {/*</Touchable>*/
-        }
-    }
-
-    @autobind
-    onClick() {
-         console.log("clclclcl")
-    }
-}
-
 const HomeTab = StackNavigator({
         Home: {
             screen: HomeScreen,
             path: '/',
-            navigationOptions: {
-                title: "none",
-                headerLeft: <Hamburger/>
+            navigationOptions: (props) => {
+                return {
+                    title: "Home",
+                    headerLeft: <Hamburger {...props} />
+                }
             }
         },
         Event: {
@@ -72,8 +48,11 @@ const LiveTab = StackNavigator({
         Live: {
             screen: LiveScreen,
             path: '/',
-            navigationOptions: {
-                title: "Live right now"
+            navigationOptions: (props) => {
+                return {
+                    title: "Live Right Now",
+                    headerLeft: <Hamburger {...props} />
+                }
             }
         },
         Event: {
@@ -91,40 +70,14 @@ const LiveTab = StackNavigator({
 
 const NavApp = DrawerNavigator(
     {
-        Home: {
-            screen: HomeTab,
-            navigationOptions: {
-                headerMode: "none"
-            }
-        },
+        Home: {screen: HomeTab},
         Live: {screen: LiveTab}
     },
     {
-        contentComponent: props => <SideBar {...props} />,
+        contentComponent: props => <Drawer {...props} />,
         initialRouteName: "Home"
     }
 );
-
-
-interface SideBarProps {
-    navigation: NavigationScreenProp<{}, {}>
-}
-
-class SideBar extends React.Component<SideBarProps> {
-
-    render() {
-        return <View>
-            <Button
-                onPress={() => this.props.navigation.navigate('Home')}
-                title="Go to Home"
-            />
-            <Button
-                onPress={() => this.props.navigation.navigate('Live')}
-                title="Go to Live"
-            />
-        </View>
-    }
-}
 
 const ImageHeader = props => (
     <View style={{backgroundColor: '#eee'}}>
@@ -139,12 +92,6 @@ const ImageHeader = props => (
         }}/>
     </View>
 );
-
-function iconResolver(icon: string) {
-    return ({tintColor, focused}) => {
-        return <CrossPlatformIcon name={icon} size={30} color={tintColor} outline={focused}/>
-    }
-}
 
 
 export default NavApp;
