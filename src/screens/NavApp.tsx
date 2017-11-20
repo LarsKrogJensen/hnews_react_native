@@ -13,6 +13,7 @@ import EventScreen from "screens/EventScreen";
 import banner from "images/banner";
 import CrossPlatformIcon from "components/CrossPlatformIcon";
 import absoluteFill = StyleSheet.absoluteFill;
+import autobind from "autobind-decorator";
 
 const defaultNavOptions: NavigationStackScreenOptions = {
     headerTintColor: 'white',
@@ -23,43 +24,70 @@ const defaultNavOptions: NavigationStackScreenOptions = {
     },
     header: (props) => <ImageHeader {...props} />
 }
-const HomeTab = StackNavigator({
-    Home: {
-        screen: HomeScreen,
-        path: '/',
-        navigationOptions: {
-            headerMode: "none"
-        }
-    },
-    Event: {
-        screen: EventScreen,
-        path: '/liveEvent/:name',
-        navigationOptions: {
-            ...defaultNavOptions,
-            title: "Event"
 
+
+class Hamburger extends React.Component {
+    render() {
+        return (
+            <Button title="menu" onPress={this.onClick}/>
+        )
+        {/*<Touchable onPress={() => console.log(this.props)} style={{paddingLeft: 16}}>*/
+        }
+        {/*<CrossPlatformIcon name="menu" size={30} color="white"/>*/
+        }
+        {/*</Touchable>*/
         }
     }
-});
+
+    @autobind
+    onClick() {
+         console.log("clclclcl")
+    }
+}
+
+const HomeTab = StackNavigator({
+        Home: {
+            screen: HomeScreen,
+            path: '/',
+            navigationOptions: {
+                title: "none",
+                headerLeft: <Hamburger/>
+            }
+        },
+        Event: {
+            screen: EventScreen,
+            path: '/liveEvent/:name',
+            navigationOptions: {
+                title: "Event"
+
+            }
+        }
+    },
+    {
+        navigationOptions: defaultNavOptions
+    }
+);
 
 const LiveTab = StackNavigator({
-    Live: {
-        screen: LiveScreen,
-        path: '/',
-        navigationOptions: {
-            mode: "none"
+        Live: {
+            screen: LiveScreen,
+            path: '/',
+            navigationOptions: {
+                title: "Live right now"
+            }
+        },
+        Event: {
+            screen: EventScreen,
+            path: '/liveEvent/:name',
+            navigationOptions: {
+                title: "Event"
+
+            }
         }
     },
-    Event: {
-        screen: EventScreen,
-        path: '/liveEvent/:name',
-        navigationOptions: {
-            ...defaultNavOptions,
-            title: "Event"
-
-        }
-    }
-});
+    {
+        navigationOptions: defaultNavOptions
+    });
 
 const NavApp = DrawerNavigator(
     {
@@ -117,5 +145,6 @@ function iconResolver(icon: string) {
         return <CrossPlatformIcon name={icon} size={30} color={tintColor} outline={focused}/>
     }
 }
+
 
 export default NavApp;

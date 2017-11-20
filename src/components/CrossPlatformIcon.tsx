@@ -6,7 +6,7 @@ interface Props {
     name: string,
     size: number,
     color: string,
-    outline: boolean
+    outline?: boolean
 }
 
 export default class CrossPlatformIcon extends React.PureComponent<Props> {

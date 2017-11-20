@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {ActivityIndicator, View} from "react-native"
+import {ActivityIndicator, Button, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
@@ -8,9 +8,16 @@ import {connect} from "react-redux";
 import {load} from "store/landing/actions";
 import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/containers/AppStateRefresh";
-import CrossPlatformIcon from "components/CrossPlatformIcon";
 
 type ComponentProps = StateProps & DispatchProps
+
+
+
+class Hamburger extends React.Component {
+    render() {
+        return <Button title="meny" onPress={() => console.log(this.props)}/>
+    }
+}
 
 class HomeScreen extends React.Component<ComponentProps> {
     // static navigationOptions = {
@@ -19,6 +26,11 @@ class HomeScreen extends React.Component<ComponentProps> {
     //         <CrossPlatformIcon name="home" size={30} color={tintColor} outline={false}/>
     //     )
     // };
+
+    static navigationOptions = {
+        title: "none",
+        headerLeft: <Hamburger/>
+    }
 
     componentDidMount(): void {
         this.props.loadData()
@@ -35,6 +47,7 @@ class HomeScreen extends React.Component<ComponentProps> {
 
         return (
             <View>
+                <Button title="Event" onPress={() => this.props.navigation.navigate("Event")}/>
             </View>
         )
     }
