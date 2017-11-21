@@ -1,5 +1,6 @@
 import * as React from "react"
-import {Text, View} from "react-native"
+import {Text} from "react-native"
+import Screen from "screens/Screen";
 
 interface Props {
     navigation: any
@@ -10,9 +11,9 @@ export default class EventScreen extends React.Component<Props> {
         const {navigation} = this.props
 
         return (
-            <View>
+            <Screen title="Event" {...this.props}>
                 <Text>Event screen</Text>
-            </View>
+            </Screen>
         )
     }
 }

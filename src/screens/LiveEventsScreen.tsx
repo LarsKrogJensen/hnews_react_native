@@ -24,6 +24,7 @@ import {connect} from "react-redux";
 import * as LiveActions from "store/live/actions"
 import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/containers/AppStateRefresh";
+import Screen from "screens/Screen";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -66,8 +67,15 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         this.props.loadData()
     }
 
-
     public render() {
+        return (
+            <Screen title="Live right now" {...this.props} rootScreen>
+                {this.renderBody()}
+            </Screen>
+        )
+    }
+
+    public renderBody() {
         const {loading, events, groups, favorites} = this.props;
 
         if (loading) {
@@ -182,7 +190,6 @@ const countTextStyle: TextStyle = {
 
 
 // Connect compoentn to store and appstate
-
 
 
 function mapEvents(state: AppStore): EventEntity[] {
