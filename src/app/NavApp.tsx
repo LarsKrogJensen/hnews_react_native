@@ -8,6 +8,7 @@ import banner from "images/banner";
 import Hamburger from "app/Hamburger";
 import Drawer from "app/Drawer";
 import absoluteFill = StyleSheet.absoluteFill;
+import NavbarSearch from "app/NavbarSearch";
 
 const defaultNavOptions: NavigationStackScreenOptions = {
     headerTintColor: 'white',
@@ -16,7 +17,8 @@ const defaultNavOptions: NavigationStackScreenOptions = {
     headerStyle: {
         backgroundColor: "transparent"
     },
-    header: (props) => <ImageHeader {...props} />
+    header: (props) => <ImageHeader {...props} />,
+    headerRight: <NavbarSearch />
 }
 
 const HomeTab = StackNavigator({
@@ -35,7 +37,6 @@ const HomeTab = StackNavigator({
             path: '/liveEvent/:name',
             navigationOptions: {
                 title: "Event"
-
             }
         }
     },
