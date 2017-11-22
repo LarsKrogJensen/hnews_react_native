@@ -8,7 +8,6 @@ import {AppStore} from "store/store";
 import {ComponentClass} from "react";
 import {connect} from "react-redux";
 
-
 interface ExternalProps {
     betofferId?: number
     orientation: Orientation

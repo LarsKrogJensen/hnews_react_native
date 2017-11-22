@@ -31,7 +31,6 @@ class ListEventListItem extends React.PureComponent<Props> {
         const event = this.props.event
         const viewStyle = orient === Orientation.Portrait ? portraitStyle : landscapeStyle;
 
-        // console.log("Render list item: " + this.props.liveEvent.event.id)
         return (
             <Touchable onPress={this.handleItemClick}>
                 <View style={viewStyle}>

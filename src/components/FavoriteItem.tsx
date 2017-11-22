@@ -29,7 +29,6 @@ class FavoriteItem extends React.Component<Props> {
 
     public render() {
         const {isFavorite, setFavorite} = this.props
-        // console.log("render favitem: " + this.props.isFavorite)
         return (
             <TouchableHighlight
                 onPress={() => requestAnimationFrame(() => setFavorite(!isFavorite))}
@@ -43,7 +42,6 @@ class FavoriteItem extends React.Component<Props> {
         )
     }
 }
-
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     isFavorite: state.favoriteStore.favorites[inputProps.eventId]

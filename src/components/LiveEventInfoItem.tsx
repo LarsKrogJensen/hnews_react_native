@@ -36,7 +36,6 @@ class LiveEventInfoItem extends React.PureComponent<Props> {
     }
 }
 
-
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     event: state.entityStore.events.get(inputProps.eventId),
     liveData: state.statsStore.liveData.get(inputProps.eventId)
