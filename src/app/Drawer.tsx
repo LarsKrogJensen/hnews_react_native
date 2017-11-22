@@ -24,10 +24,10 @@ export default class Drawer extends React.Component<DrawerProps> {
     render() {
         const sections: SectionListData<Item>[] = [
             {
-                title: "-",
+                title: "",
                 data: [
                     {name: "Home", path: "Home"},
-                    {name: "Live Right Now", path: "Live"},
+                    {name: "Right Now", path: "Live", live: true},
                     {name: "Starting Soon", path: "Live"}
                 ]
             },
@@ -89,7 +89,8 @@ export default class Drawer extends React.Component<DrawerProps> {
         return (
             <Touchable onPress={() => this.onItemClick(item)}>
                 <View style={{height: 44, flexDirection: "row", alignItems: "center"}}>
-                    <Text style={{color: "white", fontSize: 16, marginLeft: 16}}>{item.name}</Text>
+                    {item.live && <Text style={{color: "red", fontSize: 16, marginLeft: 16}}>Live</Text>}
+                    <Text style={{color: "white", fontSize: 16, marginLeft: item.live ? 3 : 16}}>{item.name}</Text>
                     <Text style={{color: "#dcdcdc", fontSize: 11, flex: 1, marginLeft: 8}}>{item.category}</Text>
                     <Text style={{color: "#dcdcdc", fontSize: 11, marginRight: 8}}>{item.count}</Text>
                 </View>
@@ -99,9 +100,23 @@ export default class Drawer extends React.Component<DrawerProps> {
 
     @autobind
     private renderSectionHeader(info: { section: SectionListData<Item> }) {
+        if (!info.section.title) return null;
+
         return (
-            <View style={{backgroundColor: "#333333"}}>
-                <Text style={{color: "#dcdcdc", fontSize: 12, fontWeight: "bold", marginLeft: 8}}>{info.section.title}</Text>
+            <View style={{
+                backgroundColor: "#333333",
+                borderTopWidth: 1,
+                borderTopColor: "#626262",
+                paddingTop: 8,
+                paddingBottom: 8,
+                marginTop: 4
+            }}>
+                <Text style={{
+                    color: "#dcdcdc",
+                    fontSize: 12,
+                    fontWeight: "bold",
+                    marginLeft: 8
+                }}>{info.section.title}</Text>
             </View>
         )
     }

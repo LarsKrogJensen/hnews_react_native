@@ -7,7 +7,7 @@ import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {load} from "store/landing/actions";
 import {EventCollection} from "store/landing/reducer";
-import connectAppState from "components/containers/AppStateRefresh";
+import connectAppState from "components/AppStateRefresh";
 import Screen from "screens/Screen";
 
 interface ExternalProps {
@@ -67,7 +67,7 @@ class HomeScreen extends React.Component<ComponentProps> {
 }
 
 
-const mapStateToProps = (state: AppStore, inputProps: ExternalProps) => ({
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     loading: state.landingStore.loading,
     liveRightNow: state.landingStore.liveRightNow,
     popular: state.landingStore.popular,

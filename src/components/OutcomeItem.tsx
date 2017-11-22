@@ -9,11 +9,19 @@ import {AppStore} from "store/store";
 import {ComponentClass} from "react";
 import {connect} from "react-redux";
 
-interface Props {
-    outcome: OutcomeEntity,
-    event: EventEntity,
+
+interface ExternalProps {
+    outcomeId: number
+    eventId: number
     orientation: Orientation
 }
+
+interface StateProps {
+    outcome: OutcomeEntity
+    event: EventEntity
+}
+
+type Props = StateProps & ExternalProps
 
 class OutcomeItem extends React.PureComponent<Props> {
 
@@ -92,21 +100,13 @@ const oddsStyle: TextStyle = {
     fontWeight: "bold"
 }
 
-
-interface PropsIn {
-    outcomeId: number
-    eventId: number
-    orientation: Orientation
-}
-
-const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     outcome: state.entityStore.outcomes.get(inputProps.outcomeId),
-    event: state.entityStore.events.get(inputProps.eventId),
-    orientation: inputProps.orientation
+    event: state.entityStore.events.get(inputProps.eventId)
 })
 
 
-const OutcomeItemWithData: ComponentClass<PropsIn> =
-    connect<Props, {}, PropsIn>(mapStateToProps)(OutcomeItem)
+const OutcomeItemWithData: ComponentClass<ExternalProps> =
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(OutcomeItem)
 
 export default OutcomeItemWithData

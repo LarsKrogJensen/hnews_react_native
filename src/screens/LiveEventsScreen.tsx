@@ -23,7 +23,7 @@ import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import * as LiveActions from "store/live/actions"
 import {EventEntity} from "model/EventEntity";
-import connectAppState from "components/containers/AppStateRefresh";
+import connectAppState from "components/AppStateRefresh";
 import Screen from "screens/Screen";
 
 interface ExternalProps {

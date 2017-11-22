@@ -8,10 +8,17 @@ import {AppStore} from "store/store";
 import {ComponentClass} from "react";
 import {connect} from "react-redux";
 
-interface Props {
-    betoffer?: BetOfferEntity,
+
+interface ExternalProps {
+    betofferId?: number
     orientation: Orientation
 }
+
+interface StateProps {
+    betoffer?: BetOfferEntity
+}
+
+type Props = StateProps & ExternalProps
 
 class BetOfferItem extends React.Component<Props> {
 
@@ -36,18 +43,12 @@ class BetOfferItem extends React.Component<Props> {
     }
 }
 
-interface PropsIn {
-    betofferId?: number
-    orientation: Orientation
-}
 
-const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
-    betoffer: inputProps.betofferId && state.entityStore.betoffers.get(inputProps.betofferId) || undefined,
-    orientation: inputProps.orientation
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+    betoffer: inputProps.betofferId && state.entityStore.betoffers.get(inputProps.betofferId) || undefined
 })
 
-
-const WithData: ComponentClass<PropsIn> =
-    connect<Props, {}, PropsIn>(mapStateToProps)(BetOfferItem)
+const WithData: ComponentClass<ExternalProps> =
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(BetOfferItem)
 
 export default WithData

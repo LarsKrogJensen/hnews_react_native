@@ -11,11 +11,18 @@ import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 
-interface Props {
-    navigation: NavigationScreenProp<{}, {}>,
-    event: EventEntity,
+
+interface ExternalProps {
+    eventId: number
     orientation: Orientation
+    navigation: NavigationScreenProp<{}, {}>,
 }
+
+interface StateProps {
+    event: EventEntity
+}
+
+type Props = StateProps & ExternalProps
 
 class ListEventListItem extends React.PureComponent<Props> {
 
@@ -35,12 +42,6 @@ class ListEventListItem extends React.PureComponent<Props> {
             </Touchable>
         );
     }
-
-    componentDidMount(): void {
-        // console.log("compoent did mount" + this.props.liveEvent.event.id)
-    }
-
-
 
     @autobind
     private handleItemClick() {
@@ -64,20 +65,11 @@ const landscapeStyle: ViewStyle = {
     flexDirection: "row"
 }
 
-interface PropsIn {
-    eventId: number
-    orientation: Orientation
-    navigation: NavigationScreenProp<{}, {}>,
-}
-
-const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
-    event: state.entityStore.events.get(inputProps.eventId),
-    orientation: inputProps.orientation,
-    navigation: inputProps.navigation
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+    event: state.entityStore.events.get(inputProps.eventId)
 })
 
-
-const WithData: ComponentClass<PropsIn> =
-    connect<Props, {}, PropsIn>(mapStateToProps)(ListEventListItem)
+const WithData: ComponentClass<ExternalProps> =
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(ListEventListItem)
 
 export default WithData

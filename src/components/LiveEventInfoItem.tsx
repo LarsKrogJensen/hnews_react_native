@@ -8,11 +8,18 @@ import {ComponentClass} from "react";
 import {connect} from "react-redux";
 import {LiveData} from "api/typings";
 
-interface Props {
-    event: EventEntity,
-    liveData: LiveData,
+
+interface ExternalProps {
+    eventId: number,
     viewStyle: ViewStyle
 }
+
+interface StateProps {
+    event: EventEntity
+    liveData: LiveData
+}
+
+type Props = StateProps & ExternalProps
 
 class LiveEventInfoItem extends React.PureComponent<Props> {
     public render() {
@@ -29,18 +36,13 @@ class LiveEventInfoItem extends React.PureComponent<Props> {
     }
 }
 
-interface PropsIn {
-    eventId: number,
-    viewStyle: ViewStyle
-}
 
-const mapStateToProps = (state: AppStore, inputProps: PropsIn) => ({
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     event: state.entityStore.events.get(inputProps.eventId),
-    liveData: state.statsStore.liveData.get(inputProps.eventId),
-    viewStyle: inputProps.viewStyle
+    liveData: state.statsStore.liveData.get(inputProps.eventId)
 })
 
 
-const WithData: ComponentClass<PropsIn> = connect<Props, {}, PropsIn>(mapStateToProps)(LiveEventInfoItem)
+const WithData: ComponentClass<ExternalProps> = connect<StateProps, {}, ExternalProps>(mapStateToProps)(LiveEventInfoItem)
 
 export default WithData

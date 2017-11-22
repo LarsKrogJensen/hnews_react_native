@@ -2,7 +2,7 @@ import * as React from "react"
 import {LiveEvent} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
-import FavoriteItem from "components/containers/FavoriteItemContainer";
+import FavoriteItem from "components/FavoriteItem";
 import {EventEntity} from "model/EventEntity";
 
 interface Props {
