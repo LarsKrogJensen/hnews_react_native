@@ -6,6 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
+  "rnpm": {
+    "assets": ["./assets/fonts"]
+  },
   "dependencies": {
     "autobind-decorator": "^2.1.0",
     "immutable": "^3.8.2",
