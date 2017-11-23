@@ -24,7 +24,7 @@ export function load(): Dispatch<LandingLoadAction> {
         try {
             const start = new Date().getTime();
             const response =
-                await fetch('https://e4-api.kambi.com/offering/api/v2/ub/betoffer/landing.json?lang=sv_SE&market=SE&client_id=2&ncid=1510848251011');
+                await fetch('https://e4-api.kambi.com/offering/api/v2/kambiplay/betoffer/landing.json?lang=en_GB&market=GB&client_id=2&ncid=1510848251011');
             const responseJson = await response.json();
             const end = new Date().getTime();
             console.log("Fetch landing data took " + (end - start) + " ms.")

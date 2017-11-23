@@ -15,7 +15,6 @@ interface ExternalProps {
 }
 
 interface StateProps {
-    navigation: NavigationScreenProp<{}, {}>
     liveRightNow: EventCollection
     popular: EventCollection
     highlights: EventCollection
@@ -29,7 +28,7 @@ interface DispatchProps {
     loadData: () => any
 }
 
-type ComponentProps = StateProps & DispatchProps
+type ComponentProps = StateProps & DispatchProps & ExternalProps
 
 
 class HomeScreen extends React.Component<ComponentProps> {
@@ -74,8 +73,7 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     highlights: state.landingStore.highlights,
     shocker: state.landingStore.shocker,
     nextOff: state.landingStore.nextOff,
-    startingSoon: state.landingStore.startingSoon,
-    navigation: inputProps.navigation
+    startingSoon: state.landingStore.startingSoon
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (

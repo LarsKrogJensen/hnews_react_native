@@ -35,14 +35,13 @@ interface DispatchProps {
 }
 
 interface StateProps {
-    navigation: NavigationScreenProp<{}, {}>
     loading: boolean,
     events: EventEntity[]
     groups: EventGroup[]
     favorites: Set<number>
 }
 
-type ComponentProps = StateProps & DispatchProps
+type ComponentProps = StateProps & DispatchProps & ExternalProps
 
 interface State {
     refreshing: boolean
@@ -208,8 +207,7 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     loading: state.liveStore.loading,
     events: mapEvents(state),
     groups: state.liveStore.groups,
-    favorites: state.favoriteStore.favorites,
-    navigation: inputProps.navigation
+    favorites: state.favoriteStore.favorites
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (

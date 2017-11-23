@@ -24,7 +24,7 @@ export function load(): Dispatch<LiveLoadAction> {
         try {
             const start = new Date().getTime();
             const response =
-                await fetch('https://e4-api.kambi.com/offering/api/v2/ub/event/live/open.json?lang=sv_SE&market=SE&client_id=2&channel_id=1');
+                await fetch('https://e4-api.kambi.com/offering/api/v2/kambiplay/event/live/open.json?lang=en_GB&market=GB&client_id=2&channel_id=1');
             const responseJson = await response.json();
             const end = new Date().getTime();
             console.log("Fetch data took " + (end - start) + " ms.")

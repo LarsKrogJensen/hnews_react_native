@@ -8,7 +8,6 @@ import {Map} from "immutable"
 import {LANDING_LOAD_SUCCESS} from "store/landing/types";
 import {LandingLoadAction} from "store/landing/actions";
 import * as _ from "lodash"
-import {Omit} from "react-redux";
 
 export interface EntityStore {
     events: Map<number, EventEntity>
