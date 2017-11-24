@@ -1,6 +1,6 @@
 import {LIVE_LOAD_SUCCESS} from "store/live/types"
 import {LiveLoadAction} from "store/live/actions"
-import {BetOffer, LandingEvent, LiveEvent, Outcome} from "api/typings";
+import {BetOffer, EventWithBetOffers, LiveEvent, Outcome} from "api/typings";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {BetOfferEntity} from "model/BetOfferEntity";
@@ -8,6 +8,8 @@ import {Map} from "immutable"
 import {LANDING_LOAD_SUCCESS} from "store/landing/types";
 import {LandingLoadAction} from "store/landing/actions";
 import * as _ from "lodash"
+import {SOON_LOAD_SUCCESS} from "store/soon/types";
+import {SoonLoadAction} from "store/soon/actions";
 
 export interface EntityStore {
     events: Map<number, EventEntity>
@@ -21,7 +23,7 @@ const initialState: EntityStore = {
     outcomes: Map<number, OutcomeEntity>()
 }
 
-export default function entityReducer(state: EntityStore = initialState, action: LiveLoadAction | LandingLoadAction): EntityStore {
+export default function entityReducer(state: EntityStore = initialState, action: LiveLoadAction | LandingLoadAction | SoonLoadAction): EntityStore {
     switch (action.type) {
         case LIVE_LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;
@@ -31,13 +33,22 @@ export default function entityReducer(state: EntityStore = initialState, action:
                 outcomes: mergeOutcomes(state.outcomes, flatMapOutcomes(liveEvents.map(e => e.mainBetOffer)))
             }
         case LANDING_LOAD_SUCCESS:
-            let landingEvents: LandingEvent[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
+            let landingEvents: EventWithBetOffers[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
             let betoffers: BetOffer[] = _.flatMap(landingEvents.map(e => e.betOffers).filter(bo => bo));
 
             return {
-                events: mergeLandingEvents(state.events, landingEvents),
+                events: mergeEventWithBetOffers(state.events, landingEvents),
                 betoffers: mergeBetOffers(state.betoffers, betoffers),
                 outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers.map(bo => bo.outcomes)))
+            }
+        case SOON_LOAD_SUCCESS:
+            let soonEvents: EventWithBetOffers[] = action.data.events
+            let betoffers2: BetOffer[] = _.flatMap(soonEvents.map(e => e.betOffers).filter(bo => bo));
+
+            return {
+                events: mergeEventWithBetOffers(state.events, soonEvents),
+                betoffers: mergeBetOffers(state.betoffers, betoffers2),
+                outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers2.map(bo => bo.outcomes)))
             }
         default:
             return state
@@ -56,12 +67,12 @@ function mergeLiveEvents(state: Map<number, EventEntity>, events: LiveEvent[]): 
     return state
 }
 
-function mergeLandingEvents(state: Map<number, EventEntity>, events: LandingEvent[]): Map<number, EventEntity> {
+function mergeEventWithBetOffers(state: Map<number, EventEntity>, events: EventWithBetOffers[]): Map<number, EventEntity> {
     for (let landingEvent of events) {
         // TODO: should merge in changes
         state = state.set(landingEvent.event.id, {
             ...landingEvent.event,
-            mainBetOfferId: landingEvent.betOffers && landingEvent.betOffers[0].id
+            mainBetOfferId: landingEvent.betOffers && landingEvent.betOffers[0] && landingEvent.betOffers[0].id
         })
     }
 
@@ -74,12 +85,10 @@ function mergeBetOffers(state: Map<number, BetOfferEntity>, betoffers: (BetOffer
             continue
         }
 
+        // noinspection JSUnusedLocalSymbols
         const {outcomes, criterion, oddsStats, betOfferType, pba, ...rest} = bo
         let outcomesIds = outcomes && outcomes.map(oc => oc.id) || [];
-
         
-        // const boss: Omit<BetOffer, {outcomes: any, criterion: any, oddsStats: any, betOfferType: any, pba: any}> = bo
-
         // TODO: should merge in changes
         state = state.set(bo.id, {...rest, outcomes: outcomesIds})
     }

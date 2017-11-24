@@ -225,7 +225,7 @@ export interface LiveEvents {
     group: EventGroup;
 }
 
-export interface LandingEvent {
+export interface EventWithBetOffers {
     event: Event,
     betOffers?: BetOffer[],
     liveData?: LiveData
@@ -239,9 +239,14 @@ export interface Range {
 
 export interface LandingPageSection {
     name: string;
-    events?: LandingEvent[];
+    events?: EventWithBetOffers[];
     range?: Range
 }
+
 export interface LandingPage {
     result: LandingPageSection[]
+}
+
+export interface SoonPage {
+    events: EventWithBetOffers[];
 }

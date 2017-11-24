@@ -56,10 +56,8 @@ class Drawer extends React.Component<Props> {
         return (
             <View style={{backgroundColor: "#333333", flexDirection: "column", paddingBottom: 12}}>
                 <View style={{height: 100, justifyContent: "center", alignItems: "center"}}>
-                    <Image style={absoluteFill}
-                           source={{uri: banner}}
-                    />
-                    <Text style={{color: "white", fontSize: 24, fontWeight: "bold"}}>PLAY</Text>
+                    <Image style={absoluteFill} source={{uri: banner}}/>
+                    <Text style={{color: "white", backgroundColor: "transparent", fontSize: 24, fontWeight: "bold"}}>PLAY</Text>
                 </View>
                 {this.renderBody()}
             </View>
@@ -79,7 +77,7 @@ class Drawer extends React.Component<Props> {
                 data: [
                     {name: "Home", path: "Home"},
                     {name: "Right Now", path: "Live", live: true},
-                    {name: "Starting Soon", path: "Live"}
+                    {name: "Starting Soon", path: "Soon"}
                 ]
             },
             {

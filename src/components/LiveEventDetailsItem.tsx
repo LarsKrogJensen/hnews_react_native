@@ -37,7 +37,7 @@ export default class LiveEventDetailsItem extends React.PureComponent<Props> {
                             padding: 8,
                             color: "#717171",
                             textAlign: "right"
-                        }}>+{event.liveBoCount}</Text>
+                        }}>+{event.liveBoCount || event.nonLiveBoCount}</Text>
                     </View>
                 </View>
                 <View style={pathStyle}>{this.renderPath(event)}</View>
