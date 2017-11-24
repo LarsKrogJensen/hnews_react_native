@@ -217,6 +217,7 @@ export interface EventGroup {
     eventCount?: number
     secondsToNextEvent?: number
     pathTermId?: string
+    parentGroup?: EventGroup
 }
 
 export interface LiveEvents {

@@ -38,7 +38,7 @@ export default function groupsReducer(state: GroupStore = initialState, action: 
             return {
                 ...state,
                 groupsLoading: false,
-                groupById: flattenGroups(action.data.group.groups || [], state.groupById),
+                groupById: flattenGroups(undefined, action.data.group.groups || [], state.groupById),
                 sports: (action.data.group.groups || []).map(group => group.id)
             }
         case GROUPS_LOAD_FAILED:
@@ -68,11 +68,12 @@ export default function groupsReducer(state: GroupStore = initialState, action: 
     }
 }
 
-function flattenGroups(data: EventGroup[] , map: Map<number, EventGroup>): Map<number, EventGroup> {
+function flattenGroups(parent: EventGroup | undefined, data: EventGroup[], map: Map<number, EventGroup>): Map<number, EventGroup> {
     for (let eventGroup of data) {
+        eventGroup.parentGroup = parent
         map = map.set(eventGroup.id, eventGroup)
-        map = flattenGroups(eventGroup.groups || [], map)
+        map = flattenGroups(eventGroup, eventGroup.groups || [], map)
     }
-
+    
     return map
 }

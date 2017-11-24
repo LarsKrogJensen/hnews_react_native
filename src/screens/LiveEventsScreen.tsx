@@ -100,16 +100,14 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         }
 
         return (
-            <View>
-                <SectionList
-                    stickySectionHeadersEnabled={true}
-                    refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
-                    sections={sections}
-                    renderSectionHeader={this.renderSectionHeader}
-                    keyExtractor={this.keyExtractor}
-                    renderItem={this.renderItem}
-                />
-            </View>
+            <SectionList
+                stickySectionHeadersEnabled={true}
+                refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
+                sections={sections}
+                renderSectionHeader={this.renderSectionHeader}
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderItem}
+            />
         )
     }
 

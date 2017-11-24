@@ -19,8 +19,8 @@ import {Dispatch} from "redux";
 import {loadGroups, loadHighlights} from "store/groups/actions";
 import connectAppState from "components/AppStateRefresh";
 import {connect} from "react-redux";
-import absoluteFill = StyleSheet.absoluteFill;
 import {EventGroup} from "api/typings";
+import absoluteFill = StyleSheet.absoluteFill;
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -40,7 +40,7 @@ type Props = DispatchProps & StateProps & ExternalProps
 
 interface Item {
     name: string
-    category?: string
+    group?: EventGroup
     count?: number
     live?: boolean
     path: string
@@ -88,7 +88,8 @@ class Drawer extends React.Component<Props> {
                     name: group.name,
                     path: "Event",
                     count: group.boCount,
-                    category: group.pathTermId
+                    category: group.pathTermId,
+                    group
                 }))
             },
             {
@@ -96,7 +97,8 @@ class Drawer extends React.Component<Props> {
                 data: this.props.sports.filter(group => group.sortOrder).map(group => ({
                     name: group.name,
                     path: "Event",
-                    count: group.boCount
+                    count: group.boCount,
+                    group
                 }))
             },
             {
@@ -104,7 +106,8 @@ class Drawer extends React.Component<Props> {
                 data: this.props.sports.filter(group => !group.sortOrder).map(group => ({
                     name: group.name,
                     path: "Event",
-                    count: group.boCount
+                    count: group.boCount,
+                    group
                 }))
             }
         ]
@@ -129,11 +132,25 @@ class Drawer extends React.Component<Props> {
                 <View style={{height: 44, flexDirection: "row", alignItems: "center"}}>
                     {item.live && <Text style={{color: "red", fontSize: 16, marginLeft: 16}}>Live</Text>}
                     <Text style={{color: "white", fontSize: 16, marginLeft: item.live ? 3 : 16}}>{item.name}</Text>
-                    <Text style={{color: "#dcdcdc", fontSize: 11, flex: 1, marginLeft: 8}}>{item.category}</Text>
+                    <Text style={{color: "#dcdcdc", fontSize: 11, flex: 1, marginLeft: 8}}>{this.formatCategory(item.group)}</Text>
                     <Text style={{color: "#dcdcdc", fontSize: 11, marginRight: 8}}>{item.count}</Text>
                 </View>
             </Touchable>
         )
+    }
+
+    @autobind
+    private formatCategory(group: EventGroup | undefined): string | null {
+        if (!group) return null
+
+        let eg = group;
+        const flattenPath: string[] = []
+        while (eg.parentGroup) {
+            flattenPath.unshift(eg.parentGroup.name)
+            eg = eg.parentGroup
+        }
+
+        return flattenPath.join(" / ")
     }
 
     @autobind
