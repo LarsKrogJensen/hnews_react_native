@@ -16,7 +16,7 @@ export default class Screen extends React.Component<Props> {
 
     render() {
         return (
-            <View>
+            <View style={{flexDirection: "column", flex: 1}}>
                 <View>
                     <StatusBar backgroundColor="transparent" translucent/>
                     <View style={{backgroundColor: "transparent", height: 24}}/>
@@ -32,7 +32,9 @@ export default class Screen extends React.Component<Props> {
                              }}
                     />
                 </View>
-                {this.props.children}
+                <View style={{flex: 1}}>
+                    {this.props.children}
+                </View>
             </View>
         )
     }

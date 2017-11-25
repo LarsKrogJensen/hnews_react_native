@@ -11,7 +11,6 @@ import {
     View,
     ViewStyle
 } from "react-native"
-import {Set} from "immutable"
 import {NavigationScreenProp} from "react-navigation";
 import LiveEventListItem from "components/LiveEventListItem";
 import {orientation} from "lib/device";
@@ -23,6 +22,8 @@ import * as SoonActions from "store/soon/actions"
 import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
 import Screen from "screens/Screen";
+import Touchable from "components/Touchable";
+import {Set} from "immutable"
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -35,17 +36,18 @@ interface DispatchProps {
 interface StateProps {
     loading: boolean,
     events: EventEntity[]
-    favorites: Set<number>
 }
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps
 
 interface State {
     refreshing: boolean
+    collapsed: Set<string>
 }
 
 interface DateSection extends SectionListData<EventEntity> {
-    date: Date
+    date: Date,
+    count: number
 }
 
 class StartingSoonScreen extends React.Component<ComponentProps, State> {
@@ -60,14 +62,15 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         this.tomorrow.setDate(this.today.getDate() + 1)
         this.toMorrowStr = this.tomorrow.toDateString()
         this.state = {
-            refreshing: false
+            refreshing: false,
+            collapsed: Set()
         }
     }
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
         return nextProps.loading !== this.props.loading ||
-            nextProps.favorites.count() !== this.props.favorites.count() ||
-            nextProps.events.length !== this.props.events.length
+            nextProps.events.length !== this.props.events.length ||
+            nextState.collapsed !== this.state.collapsed
     }
 
     componentDidMount(): void {
@@ -83,7 +86,8 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     }
 
     public renderBody() {
-        const {loading, events, favorites} = this.props;
+        const {loading, events} = this.props;
+        const {collapsed} = this.state
 
         if (loading) {
             return <View>
@@ -109,12 +113,16 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
             if (!section) {
                 section = {
                     date: date,
-                    data: []
+                    data: [],
+                    count: 0
                 }
                 sections.push(section)
             }
 
-            section.data.push(event)
+            if (!collapsed.has(date.toISOString())) {
+                section.data.push(event)
+            }
+            section.count++
         }
 
 
@@ -166,11 +174,25 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         }
 
         return (
-            <View style={headerStyle}>
-                <Text style={liveTextStyle}>{hour}</Text>
-                <Text style={sportTextStyle}>{datum}</Text>
-                <Text style={countTextStyle}>{info.section.data.length}</Text>
-            </View>
+            <Touchable onPress={() => this.toggleSection(info.section.date.toISOString())}>
+                <View style={headerStyle}>
+                    <Text style={liveTextStyle}>{hour}</Text>
+                    <Text style={sportTextStyle}>{datum}</Text>
+                    <Text style={countTextStyle}>{info.section.count}</Text>
+                </View>
+            </Touchable>
+        )
+    }
+
+    @autobind
+    private toggleSection(name: string) {
+        this.setState(prevState => {
+                let collapsed: Set<string> = prevState.collapsed
+                collapsed = collapsed.has(name) ? collapsed.delete(name) : collapsed.add(name)
+                return {
+                    collapsed
+                }
+            }
         )
     }
 
@@ -180,6 +202,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
         return hours.toString()
     }
+
     private keyExtractor(event: EventEntity): string {
         return event.id.toString()
     }
@@ -232,8 +255,7 @@ function mapEvents(state: AppStore): EventEntity[] {
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     loading: state.soonStore.loading,
-    events: mapEvents(state),
-    favorites: state.favoriteStore.favorites
+    events: mapEvents(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
