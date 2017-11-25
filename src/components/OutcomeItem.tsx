@@ -1,4 +1,5 @@
 import * as React from "react"
+import {ComponentClass} from "react"
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import {Orientation} from "lib/device";
 import Touchable from "components/Touchable";
@@ -6,14 +7,14 @@ import autobind from "autobind-decorator";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
-import {ComponentClass} from "react";
 import {connect} from "react-redux";
 
 
 interface ExternalProps {
     outcomeId: number
     eventId: number
-    orientation: Orientation
+    orientation: Orientation,
+    style: ViewStyle
 }
 
 interface StateProps {
@@ -31,7 +32,11 @@ class OutcomeItem extends React.PureComponent<Props> {
 
         const height = orientation === Orientation.Portrait ? 38 : 48
         const viewStyle = orientation === Orientation.Portrait ? portraitViewStyle : landscapeViewStyle
-        const touchStyle: ViewStyle = {...touchBaseStyle, height}
+        const touchStyle: ViewStyle = {
+            ...touchBaseStyle,
+            height,
+            ...this.props.style
+        }
 
         // console.log("oritentation - " + orientation)
         return (
@@ -53,7 +58,7 @@ class OutcomeItem extends React.PureComponent<Props> {
         if (outcome.type === "OT_TWO")
             return event.awayName;
 
-        return outcome.type
+        return outcome.label
     }
 }
 

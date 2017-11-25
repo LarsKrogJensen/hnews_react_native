@@ -30,7 +30,7 @@ interface ExternalProps {
 }
 
 interface DispatchProps {
-    loadData: () => void
+    loadData: (fireStartLoad: boolean) => void
 }
 
 interface StateProps {
@@ -42,7 +42,7 @@ type ComponentProps = StateProps & DispatchProps & ExternalProps
 
 interface State {
     refreshing: boolean
-    collapsed: Set<string>
+    expanded: Set<string>
 }
 
 interface DateSection extends SectionListData<EventEntity> {
@@ -51,6 +51,7 @@ interface DateSection extends SectionListData<EventEntity> {
 }
 
 class StartingSoonScreen extends React.Component<ComponentProps, State> {
+    // private
     private today = new Date()
     private todayStr: string
     private tomorrow = new Date()
@@ -63,18 +64,18 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         this.toMorrowStr = this.tomorrow.toDateString()
         this.state = {
             refreshing: false,
-            collapsed: Set()
+            expanded: Set()
         }
     }
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
         return nextProps.loading !== this.props.loading ||
             nextProps.events.length !== this.props.events.length ||
-            nextState.collapsed !== this.state.collapsed
+            nextState.expanded !== this.state.expanded
     }
 
     componentDidMount(): void {
-        this.props.loadData()
+        this.props.loadData(true)
     }
 
     public render() {
@@ -87,7 +88,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
     public renderBody() {
         const {loading, events} = this.props;
-        const {collapsed} = this.state
+        const {expanded} = this.state
 
         if (loading) {
             return <View>
@@ -119,7 +120,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
                 sections.push(section)
             }
 
-            if (!collapsed.has(date.toISOString())) {
+            if (expanded.has(date.toISOString())) {
                 section.data.push(event)
             }
             section.count++
@@ -140,7 +141,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
     @autobind
     private onRefresh() {
-        this.props.loadData()
+        this.props.loadData(true)
     }
 
     @autobind
@@ -187,10 +188,10 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     @autobind
     private toggleSection(name: string) {
         this.setState(prevState => {
-                let collapsed: Set<string> = prevState.collapsed
-                collapsed = collapsed.has(name) ? collapsed.delete(name) : collapsed.add(name)
+                let expanded: Set<string> = prevState.expanded
+                expanded = expanded.has(name) ? expanded.delete(name) : expanded.add(name)
                 return {
-                    collapsed
+                    expanded
                 }
             }
         )
@@ -260,12 +261,12 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
-        loadData: (): any => dispatch(SoonActions.load())
+        loadData: (fireStartLoad: boolean): any => dispatch(SoonActions.load(fireStartLoad))
     }
 )
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps) => props.loadData())(StartingSoonScreen)
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(StartingSoonScreen)
 
 export const LiveEventsWithData: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)

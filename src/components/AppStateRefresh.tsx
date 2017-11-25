@@ -5,7 +5,7 @@ interface State {
     appState: string
 }
 
-const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalProps) => any) =>
+const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalProps, incrementalLoad: boolean) => any) =>
     (Component: (React.ComponentClass<TOriginalProps>
         | React.StatelessComponent<TOriginalProps>)) => {
 
@@ -21,7 +21,7 @@ const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalP
 
             componentDidMount() {
                 AppState.addEventListener('change', this._handleAppStateChange);
-                this.timer = setInterval(() => onActive(this.props), 30000);
+                this.timer = setInterval(() => onActive(this.props, true), 30000);
             }
 
             componentWillUnmount() {
@@ -33,7 +33,7 @@ const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalP
                 console.log("Next AppState: " + nextAppState + " current state: " + this.state.appState)
                 if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
                     console.log('App has come to the foreground!')
-                    onActive(this.props)
+                    onActive(this.props, false)
                 }
                 this.setState({appState: nextAppState});
             }

@@ -25,7 +25,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    loadData: () => any
+    loadData: (fireStartLoad: boolean) => any
 }
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps
@@ -34,7 +34,7 @@ type ComponentProps = StateProps & DispatchProps & ExternalProps
 class HomeScreen extends React.Component<ComponentProps> {
 
     componentDidMount(): void {
-        this.props.loadData()
+        this.props.loadData(true)
     }
 
     public render() {
@@ -78,12 +78,12 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
-        loadData: () => dispatch(load())
+        loadData: (fireStartLoad: boolean) => dispatch(load(fireStartLoad))
     }
 )
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps) => props.loadData())(HomeScreen)
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(HomeScreen)
 
 const WithData: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)

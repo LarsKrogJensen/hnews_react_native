@@ -17,9 +17,11 @@ export interface SoonLoadFailedAction {
 
 export type SoonLoadAction = SoonStartLoadAction | SoonLoadSuccessAction | SoonLoadFailedAction
 
-export function load(): Dispatch<SoonLoadAction> {
+export function load(fireStartLoad: boolean = true): Dispatch<SoonLoadAction> {
     return async dispatch => {
-        dispatch({type: types.SOON_START_LOADING})
+        if (fireStartLoad) {
+            dispatch({type: types.SOON_START_LOADING})
+        }
 
         try {
             const start = new Date().getTime();

@@ -33,7 +33,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    loadData: () => void
+    loadData: (fireStartLoad: boolean) => void
 }
 
 type Props = DispatchProps & StateProps & ExternalProps
@@ -48,17 +48,19 @@ interface Item {
 
 class Drawer extends React.Component<Props> {
     componentDidMount(): void {
-        this.props.loadData()
+        this.props.loadData(true)
     }
 
     render() {
         return (
-            <View style={{backgroundColor: "#333333", flexDirection: "column", paddingBottom: 12}}>
+            <View style={{backgroundColor: "#333333", flex: 1, flexDirection: "column", paddingBottom: 12}}>
                 <View style={{height: 100, justifyContent: "center", alignItems: "center"}}>
                     <Image style={absoluteFill} source={{uri: banner}}/>
                     <Text style={{color: "white", backgroundColor: "transparent", fontSize: 24, fontWeight: "bold"}}>PLAY</Text>
                 </View>
-                {this.renderBody()}
+                <View style={{flex: 1}}>
+                    {this.renderBody()}
+                </View>
             </View>
         )
     }
@@ -193,15 +195,15 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
-        loadData: () => {
-            dispatch(loadGroups())
-            dispatch(loadHighlights())
+        loadData: (fireStartLoad: boolean) => {
+            dispatch(loadGroups(fireStartLoad))
+            dispatch(loadHighlights(fireStartLoad))
         }
     }
 )
 
 const WithAppStateRefresh: ComponentClass<Props> =
-    connectAppState((props: Props) => props.loadData())(Drawer)
+    connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
 
 const WithData: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)

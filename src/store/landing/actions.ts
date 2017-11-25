@@ -17,9 +17,11 @@ export interface LandingLoadFailedAction {
 
 export type LandingLoadAction = LandingStartLoadAction | LandingLoadSuccessAction | LandingLoadFailedAction
 
-export function load(): Dispatch<LandingLoadAction> {
+export function load(fireStartLoad: boolean = true): Dispatch<LandingLoadAction> {
     return async dispatch => {
-        dispatch({type: types.LANDING_START_LOADING})
+        if (fireStartLoad) {
+            dispatch({type: types.LANDING_START_LOADING})
+        }
 
         try {
             const start = new Date().getTime();

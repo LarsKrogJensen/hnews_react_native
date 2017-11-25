@@ -31,9 +31,11 @@ export interface HighlightsLoadFailedAction {
 export type GroupsLoadAction = GroupsStartLoadAction | GroupsLoadSuccessAction | GroupsLoadFailedAction |
     HighlightsStartLoadAction | HighlightsLoadSuccessAction | HighlightsLoadFailedAction
 
-export function loadGroups(): Dispatch<GroupsLoadAction> {
+export function loadGroups(fireStartLoad: boolean = true): Dispatch<GroupsLoadAction> {
     return async dispatch => {
-        dispatch({type: types.GROUPS_START_LOADING})
+        if (fireStartLoad) {
+            dispatch({type: types.GROUPS_START_LOADING})
+        }
 
         try {
             const start = new Date().getTime();
@@ -53,9 +55,11 @@ export function loadGroups(): Dispatch<GroupsLoadAction> {
     };
 }
 
-export function loadHighlights(): Dispatch<GroupsLoadAction> {
+export function loadHighlights(fireStartLoad: boolean = false): Dispatch<GroupsLoadAction> {
     return async dispatch => {
-        dispatch({type: types.HIGHLIGHTS_START_LOADING})
+        if (fireStartLoad) {
+            dispatch({type: types.HIGHLIGHTS_START_LOADING})
+        }
 
         try {
             const start = new Date().getTime();
