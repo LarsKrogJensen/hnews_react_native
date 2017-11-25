@@ -10,7 +10,7 @@ const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalP
         | React.StatelessComponent<TOriginalProps>)) => {
 
         return class extends React.Component<TOriginalProps, State> {
-
+             private timer: number
 
             constructor(props: TOriginalProps, context: any) {
                 super(props, context);
@@ -21,9 +21,11 @@ const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalP
 
             componentDidMount() {
                 AppState.addEventListener('change', this._handleAppStateChange);
+                this.timer = setInterval(() => onActive(this.props), 30000);
             }
 
             componentWillUnmount() {
+                 clearInterval(this.timer)
                 AppState.removeEventListener('change', this._handleAppStateChange);
             }
 

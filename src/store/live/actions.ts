@@ -17,9 +17,11 @@ export interface LiveLoadFailedAction {
 
 export type LiveLoadAction = LiveStartLoadAction | LiveLoadSuccessAction | LiveLoadFailedAction
 
-export function load(): Dispatch<LiveLoadAction> {
+export function load(fireStartLoading: boolean = true): Dispatch<LiveLoadAction> {
     return async dispatch => {
-        dispatch({type: types.LIVE_START_LOADING})
+        if (fireStartLoading) {
+            dispatch({type: types.LIVE_START_LOADING})
+        }
 
         try {
             const start = new Date().getTime();

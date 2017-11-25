@@ -32,7 +32,7 @@ interface ExternalProps {
 }
 
 interface DispatchProps {
-    loadData: () => void
+    loadData: (fireStartLoading: boolean) => void
 }
 
 interface StateProps {
@@ -72,7 +72,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
     }
 
     componentDidMount(): void {
-        this.props.loadData()
+        this.props.loadData(true)
     }
 
     public render() {
@@ -139,7 +139,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
 
     @autobind
     private onRefresh() {
-        this.props.loadData()
+        this.props.loadData(true)
     }
 
     @autobind
@@ -251,12 +251,12 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
-        loadData: (): any => dispatch(LiveActions.load())
+        loadData: (fireStartLoad: boolean): any => dispatch(LiveActions.load(fireStartLoad))
     }
 )
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps) => props.loadData())(LiveEventsScreen)
+    connectAppState((props: ComponentProps) => props.loadData(false))(LiveEventsScreen)
 
 export const LiveEventsWithData: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
