@@ -37,7 +37,7 @@ const LiveStack = StackNavigator({
     });
 
 const SoonStack = StackNavigator({
-        Live: {
+        Soon: {
             screen: SoonScreen,
             path: '/'
         },
