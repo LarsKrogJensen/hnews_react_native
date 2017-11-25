@@ -52,7 +52,6 @@ class Drawer extends React.Component<Props> {
     }
 
     render() {
-
         return (
             <View style={{backgroundColor: "#333333", flexDirection: "column", paddingBottom: 12}}>
                 <View style={{height: 100, justifyContent: "center", alignItems: "center"}}>
