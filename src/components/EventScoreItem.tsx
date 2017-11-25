@@ -2,6 +2,7 @@ import * as React from "react"
 import {LiveData, MatchClock, Score, SetStats, Statistics} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
+import EventTimeItem from "components/EventTimeItem";
 
 interface Props {
     style: ViewStyle,
@@ -16,7 +17,7 @@ interface GameSummary {
     awayGames: number
 }
 
-export default class LiveEventScoreItem extends React.PureComponent<Props> {
+export default class EventScoreItem extends React.PureComponent<Props> {
 
     public render() {
         if (this.props.liveData) {

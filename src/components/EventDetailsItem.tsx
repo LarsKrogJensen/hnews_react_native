@@ -9,7 +9,7 @@ interface Props {
     event: EventEntity
 }
 
-export default class LiveEventDetailsItem extends React.PureComponent<Props> {
+export default class EventDetailsItem extends React.PureComponent<Props> {
 
     public render() {
         const {event, style} = this.props;

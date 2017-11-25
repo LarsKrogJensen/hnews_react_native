@@ -1,5 +1,5 @@
 import * as React from "react"
-import CrossPlatformIcon from "components/CrossPlatformIcon";
+import PlatformIcon from "components/PlatformIcon";
 import {TouchableHighlight} from "react-native";
 import * as Actions from "store/favorite/actions"
 import {AppStore} from "store/store";
@@ -33,7 +33,7 @@ class FavoriteItem extends React.Component<Props> {
             <TouchableHighlight
                 onPress={() => requestAnimationFrame(() => setFavorite(!isFavorite))}
                 style={{borderRadius: 5}}>
-                <CrossPlatformIcon
+                <PlatformIcon
                     name={"star"}
                     size={30}
                     color={isFavorite ? "darkorange" : "#717171"}

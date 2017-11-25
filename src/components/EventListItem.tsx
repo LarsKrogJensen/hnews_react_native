@@ -1,7 +1,7 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import BetOfferItem from "components/BetOfferItem";
-import LiveEventInfoItem from "components/LiveEventInfoItem";
+import LiveEventInfoItem from "components/EventInfoItem";
 import Touchable from "components/Touchable";
 import {Orientation} from "lib/device";
 import {NavigationScreenProp} from "react-navigation";

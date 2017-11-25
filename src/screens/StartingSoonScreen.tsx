@@ -12,7 +12,7 @@ import {
     ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
-import LiveEventListItem from "components/LiveEventListItem";
+import LiveEventListItem from "components/EventListItem";
 import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
