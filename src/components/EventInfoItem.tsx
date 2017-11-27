@@ -36,7 +36,10 @@ class EventInfoItem extends React.PureComponent<Props> {
 
     private renderScoreOrTime(event: EventEntity, liveData: LiveData) {
         const style: ViewStyle = {width: 68}
-        if (liveData) {
+        const startTime = new Date(event.start)
+        const now: Date = new Date()
+
+        if (liveData && now > startTime) {
             return (
                 <EventScoreItem style={style}
                                 sport={event.sport}

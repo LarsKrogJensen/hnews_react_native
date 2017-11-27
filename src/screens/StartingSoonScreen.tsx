@@ -199,6 +199,8 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
     @autobind
     private padHours(hours: number): string {
+        if (hours === 24)
+            hours = 0;
         if (hours < 10) return "0" + hours
 
         return hours.toString()
