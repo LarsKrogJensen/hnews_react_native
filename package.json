@@ -1,5 +1,5 @@
 {
-  "name": "HackerNews",
+  "name": "Play",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -16,8 +16,8 @@
     "immutable": "^3.8.2",
     "lodash": "^4.17.4",
     "react": "16.0.0",
-    "react-native": "0.49.3",
-    "react-native-material-ui": "^1.14.0",
+    "react-native": "0.50.4",
+    "react-native-material-ui": "^1.15.0",
     "react-native-vector-icons": "^4.4.2",
     "react-navigation": "1.0.0-beta.21",
     "react-redux": "^5.0.4",
@@ -36,7 +36,7 @@
     "@types/react-redux": "^5.0.12",
     "babel-jest": "21.2.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-react-native": "2.1.0",
+    "babel-preset-react-native": "4.0.0",
     "jest": "21.2.1",
     "react-native-typescript-transformer": "^1.1.3",
     "react-test-renderer": "16.0.0",

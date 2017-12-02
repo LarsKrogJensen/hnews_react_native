@@ -11,4 +11,4 @@ export default class NativePlayApp extends Component {
     }
 }
 
-AppRegistry.registerComponent('nativePlay', () => NativePlayApp);
+AppRegistry.registerComponent('HackerNews', () => NativePlayApp);
