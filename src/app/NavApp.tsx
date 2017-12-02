@@ -1,78 +1,60 @@
 import * as React from "react"
-import {DrawerNavigator, Header, NavigationStackScreenOptions, StackNavigator} from "react-navigation";
+import {DrawerNavigator, StackNavigator} from "react-navigation";
 import HomeScreen from "screens/HomeScreen"
 import LiveScreen from "screens/LiveEventsScreen"
-import {Image, Platform, StatusBar, StyleSheet, View} from "react-native";
+import SoonScreen from "screens/StartingSoonScreen"
+import {NativeModules} from "react-native";
 import EventScreen from "screens/EventScreen";
-import banner from "images/banner";
-import Hamburger from "app/Hamburger";
 import Drawer from "app/Drawer";
-import absoluteFill = StyleSheet.absoluteFill;
-import NavbarSearch from "app/NavbarSearch";
 
-const defaultNavOptions: NavigationStackScreenOptions = {
-    headerTintColor: 'white',
-    headerTitleStyle: {color: 'white'},
-    headerBackTitleStyle: {color: 'white'},
-    headerStyle: {
-        backgroundColor: "transparent"
-    },
-    header: (props) => <ImageHeader {...props} />,
-    headerRight: <NavbarSearch />
-}
-
-const HomeTab = StackNavigator({
+const HomeStack = StackNavigator({
         Home: {
             screen: HomeScreen,
-            path: '/',
-            navigationOptions: (props) => {
-                return {
-                    title: "Home",
-                    headerLeft: <Hamburger {...props} />
-                }
-            }
+            path: '/'
         },
         Event: {
             screen: EventScreen,
-            path: '/liveEvent/:name',
-            navigationOptions: {
-                title: "Event"
-            }
+            path: '/liveEvent/:name'
         }
     },
     {
-        navigationOptions: defaultNavOptions
+        headerMode: "none"
     }
 );
 
-const LiveTab = StackNavigator({
+const LiveStack = StackNavigator({
         Live: {
             screen: LiveScreen,
-            path: '/',
-            navigationOptions: (props) => {
-                return {
-                    title: "Live Right Now",
-                    headerLeft: <Hamburger {...props} />
-                }
-            }
+            path: '/'
         },
         Event: {
             screen: EventScreen,
-            path: '/liveEvent/:name',
-            navigationOptions: {
-                title: "Event"
-
-            }
+            path: '/liveEvent/:name'
         }
     },
     {
-        navigationOptions: defaultNavOptions
+        headerMode: "none"
+    });
+
+const SoonStack = StackNavigator({
+        Soon: {
+            screen: SoonScreen,
+            path: '/'
+        },
+        Event: {
+            screen: EventScreen,
+            path: '/liveEvent/:name'
+        }
+    },
+    {
+        headerMode: "none"
     });
 
 const NavApp = DrawerNavigator(
     {
-        Home: {screen: HomeTab},
-        Live: {screen: LiveTab}
+        Home: {screen: HomeStack},
+        Live: {screen: LiveStack},
+        Soon: {screen: SoonStack}
     },
     {
         contentComponent: props => <Drawer {...props} />,
@@ -80,19 +62,8 @@ const NavApp = DrawerNavigator(
     }
 );
 
-const ImageHeader = props => (
-    <View style={{backgroundColor: '#eee'}}>
-        <StatusBar translucent backgroundColor="transparent" barStyle="light-content"/>
-        <Image
-            style={absoluteFill}
-            source={{uri: banner}}
-        />
-        <Header {...props} style={{
-            backgroundColor: 'transparent',
-            marginTop: Platform.select({ios: () => 0, android: () => 24})()
-        }}/>
-    </View>
-);
+const {UIManager} = NativeModules;
 
+// UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
 export default NavApp;

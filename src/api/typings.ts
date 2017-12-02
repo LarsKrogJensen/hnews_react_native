@@ -201,28 +201,31 @@ export interface LiveEvent {
     mainBetOffer?: BetOffer;
 }
 
+export interface RootGroup {
+    group: EventGroup
+}
+
 export interface EventGroup {
     id: number;
     name: string;
     englishName: string;
-    groups: EventGroup[];
+    groups?: EventGroup[];
     sortOrder: string;
     sport: string;
     termKey: string;
-}
-
-export interface RootGroup {
-    id: number;
-    groups: EventGroup[];
-    sport: string;
+    boCount?: number
+    eventCount?: number
+    secondsToNextEvent?: number
+    pathTermId?: string
+    parentGroup?: EventGroup
 }
 
 export interface LiveEvents {
     liveEvents: LiveEvent[];
-    group: RootGroup;
+    group: EventGroup;
 }
 
-export interface LandingEvent {
+export interface EventWithBetOffers {
     event: Event,
     betOffers?: BetOffer[],
     liveData?: LiveData
@@ -236,9 +239,14 @@ export interface Range {
 
 export interface LandingPageSection {
     name: string;
-    events?: LandingEvent[];
+    events?: EventWithBetOffers[];
     range?: Range
 }
+
 export interface LandingPage {
     result: LandingPageSection[]
+}
+
+export interface SoonPage {
+    events: EventWithBetOffers[];
 }

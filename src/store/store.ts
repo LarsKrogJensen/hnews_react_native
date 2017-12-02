@@ -6,13 +6,17 @@ import thunk from "redux-thunk";
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {default as statsReducer, StatsStore} from "store/stats/reducer";
 import {default as landingReducer, LandingStore} from "store/landing/reducer";
+import {default as groupsReducer, GroupStore} from "store/groups/reducer";
+import {SoonEventsStore, default as soonReducer} from "store/soon/reducer";
 
 export interface AppStore {
     favoriteStore: FavoriteStore,
     liveStore: LiveEventsStore,
     entityStore: EntityStore,
     statsStore: StatsStore,
-    landingStore: LandingStore
+    landingStore: LandingStore,
+    groupStore: GroupStore,
+    soonStore: SoonEventsStore
 }
 
 const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
@@ -20,7 +24,9 @@ const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
     liveStore: liveReducer,
     entityStore: entityReducer,
     statsStore: statsReducer,
-    landingStore: landingReducer
+    landingStore: landingReducer,
+    groupStore: groupsReducer,
+    soonStore: soonReducer
 })
 
 // const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

@@ -1,8 +1,7 @@
 import * as React from "react"
-import {LiveEvent} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
-import FavoriteItem from "components/containers/FavoriteItemContainer";
+import FavoriteItem from "components/FavoriteItem";
 import {EventEntity} from "model/EventEntity";
 
 interface Props {
@@ -10,7 +9,7 @@ interface Props {
     event: EventEntity
 }
 
-export default class LiveEventDetailsItem extends React.PureComponent<Props> {
+export default class EventDetailsItem extends React.PureComponent<Props> {
 
     public render() {
         const {event, style} = this.props;
@@ -38,7 +37,7 @@ export default class LiveEventDetailsItem extends React.PureComponent<Props> {
                             padding: 8,
                             color: "#717171",
                             textAlign: "right"
-                        }}>+{event.liveBoCount}</Text>
+                        }}>+{event.liveBoCount || event.nonLiveBoCount}</Text>
                     </View>
                 </View>
                 <View style={pathStyle}>{this.renderPath(event)}</View>

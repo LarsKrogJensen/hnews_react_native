@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Set} from "immutable"
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup, LiveEvent} from "api/typings";
-import LiveEventListItem from "components/LiveEventListItem";
+import EventListItem from "components/EventListItem";
 import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
@@ -23,28 +23,35 @@ import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import * as LiveActions from "store/live/actions"
 import {EventEntity} from "model/EventEntity";
-import connectAppState from "components/containers/AppStateRefresh";
+import connectAppState from "components/AppStateRefresh";
+import Screen from "screens/Screen";
+import Touchable from "components/Touchable";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
 }
 
 interface DispatchProps {
-    loadData: () => void
+    loadData: (fireStartLoading: boolean) => void
 }
 
 interface StateProps {
-    navigation: NavigationScreenProp<{}, {}>
     loading: boolean,
     events: EventEntity[]
     groups: EventGroup[]
     favorites: Set<number>
 }
 
-type ComponentProps = StateProps & DispatchProps
+type ComponentProps = StateProps & DispatchProps & ExternalProps
 
 interface State {
     refreshing: boolean
+    expanded: Set<number>
+}
+
+interface LiveSection extends SectionListData<EventEntity> {
+    count: number,
+    order: number
 }
 
 class LiveEventsScreen extends React.Component<ComponentProps, State> {
@@ -52,23 +59,34 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
     constructor() {
         super();
         this.state = {
-            refreshing: false
+            refreshing: false,
+            expanded: Set([0])
         }
     }
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
         return nextProps.loading !== this.props.loading ||
             nextProps.favorites.count() !== this.props.favorites.count() ||
-            nextProps.events.length !== this.props.events.length
+            nextProps.events.length !== this.props.events.length ||
+            nextState.expanded !== this.state.expanded
     }
 
     componentDidMount(): void {
-        this.props.loadData()
+        this.props.loadData(true)
     }
 
-
     public render() {
+        return (
+            <Screen title="Live right now" {...this.props} rootScreen>
+                {this.renderBody()}
+            </Screen>
+        )
+    }
+
+    public renderBody() {
         const {loading, events, groups, favorites} = this.props;
+        let { expanded} = this.state
+
 
         if (loading) {
             return <View>
@@ -76,11 +94,13 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             </View>
         }
 
-        const sections: SectionListData<EventEntity>[] = groups.map(group => ({
+        const sections: LiveSection[] = groups.map(group => ({
             title: group.englishName,
             sport: group.sport,
             sortOrder: group.sortOrder && parseInt(group.sortOrder, 10) || 100,
-            data: events.filter(event => event.sport === group.sport)
+            data: events.filter(event => event.sport === group.sport),
+            order: 0,
+            count: 0
         })).sort((a, b) => a.sortOrder - b.sortOrder);
 
         if (!favorites.isEmpty()) {
@@ -88,40 +108,51 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
                 title: "Favorites",
                 sport: "arne",
                 sortOrder: 0,
-                data: events.filter(event => favorites.contains(event.id))
+                data: events.filter(event => favorites.contains(event.id)),
+                order: 0,
+                count: 0
             })
         }
 
+        let i = 0;
+        for (let sec of sections) {
+            sec.order = i
+            sec.count = sec.data.length
+            if (!expanded.has(i)) {
+                sec.data = []
+            }
+            i++;
+        }
+
+
         return (
-            <View>
-                <SectionList
-                    stickySectionHeadersEnabled={true}
-                    refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
-                    sections={sections}
-                    renderSectionHeader={this.renderSectionHeader}
-                    keyExtractor={this.keyExtractor}
-                    renderItem={this.renderItem}
-                />
-            </View>
+            <SectionList
+                stickySectionHeadersEnabled={true}
+                refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
+                sections={sections}
+                renderSectionHeader={this.renderSectionHeader}
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderItem}
+            />
         )
     }
 
     @autobind
     private onRefresh() {
-        this.props.loadData()
+        this.props.loadData(true)
     }
 
     @autobind
     private renderItem(info: ListRenderItemInfo<EventEntity>) {
         const event: EventEntity = info.item;
         let orient = orientation();
-        return <LiveEventListItem eventId={event.id}
-                                  navigation={this.props.navigation}
-                                  orientation={orient}/>
+        return <EventListItem eventId={event.id}
+                              navigation={this.props.navigation}
+                              orientation={orient}/>
     }
 
     @autobind
-    private renderSectionHeader(info: { section: SectionListData<LiveEvent> }) {
+    private renderSectionHeader(info: { section: LiveSection }) {
         if (info.section.title === "Favorites") {
             if (info.section.data.length === 0) {
                 return null
@@ -138,17 +169,32 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             )
         }
         return (
-            <View style={headerStyle}>
-                <Text style={liveTextStyle}>Live</Text>
-                <Text style={sportTextStyle}>{info.section.title}</Text>
-                <Text style={countTextStyle}>{info.section.data.length}</Text>
-            </View>
+            <Touchable onPress={() => this.toggleSection(info.section.order)}>
+                <View style={headerStyle}>
+                    <Text style={liveTextStyle}>Live</Text>
+                    <Text style={sportTextStyle}>{info.section.title}</Text>
+                    <Text style={countTextStyle}>{info.section.count}</Text>
+                </View>
+            </Touchable>
         )
     }
 
     private keyExtractor(event: EventEntity): string {
         return event.id.toString()
     }
+
+    @autobind
+    private toggleSection(order: number) {
+        this.setState(prevState => {
+                let expanded: Set<number> = prevState.expanded
+                expanded = expanded.has(order) ? expanded.delete(order) : expanded.add(order)
+                return {
+                    expanded: expanded
+                }
+            }
+        )
+    }
+
 }
 
 const headerStyle: ViewStyle = {
@@ -184,7 +230,6 @@ const countTextStyle: TextStyle = {
 // Connect compoentn to store and appstate
 
 
-
 function mapEvents(state: AppStore): EventEntity[] {
     const events: EventEntity[] = []
     for (let eventId of state.liveStore.liveEvents) {
@@ -201,18 +246,17 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     loading: state.liveStore.loading,
     events: mapEvents(state),
     groups: state.liveStore.groups,
-    favorites: state.favoriteStore.favorites,
-    navigation: inputProps.navigation
+    favorites: state.favoriteStore.favorites
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
-        loadData: (): any => dispatch(LiveActions.load())
+        loadData: (fireStartLoad: boolean): any => dispatch(LiveActions.load(fireStartLoad))
     }
 )
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps) => props.loadData())(LiveEventsScreen)
+    connectAppState((props: ComponentProps) => props.loadData(false))(LiveEventsScreen)
 
 export const LiveEventsWithData: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)

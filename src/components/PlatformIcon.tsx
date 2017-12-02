@@ -9,7 +9,7 @@ interface Props {
     outline?: boolean
 }
 
-export default class CrossPlatformIcon extends React.PureComponent<Props> {
+export default class PlatformIcon extends React.PureComponent<Props> {
     private _root: any;
 
     // noinspection JSUnusedGlobalSymbols

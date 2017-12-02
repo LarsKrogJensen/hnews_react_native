@@ -22,12 +22,11 @@ export default function liveReducer(state: LiveEventsStore = initialState, actio
                 loading: true
             }
         case LIVE_LOAD_SUCCESS:
-
             return {
                 ...state,
                 loading: false,
                 liveEvents: action.data.liveEvents.map(liveEvent => liveEvent.event.id),
-                groups: action.data.group.groups
+                groups: action.data.group.groups || []
             }
         case LIVE_LOAD_FAILED:
             return {
