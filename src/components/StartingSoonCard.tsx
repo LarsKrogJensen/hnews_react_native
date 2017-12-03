@@ -1,0 +1,83 @@
+import * as React from "react"
+import {ComponentClass} from "react"
+import {Card} from "react-native-material-ui";
+import {Text, View, ViewStyle} from "react-native";
+import {NavigationScreenProp} from "react-navigation";
+import {EventEntity} from "model/EventEntity";
+import {connect} from "react-redux";
+import {AppStore} from "store/store";
+import BetOfferItem from "components/BetOfferItem"
+import {Orientation} from "lib/device";
+import EventPathItem from "components/EventPathItem";
+
+interface ExternalProps {
+    eventId: number
+    navigation: NavigationScreenProp<{}, {}>,
+}
+
+interface StateProps {
+    event: EventEntity
+}
+
+type Props = StateProps & ExternalProps
+
+class StartingSoonCard extends React.Component<Props> {
+    public render() {
+        return (
+            <Card style={{container: cardStyle}} onPress={() => this.props.navigation.navigate("Event")}>
+                <View>
+                    {this.renderHeader()}
+                    {this.renderBody()}
+                </View>
+            </Card>
+        )
+    }
+
+    private renderHeader() {
+        return (
+            <View style={headerStyle}>
+                <Text style={{fontWeight: "500", flex: 1}}>STARTING SOON</Text>
+                <Text>time</Text>
+            </View>
+        )
+    }
+
+    private renderBody() {
+        let event = this.props.event;
+        return (
+            <View style={bodyStyle}>
+                <Text style={{fontSize: 20, marginTop: 8}}>{event.name}</Text>
+                <EventPathItem event={event} style={{marginBottom: 8}}/>
+                <BetOfferItem orientation={Orientation.Portrait} betofferId={event.mainBetOfferId}/>
+            </View>
+        )
+    }
+}
+
+const cardStyle: ViewStyle = {
+    backgroundColor: "#F6F6F6"
+}
+
+const headerStyle: ViewStyle = {
+    flexDirection: "row",
+    padding: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(0, 0, 0, 0.12)"
+}
+
+const bodyStyle: ViewStyle = {
+    padding: 8,
+    justifyContent: "center",
+    alignItems: "center"
+
+}
+
+
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+    event: state.entityStore.events.get(inputProps.eventId)
+})
+
+const WithData: ComponentClass<ExternalProps> =
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(StartingSoonCard)
+
+export default WithData

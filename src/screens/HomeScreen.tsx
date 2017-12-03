@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {ActivityIndicator, Button, View} from "react-native"
+import {ActivityIndicator, RefreshControl, ScrollView, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
@@ -9,6 +9,8 @@ import {load} from "store/landing/actions";
 import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/AppStateRefresh";
 import Screen from "screens/Screen";
+import StartingSoonCard from "components/StartingSoonCard";
+import autobind from "autobind-decorator";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -58,13 +60,27 @@ class HomeScreen extends React.Component<ComponentProps> {
         }
 
         return (
-            <View>
-                <Button title="Event" onPress={() => this.props.navigation.navigate("Event")}/>
-            </View>
+            <ScrollView
+                refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
+                {this.renderStartingSoon()}
+            </ScrollView>
         )
     }
-}
 
+    private renderStartingSoon() {
+        return this.props.startingSoon
+            .events.map(eventId =>
+                <StartingSoonCard key={`startingSoon${eventId}`}
+                                  eventId={eventId}
+                                  navigation={this.props.navigation}/>
+            )
+    }
+
+    @autobind
+    private onRefresh() {
+        this.props.loadData(true)
+    }
+}
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     loading: state.landingStore.loading,
