@@ -4,6 +4,7 @@ import {Text, TextStyle} from "react-native";
 
 interface Props {
     start: string,
+    format: string,
     style?: TextStyle
 }
 
@@ -34,7 +35,7 @@ export default class CountDown extends React.Component<Props, State> {
 
     public render() {
         let diff: number = this.state.startTime.diff(this.state.now);
-        const timeToStart = moment.utc(diff).format("HH:mm:ss")
+        const timeToStart = moment.utc(diff).format(this.props.format)
 
         return <Text style={this.props.style}>{timeToStart}</Text>
     }

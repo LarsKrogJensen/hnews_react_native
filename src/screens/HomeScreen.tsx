@@ -10,6 +10,7 @@ import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/AppStateRefresh";
 import Screen from "screens/Screen";
 import StartingSoonCard from "components/StartingSoonCard";
+import TrendingCard from "components/TrendingCard";
 import autobind from "autobind-decorator";
 
 interface ExternalProps {
@@ -63,6 +64,7 @@ class HomeScreen extends React.Component<ComponentProps> {
             <ScrollView
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
                 {this.renderStartingSoon()}
+                {this.renderTrending()}
             </ScrollView>
         )
     }
@@ -73,6 +75,15 @@ class HomeScreen extends React.Component<ComponentProps> {
                 <StartingSoonCard key={`startingSoon${eventId}`}
                                   eventId={eventId}
                                   navigation={this.props.navigation}/>
+            )
+    }
+
+    private renderTrending() {
+        return this.props.popular
+            .events.map(eventId =>
+                <TrendingCard key={`trending${eventId}`}
+                              eventId={eventId}
+                              navigation={this.props.navigation}/>
             )
     }
 

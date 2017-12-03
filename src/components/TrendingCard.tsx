@@ -9,7 +9,8 @@ import {AppStore} from "store/store";
 import BetOfferItem from "components/BetOfferItem"
 import {Orientation} from "lib/device";
 import EventPathItem from "components/EventPathItem";
-import CountDown from "components/CountDown";
+import * as moment from "moment";
+import {months} from "moment";
 
 interface ExternalProps {
     eventId: number
@@ -22,7 +23,7 @@ interface StateProps {
 
 type Props = StateProps & ExternalProps
 
-class StartingSoonCard extends React.Component<Props> {
+class TrendingCard extends React.Component<Props> {
     public render() {
         return (
             <Card style={{container: cardStyle}} onPress={() => this.props.navigation.navigate("Event")}>
@@ -35,10 +36,21 @@ class StartingSoonCard extends React.Component<Props> {
     }
 
     private renderHeader() {
+        const now = moment.utc(moment.now())
+        const startTime = moment.utc(this.props.event.start).local()
+
+        let datum = ""
+        if (startTime.isSame(now, "d")) {
+            datum = "Today " + startTime.format("HH:mm")
+        } else if (startTime.isAfter(now, "d")) {
+            datum = "Tomorrow "  + startTime.format("HH:mm")
+        } else {
+            datum = startTime.format("yyyy:mm:dd HH:mm")
+        }
         return (
             <View style={headerStyle}>
-                <Text style={{fontWeight: "500", flex: 1}}>STARTING SOON</Text>
-                <CountDown start={this.props.event.start} format="HH:mm:ss"/>
+                <Text style={{fontWeight: "500", flex: 1}}>TRENDING</Text>
+                <Text>{datum}</Text>
             </View>
         )
     }
@@ -81,6 +93,6 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 })
 
 const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, {}, ExternalProps>(mapStateToProps)(StartingSoonCard)
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(TrendingCard)
 
 export default WithData
