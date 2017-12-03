@@ -15,6 +15,7 @@
     "autobind-decorator": "^2.1.0",
     "immutable": "^3.8.2",
     "lodash": "^4.17.4",
+    "moment": "^2.19.3",
     "react": "16.0.0",
     "react-native": "0.50.4",
     "react-native-material-ui": "^1.15.0",

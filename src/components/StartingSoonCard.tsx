@@ -9,6 +9,7 @@ import {AppStore} from "store/store";
 import BetOfferItem from "components/BetOfferItem"
 import {Orientation} from "lib/device";
 import EventPathItem from "components/EventPathItem";
+import CountDown from "components/CountDown";
 
 interface ExternalProps {
     eventId: number
@@ -37,7 +38,7 @@ class StartingSoonCard extends React.Component<Props> {
         return (
             <View style={headerStyle}>
                 <Text style={{fontWeight: "500", flex: 1}}>STARTING SOON</Text>
-                <Text>time</Text>
+                <CountDown start={this.props.event.start}/>
             </View>
         )
     }
@@ -46,9 +47,11 @@ class StartingSoonCard extends React.Component<Props> {
         let event = this.props.event;
         return (
             <View style={bodyStyle}>
-                <Text style={{fontSize: 20, marginTop: 8}}>{event.name}</Text>
-                <EventPathItem event={event} style={{marginBottom: 8}}/>
-                <BetOfferItem orientation={Orientation.Portrait} betofferId={event.mainBetOfferId}/>
+                <Text style={{fontSize: 20, marginTop: 8, textAlign: "center"}}>{event.name}</Text>
+                <EventPathItem event={event}
+                               style={{marginBottom: 8, alignSelf: "center"}}/>
+                <BetOfferItem orientation={Orientation.Portrait}
+                              betofferId={event.mainBetOfferId}/>
             </View>
         )
     }
@@ -68,7 +71,7 @@ const headerStyle: ViewStyle = {
 const bodyStyle: ViewStyle = {
     padding: 8,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "stretch"
 
 }
 
