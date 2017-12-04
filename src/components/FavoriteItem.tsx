@@ -1,14 +1,16 @@
 import * as React from "react"
 import PlatformIcon from "components/PlatformIcon";
-import {TouchableHighlight} from "react-native";
+import {TouchableHighlight, ViewStyle} from "react-native";
 import * as Actions from "store/favorite/actions"
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {ComponentClass} from "react";
 import {connect} from "react-redux";
+import {IconToggle} from "react-native-material-ui";
 
 interface ExternalProps {
     eventId: number
+    style?: ViewStyle
 }
 
 interface StateProps {
@@ -19,7 +21,7 @@ interface DispatchProps {
     setFavorite: (favorite: boolean) => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ExternalProps
 
 class FavoriteItem extends React.Component<Props> {
 
@@ -30,21 +32,18 @@ class FavoriteItem extends React.Component<Props> {
     public render() {
         const {isFavorite, setFavorite} = this.props
         return (
-            <TouchableHighlight
-                onPress={() => requestAnimationFrame(() => setFavorite(!isFavorite))}
-                style={{borderRadius: 5}}>
-                <PlatformIcon
-                    name={"star"}
-                    size={30}
-                    color={isFavorite ? "darkorange" : "#717171"}
-                    outline={!isFavorite}/>
-            </TouchableHighlight>
+            <IconToggle name="star"
+                        size={30}
+                        color={isFavorite ? "darkorange" : "#717171"}
+                        onPress={() => setFavorite(!isFavorite)}
+                        style={{container: this.props.style}}
+            />
         )
     }
 }
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
-    isFavorite: state.favoriteStore.favorites[inputProps.eventId]
+    isFavorite: state.favoriteStore.favorites.has(inputProps.eventId)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (

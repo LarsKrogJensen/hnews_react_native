@@ -27,10 +27,9 @@ export default class EventDetailsItem extends React.PureComponent<Props> {
                         <Text numberOfLines={1}
                               ellipsizeMode={"tail"}
                               style={participantStyle}>{event.awayName}</Text>
+                        <View style={pathStyle}>{this.renderPath(event)}</View>
                     </View>
-                    <View style={{justifyContent: "center"}}>
-                        <FavoriteItem eventId={event.id}/>
-                    </View>
+                    <FavoriteItem eventId={event.id} style={{justifyContent: "center"}}/>
                     <View style={{justifyContent: "center", minWidth: 48}}>
                         <Text style={{
                             fontSize: 12,
@@ -40,7 +39,6 @@ export default class EventDetailsItem extends React.PureComponent<Props> {
                         }}>+{event.liveBoCount || event.nonLiveBoCount}</Text>
                     </View>
                 </View>
-                <View style={pathStyle}>{this.renderPath(event)}</View>
             </View>
         )
     }

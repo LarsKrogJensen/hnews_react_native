@@ -33,20 +33,19 @@ export default class EventTimeItem extends React.PureComponent<Props> {
         const now = moment.utc(moment.now())
         const secondsToGo = start.diff(now, "s");
         const total = 15 * 60;
-
-
-        if (secondsToGo < total) {
-            const fill = (secondsToGo / total) * 100
+        
+        if (secondsToGo < total && secondsToGo > 0) {
+            const fill = 100 - (secondsToGo / total) * 100
             console.log("Fill: " + fill)
-            const radius = 20;
             return (
                 <View style={{alignItems: "center"}}>
                     <AnimatedCircularProgress
                         size={20}
                         width={10}
                         fill={fill}
+                        preFill={fill}
                         rotation={0}
-                        tintColor="#00e0ff"
+                        tintColor="#00ADC9"
                         backgroundColor="#ddd"/>
                     <CountDown style={{marginTop: 4}}
                                start={this.props.event.start}
