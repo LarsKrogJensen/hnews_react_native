@@ -33,10 +33,9 @@ export default class EventTimeItem extends React.PureComponent<Props> {
         const now = moment.utc(moment.now())
         const secondsToGo = start.diff(now, "s");
         const total = 15 * 60;
-        
+
         if (secondsToGo < total && secondsToGo > 0) {
             const fill = 100 - (secondsToGo / total) * 100
-            console.log("Fill: " + fill)
             return (
                 <View style={{alignItems: "center"}}>
                     <AnimatedCircularProgress
@@ -52,8 +51,6 @@ export default class EventTimeItem extends React.PureComponent<Props> {
                                format="mm:ss"/>
                 </View>
             )
-
-            // return
         }
 
         return this.renderDateTime()

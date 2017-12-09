@@ -12,6 +12,7 @@ import Screen from "screens/Screen";
 import StartingSoonCard from "components/StartingSoonCard";
 import TrendingCard from "components/TrendingCard";
 import autobind from "autobind-decorator";
+import LiveCard from "components/LiveCard";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -63,10 +64,20 @@ class HomeScreen extends React.Component<ComponentProps> {
         return (
             <ScrollView
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
+                {this.renderLiveRightNow()}
                 {this.renderStartingSoon()}
                 {this.renderTrending()}
             </ScrollView>
         )
+    }
+
+    private renderLiveRightNow() {
+        return this.props.liveRightNow
+            .events.map(eventId =>
+                <LiveCard key={`lrn${eventId}`}
+                          eventId={eventId}
+                          navigation={this.props.navigation}/>
+            )
     }
 
     private renderStartingSoon() {

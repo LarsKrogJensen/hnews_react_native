@@ -3,6 +3,7 @@ import {LiveData, MatchClock, Score, SetStats, Statistics} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
 import EventTimeItem from "components/EventTimeItem";
+import MatchClockItem from "components/MatchClockItem";
 
 interface Props {
     style: ViewStyle,
@@ -42,8 +43,7 @@ export default class EventScoreItem extends React.PureComponent<Props> {
             <View style={{...this.props.style, alignItems: "center"}}>
                 <Text style={setStyle}>{score.home}</Text>
                 <Text style={setStyle}>{score.away}</Text>
-                <Text
-                    style={timeStyle}>{matchClock.minute}:{this.leftPad(matchClock.second.toString(), 2)}</Text>
+                <MatchClockItem matchClock={matchClock} style={timeStyle}/>
             </View>
         );
     }
@@ -112,12 +112,6 @@ export default class EventScoreItem extends React.PureComponent<Props> {
         }
 
         return summary
-    }
-
-    private leftPad(str: string, len: number, ch = '0'): string {
-        len = len - str.length + 1;
-        return len > 0 ?
-            new Array(len).join(ch) + str : str;
     }
 }
 
