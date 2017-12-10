@@ -11,7 +11,7 @@ import {Orientation} from "lib/device";
 import {LiveData, ShirtColors} from "api/typings";
 import MatchClockItem from "components/MatchClockItem";
 import {CircularProgress} from 'react-native-circular-progress';
-import Svg, {Circle, Path} from "react-native-svg";
+import Svg, {Circle, Path, Rect} from "react-native-svg";
 
 
 interface ExternalProps {
@@ -39,25 +39,32 @@ class LiveCardComponent extends React.Component<Props> {
     }
 
     private renderHeader() {
-        const event = this.props.event;
+        const {event, liveData} = this.props
         return (
             <View style={headerStyle}>
                 <View style={pathStyle}>
                     {this.renderPath(event)}
                 </View>
-                <MatchClockItem matchClock={this.props.liveData.matchClock}/>
+                {liveData && <MatchClockItem matchClock={liveData.matchClock}/>}
             </View>
         )
     }
 
     private renderBody() {
+        const {event} = this.props;
+
+        return (
+            <View style={bodyStyle}>
+                {this.renderTeams()}
+                <BetOfferItem orientation={Orientation.Portrait} betofferId={event.mainBetOfferId}/>
+            </View>
+        )
+    }
+
+    private renderTeams() {
         const {event, liveData} = this.props;
 
-        const rowStyle: ViewStyle = {
-            marginLeft: 8,
-            marginRight: 8,
-            marginTop: 4,
-            marginBottom: 0,
+        const teamRowStyle: ViewStyle = {
             flexDirection: "row",
             alignItems: "center"
         }
@@ -65,39 +72,76 @@ class LiveCardComponent extends React.Component<Props> {
         const textStyle: TextStyle = {fontSize: 20, flex: 1, marginLeft: 8}
 
         return (
-            <View style={bodyStyle}>
-                <View style={rowStyle}>
-                    {this.renderTeamColors(event.teamColors && event.teamColors.home)}
-                    <Text style={textStyle}>{event.homeName}</Text>
-                    {this.renderScore(liveData, true)}
+            <View style={{flexDirection: "row", marginRight: 8}}>
+                <View style={{flexDirection: "column", flex: 1}}>
+                    <View style={teamRowStyle}>
+                        {this.renderTeamColors(event.teamColors && event.teamColors.home)}
+                        <Text style={textStyle}>{event.homeName}</Text>
+                        {this.renderServe(liveData, true)}
+                    </View>
+                    <View style={{...teamRowStyle, marginBottom: 8}}>
+                        {this.renderTeamColors(event.teamColors && event.teamColors.away)}
+                        <Text style={textStyle}>{event.awayName}</Text>
+                        {this.renderServe(liveData, true)}
+                    </View>
                 </View>
-                <View style={{...rowStyle, marginBottom: 8}}>
-                    {this.renderTeamColors(event.teamColors && event.teamColors.away)}
-                    <Text style={textStyle}>{event.awayName}</Text>
-                    {this.renderScore(liveData, false)}
-                </View>
-                <BetOfferItem orientation={Orientation.Portrait} betofferId={event.mainBetOfferId}/>
+                {this.renderScoreColumns(liveData)}
             </View>
         )
     }
 
-    private renderScore(liveData: LiveData, home: boolean) {
+    private renderScoreColumns(liveData: LiveData) {
         const {statistics: stats, score} = liveData
 
-        if (stats && stats.football && score) {
-            return <Text style={{fontSize: 20}}>{home ? score.home : score.away}</Text>
-        } else if (stats && stats.sets && score) {
-            return this.renderSetScore(home ? stats.sets.home : stats.sets.away, home ? score.home : score.away)
+        if (stats && stats.sets && score) {
+            const elements: JSX.Element[] = []
+
+            const homeSets = stats.sets.home;
+            const awaySets = stats.sets.away;
+
+            for (let i = 0; i < homeSets.length; i++) {
+                const home = homeSets[i];
+                const away = awaySets[i];
+
+                elements.push(
+                    <View key={"sets" + i + liveData.eventId}
+                          style={{flexDirection: "column", alignItems: "center", marginLeft: 8}}>
+                        <Text style={{fontSize: 20}}>{home === -1 ? 0 : home}</Text>
+                        <Text style={{fontSize: 20}}>{away === -1 ? 0 : away}</Text>
+                    </View>
+                )
+            }
+            elements.push(
+                <View key={"score" + liveData.eventId}
+                      style={{flexDirection: "column", alignItems: "center", marginLeft: 8}}>
+                    <Text style={{fontSize: 20, color: "#00ADC9"}}>{score.home}</Text>
+                    <Text style={{fontSize: 20, color: "#00ADC9"}}>{score.away}</Text>
+                </View>
+            )
+
+            return elements;
+        } else if (score) {
+            return (
+                <View style={{flexDirection: "column", alignItems: "center"}}>
+                    <Text style={{fontSize: 20}}>{score.home}</Text>
+                    <Text style={{fontSize: 20}}>{score.away}</Text>
+                </View>
+            )
         }
 
-        return <Text style={{fontSize: 20}}>0</Text>
+        return null;
     }
 
-    private renderSetScore(sets: number[], score: string) {
-        const elements = sets.map(value => <Text style={{marginLeft: 4, fontSize: 20}}>{value === -1 ? 0 : value}</Text>)
-        elements.push(<Text style={{marginLeft: 4, fontSize: 20, color: "#00ADC9"}}>{score}</Text>)
+    private renderServe(liveData: LiveData, home: boolean) {
+        if (liveData && liveData.statistics && liveData.statistics.sets && liveData.statistics.sets.homeServe === home) {
+            return (
+                <Svg width={16} height={16} style={{flex: 1}}>
+                    <Circle cx={8} cy={8} r={4} fill="#F7CE00"/>
+                </Svg>
+            )
+        }
 
-        return elements
+        return null;
     }
 
     private renderPath(event: EventEntity): JSX.Element[] {
@@ -117,11 +161,11 @@ class LiveCardComponent extends React.Component<Props> {
     private renderTeamColors(colors: ShirtColors | undefined) {
 
         if (!colors) return null
-        
+
         return (
-            <Svg width={20} height={20} >
+            <Svg width={20} height={20}>
                 <Circle cx={10} cy={10} r={7} fill={colors.shirtColor1 || "none"}/>
-                <Path d="M3,10 a1,1 0 0,0 14,0" fill={colors.shirtColor2 || "none"} rotate={45}/>
+                <Path d="M3,10 a1,1 0 0,0 14,0" fill={colors.shirtColor2 || "none"} rotation={-45} originX={10} originY={10}/>
                 <Circle cx={10} cy={10} r={7} stroke="darkgrey" fill="none"/>
             </Svg>
         )
