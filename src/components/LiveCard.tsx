@@ -11,6 +11,7 @@ import {Orientation} from "lib/device";
 import {LiveData, ShirtColors} from "api/typings";
 import MatchClockItem from "components/MatchClockItem";
 import {CircularProgress} from 'react-native-circular-progress';
+import Svg, {Circle, Path} from "react-native-svg";
 
 
 interface ExternalProps {
@@ -93,7 +94,7 @@ class LiveCardComponent extends React.Component<Props> {
     }
 
     private renderSetScore(sets: number[], score: string) {
-        const elements = sets.map(value => <Text style={{marginLeft: 4, fontSize: 20}}>{value}</Text>)
+        const elements = sets.map(value => <Text style={{marginLeft: 4, fontSize: 20}}>{value === -1 ? 0 : value}</Text>)
         elements.push(<Text style={{marginLeft: 4, fontSize: 20, color: "#00ADC9"}}>{score}</Text>)
 
         return elements
@@ -115,15 +116,15 @@ class LiveCardComponent extends React.Component<Props> {
 
     private renderTeamColors(colors: ShirtColors | undefined) {
 
-        return <CircularProgress backgroundColor="green"
-                                 backgroundWidth={10}
-                                 tintColor="red"
-                                 size={16}
-                                 width={8}
-                                 fill={50}
-                                 rotation={45}/>
-
-        // return <View/>
+        if (!colors) return null
+        
+        return (
+            <Svg width={20} height={20} >
+                <Circle cx={10} cy={10} r={7} fill={colors.shirtColor1 || "none"}/>
+                <Path d="M3,10 a1,1 0 0,0 14,0" fill={colors.shirtColor2 || "none"} rotate={45}/>
+                <Circle cx={10} cy={10} r={7} stroke="darkgrey" fill="none"/>
+            </Svg>
+        )
     }
 }
 
