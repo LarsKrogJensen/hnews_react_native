@@ -8,8 +8,10 @@ import {connect} from "react-redux";
 import {AppStore} from "store/store";
 import BetOfferItem from "components/BetOfferItem"
 import {Orientation} from "lib/device";
-import {LiveData} from "api/typings";
+import {LiveData, ShirtColors} from "api/typings";
 import MatchClockItem from "components/MatchClockItem";
+import {CircularProgress} from 'react-native-circular-progress';
+
 
 interface ExternalProps {
     eventId: number
@@ -58,14 +60,19 @@ class LiveCardComponent extends React.Component<Props> {
             flexDirection: "row",
             alignItems: "center"
         }
+
+        const textStyle: TextStyle = {fontSize: 20, flex: 1, marginLeft: 8}
+
         return (
             <View style={bodyStyle}>
                 <View style={rowStyle}>
-                    <Text style={{fontSize: 20, flex: 1}}>{event.homeName}</Text>
+                    {this.renderTeamColors(event.teamColors && event.teamColors.home)}
+                    <Text style={textStyle}>{event.homeName}</Text>
                     {this.renderScore(liveData, true)}
                 </View>
                 <View style={{...rowStyle, marginBottom: 8}}>
-                    <Text style={{fontSize: 20, flex: 1}}>{event.awayName}</Text>
+                    {this.renderTeamColors(event.teamColors && event.teamColors.away)}
+                    <Text style={textStyle}>{event.awayName}</Text>
                     {this.renderScore(liveData, false)}
                 </View>
                 <BetOfferItem orientation={Orientation.Portrait} betofferId={event.mainBetOfferId}/>
@@ -104,6 +111,19 @@ class LiveCardComponent extends React.Component<Props> {
                                  style={pathEntryStyle}>{path.name}</Text>)
         })
         return pathArray;
+    }
+
+    private renderTeamColors(colors: ShirtColors | undefined) {
+
+        return <CircularProgress backgroundColor="green"
+                                 backgroundWidth={10}
+                                 tintColor="red"
+                                 size={16}
+                                 width={8}
+                                 fill={50}
+                                 rotation={45}/>
+
+        // return <View/>
     }
 }
 

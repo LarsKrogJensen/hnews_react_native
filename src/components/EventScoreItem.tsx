@@ -2,7 +2,6 @@ import * as React from "react"
 import {LiveData, MatchClock, Score, SetStats, Statistics} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
-import EventTimeItem from "components/EventTimeItem";
 import MatchClockItem from "components/MatchClockItem";
 
 interface Props {
