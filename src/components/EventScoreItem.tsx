@@ -126,5 +126,5 @@ const scoreStyle: TextStyle = {
 const timeStyle: TextStyle = {
     fontSize: 12,
     color: "#717171",
-    marginTop: 4
+    marginTop: 2
 }

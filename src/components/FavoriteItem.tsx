@@ -33,7 +33,7 @@ class FavoriteItem extends React.Component<Props> {
         const {isFavorite, setFavorite} = this.props
         return (
             <IconToggle name="star"
-                        size={30}
+                        size={25}
                         color={isFavorite ? "darkorange" : "#717171"}
                         onPress={() => setFavorite(!isFavorite)}
                         style={{container: this.props.style}}

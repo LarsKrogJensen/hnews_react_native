@@ -29,9 +29,10 @@ export default class EventDetailsItem extends React.PureComponent<Props> {
                               style={participantStyle}>{event.awayName}</Text>
                         <View style={pathStyle}>{this.renderPath(event)}</View>
                     </View>
-                    <FavoriteItem eventId={event.id} style={{justifyContent: "center"}}/>
-                    <View style={{justifyContent: "center", minWidth: 48}}>
+                    <View style={{justifyContent: "center", flexDirection: "row", alignItems: "center"}}>
+                        <FavoriteItem eventId={event.id} style={{justifyContent: "center"}}/>
                         <Text style={{
+                            minWidth: 48,
                             fontSize: 12,
                             padding: 8,
                             color: "#717171",
@@ -39,6 +40,7 @@ export default class EventDetailsItem extends React.PureComponent<Props> {
                         }}>+{event.liveBoCount || event.nonLiveBoCount}</Text>
                     </View>
                 </View>
+
             </View>
         )
     }
@@ -67,10 +69,10 @@ const participantStyle: TextStyle = {
 }
 
 const pathStyle: TextStyle = {
-    flex: 1,
     paddingLeft: 16,
     flexDirection: "row",
-    marginTop: 4
+    marginTop: 2,
+    alignItems: "center"
 }
 
 const pathEntryStyle: TextStyle = {
