@@ -17,7 +17,7 @@ export interface LandingLoadFailedAction {
 
 export type LandingLoadAction = LandingStartLoadAction | LandingLoadSuccessAction | LandingLoadFailedAction
 
-export function load(fireStartLoad: boolean = true): Dispatch<LandingLoadAction> {
+export function loadLanding(fireStartLoad: boolean = true): Dispatch<LandingLoadAction> {
     return async dispatch => {
         if (fireStartLoad) {
             dispatch({type: types.LANDING_START_LOADING})

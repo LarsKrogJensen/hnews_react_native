@@ -11,7 +11,8 @@ import {Orientation} from "lib/device";
 import {LiveData, ShirtColors} from "api/typings";
 import MatchClockItem from "components/MatchClockItem";
 import {CircularProgress} from 'react-native-circular-progress';
-import Svg, {Circle, Path, Rect} from "react-native-svg";
+import Svg, {Circle, Path} from "react-native-svg";
+import Touchable from "components/Touchable";
 
 
 interface ExternalProps {
@@ -29,12 +30,14 @@ type Props = StateProps & ExternalProps
 class LiveCardComponent extends React.Component<Props> {
     public render() {
         return (
-            <Card style={{container: cardStyle}} onPress={() => this.props.navigation.navigate("Event")}>
-                <View>
-                    {this.renderHeader()}
-                    {this.renderBody()}
-                </View>
-            </Card>
+            <View style={cardStyle}>
+                <Touchable onPress={() => this.props.navigation.navigate("Event")}>
+                    <View>
+                        {this.renderHeader()}
+                        {this.renderBody()}
+                    </View>
+                </Touchable>
+            </View>
         )
     }
 
@@ -42,6 +45,7 @@ class LiveCardComponent extends React.Component<Props> {
         const {event, liveData} = this.props
         return (
             <View style={headerStyle}>
+                <Text style={liveTextStyle}>Live</Text>
                 <View style={pathStyle}>
                     {this.renderPath(event)}
                 </View>
@@ -165,7 +169,8 @@ class LiveCardComponent extends React.Component<Props> {
         return (
             <Svg width={20} height={20}>
                 <Circle cx={10} cy={10} r={7} fill={colors.shirtColor1 || "none"}/>
-                <Path d="M3,10 a1,1 0 0,0 14,0" fill={colors.shirtColor2 || "none"} rotation={-45} originX={10} originY={10}/>
+                <Path d="M3,10 a1,1 0 0,0 14,0" fill={colors.shirtColor2 || "none"} rotation={-45} originX={10}
+                      originY={10}/>
                 <Circle cx={10} cy={10} r={7} stroke="darkgrey" fill="none"/>
             </Svg>
         )
@@ -174,6 +179,13 @@ class LiveCardComponent extends React.Component<Props> {
 
 const cardStyle: ViewStyle = {
     backgroundColor: "#F6F6F6"
+}
+
+const liveTextStyle: TextStyle = {
+    color: "red",
+    fontSize: 16,
+    marginRight: 8,
+    fontWeight: "bold"
 }
 
 const headerStyle: ViewStyle = {

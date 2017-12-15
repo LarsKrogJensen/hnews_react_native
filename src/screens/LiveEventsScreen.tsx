@@ -251,7 +251,7 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
-        loadData: (fireStartLoad: boolean): any => dispatch(LiveActions.load(fireStartLoad))
+        loadData: (fireStartLoad: boolean): any => dispatch(LiveActions.loadOpenForLive(fireStartLoad))
     }
 )
 

@@ -64,6 +64,6 @@ const NavApp = DrawerNavigator(
 
 const {UIManager} = NativeModules;
 
-// UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
 export default NavApp;

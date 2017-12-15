@@ -1,11 +1,12 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {ActivityIndicator, RefreshControl, ScrollView, View} from "react-native"
+import {ActivityIndicator, RefreshControl, ScrollView, TouchableHighlight, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import {load} from "store/landing/actions";
+import {loadLanding} from "store/landing/actions";
+import {loadOpenForLive} from "store/live/actions";
 import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/AppStateRefresh";
 import Screen from "screens/Screen";
@@ -13,6 +14,7 @@ import StartingSoonCard from "components/StartingSoonCard";
 import TrendingCard from "components/TrendingCard";
 import autobind from "autobind-decorator";
 import LiveCard from "components/LiveCard";
+import Touchable from "components/Touchable";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -116,7 +118,10 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
-        loadData: (fireStartLoad: boolean) => dispatch(load(fireStartLoad))
+        loadData: (fireStartLoad: boolean) => {
+            dispatch(loadLanding(fireStartLoad))
+            dispatch(loadOpenForLive(fireStartLoad))
+        }
     }
 )
 
