@@ -11,6 +11,7 @@ import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {BetOfferEntity} from "model/BetOfferEntity";
 
+
 import {Map} from "immutable"
 import * as _ from "lodash"
 
@@ -46,11 +47,11 @@ export default function entityReducer(state: EntityStore = initialState, action:
             }
         case SOON_LOAD_SUCCESS:
         case SPORT_LOAD_SUCCESS:
-            let soonEvents: EventWithBetOffers[] = action.data.events
-            let betoffers2: BetOffer[] = _.flatMap(soonEvents.map(e => e.betOffers).filter(bo => bo));
+            let events: EventWithBetOffers[] = action.data.events
+            let betoffers2: BetOffer[] = _.flatMap(events.map(e => e.betOffers).filter(bo => bo));
 
             return {
-                events: mergeEventWithBetOffers(state.events, soonEvents),
+                events: mergeEventWithBetOffers(state.events, events),
                 betoffers: mergeBetOffers(state.betoffers, betoffers2),
                 outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers2.map(bo => bo.outcomes)))
             }

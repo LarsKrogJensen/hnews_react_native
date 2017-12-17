@@ -32,13 +32,18 @@ export function loadSport(sport: string, region: string, league: string, fireSta
             const response =
                 await fetch(`https://e4-api.kambi.com/offering/api/v3/kambiplay/listView/${sport}/${region}/${league}.json?lang=en_GB&market=GB&client_id=2&channel_id=1&ncid=1511542067294&categoryGroup=COMBINED&displayDefault=true`);
             const responseJson = await response.json();
-            const end = new Date().getTime();
-            console.log(`Fetch sport (${sport}/${region}/${league}) took ${(end - start)} ms.`)
-            dispatch({
-                type: types.SPORT_LOAD_SUCCESS,
-                key,
-                data: responseJson
-            });
+            if (response.status === 200) {
+                const end = new Date().getTime();
+                console.log(`Fetch sport (${sport}/${region}/${league}) took ${(end - start)} ms.`)
+                dispatch({
+                    type: types.SPORT_LOAD_SUCCESS,
+                    key,
+                    data: responseJson
+                });
+            } else {
+                console.warn("Bad status code on sports load: " + response.status);
+                dispatch({type: types.SPORT_LOAD_FAILED, key})
+            }
         } catch (error) {
             console.error(error);
             dispatch({type: types.SPORT_LOAD_FAILED, key})

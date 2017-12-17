@@ -227,8 +227,8 @@ class Drawer extends React.Component<Props> {
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     loading: state.groupStore.highlightsLoading || state.groupStore.groupsLoading,
-    sports: state.groupStore.sports.map(id => state.groupStore.groupById.get(id)),
-    highlights: state.groupStore.highlights.map(id => state.groupStore.groupById.get(id))
+    sports: state.groupStore.sports.map(id => state.groupStore.groupById.get(id)).filter(g => g),
+    highlights: state.groupStore.highlights.map(id => state.groupStore.groupById.get(id)).filter(g => g)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (

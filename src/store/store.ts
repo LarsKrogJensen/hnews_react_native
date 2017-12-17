@@ -8,6 +8,7 @@ import {default as statsReducer, StatsStore} from "store/stats/reducer";
 import {default as landingReducer, LandingStore} from "store/landing/reducer";
 import {default as groupsReducer, GroupStore} from "store/groups/reducer";
 import {SoonEventsStore, default as soonReducer} from "store/soon/reducer";
+import {SportEventsStore, default as sportReducer} from "store/sport/reducer";
 
 export interface AppStore {
     favoriteStore: FavoriteStore,
@@ -16,7 +17,8 @@ export interface AppStore {
     statsStore: StatsStore,
     landingStore: LandingStore,
     groupStore: GroupStore,
-    soonStore: SoonEventsStore
+    soonStore: SoonEventsStore,
+    sportStore: SportEventsStore
 }
 
 const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
@@ -26,7 +28,8 @@ const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
     statsStore: statsReducer,
     landingStore: landingReducer,
     groupStore: groupsReducer,
-    soonStore: soonReducer
+    soonStore: soonReducer,
+    sportStore: sportReducer
 })
 
 // const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

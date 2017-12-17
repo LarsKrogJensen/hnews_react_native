@@ -6,7 +6,7 @@ import SoonScreen from "screens/StartingSoonScreen"
 import {NativeModules} from "react-native";
 import EventScreen from "screens/EventScreen";
 import Drawer from "app/Drawer";
-import SportScreen from "screens/SportScreen";
+import {SportsScreen} from "screens/SportScreen";
 import { withMappedNavigationProps } from 'react-navigation-props-mapper'
 
 const HomeStack = StackNavigator({
@@ -35,7 +35,7 @@ const SoonStack = StackNavigator({
     });
 
 const SportStack = StackNavigator({
-        SportRoot: {screen: withMappedNavigationProps(SportScreen)},
+        SportRoot: {screen: withMappedNavigationProps(SportsScreen)},
         Event: {screen: EventScreen}
     },
     {

@@ -10,7 +10,7 @@ const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalP
         | React.StatelessComponent<TOriginalProps>)) => {
 
         return class extends React.Component<TOriginalProps, State> {
-             private timer: number
+            private timer: number
 
             constructor(props: TOriginalProps, context: any) {
                 super(props, context);
