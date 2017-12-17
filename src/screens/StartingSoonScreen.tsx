@@ -86,7 +86,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         )
     }
 
-    public renderBody() {
+    private renderBody() {
         const {loading, events} = this.props;
         const {expanded} = this.state
 
