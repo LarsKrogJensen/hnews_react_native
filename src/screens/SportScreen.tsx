@@ -4,24 +4,23 @@ import {NavigationParams, NavigationScreenProp} from "react-navigation";
 import Screen from "screens/Screen";
 
 
-interface NavParams {
-    params: NavigationParams
-}
-
 interface Props {
-    navigation: NavigationScreenProp<NavParams, {}>
+    navigation: NavigationScreenProp<{}, {}>
+    sport: string,
+    region: string,
+    league: string
 }
 
 export default class SportScreen extends React.Component<Props> {
 
     public render() {
-        const {navigation, navigation: {state: {params = {}}}} = this.props
+        const {navigation, sport, region, league} = this.props
 
         return (
             <Screen title="Sport" {...this.props} rootScreen>
-                <Text>Sports {params.sport}</Text>
-                <Text>Region {params.region}</Text>
-                <Text>League {params.league}</Text>
+                <Text>Sports {sport}</Text>
+                <Text>Region {region}</Text>
+                <Text>League {league}</Text>
                 <Button title="Goto Event" onPress={() => navigation.navigate('Event', {name: 'Floorball'})}/>
             </Screen>
         )
