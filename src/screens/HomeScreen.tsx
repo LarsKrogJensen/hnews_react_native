@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {ActivityIndicator, RefreshControl, ScrollView, TouchableHighlight, View} from "react-native"
+import {ActivityIndicator, RefreshControl, ScrollView, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
@@ -14,7 +14,6 @@ import StartingSoonCard from "components/StartingSoonCard";
 import TrendingCard from "components/TrendingCard";
 import autobind from "autobind-decorator";
 import LiveCard from "components/LiveCard";
-import Touchable from "components/Touchable";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -74,8 +73,7 @@ class HomeScreen extends React.Component<ComponentProps> {
     }
 
     private renderLiveRightNow() {
-        return this.props.liveRightNow
-            .events.map(eventId =>
+        return this.props.liveRightNow.events.map(eventId =>
                 <LiveCard key={`lrn${eventId}`}
                           eventId={eventId}
                           navigation={this.props.navigation}/>

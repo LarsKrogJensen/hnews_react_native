@@ -6,6 +6,7 @@ import SoonScreen from "screens/StartingSoonScreen"
 import {NativeModules} from "react-native";
 import EventScreen from "screens/EventScreen";
 import Drawer from "app/Drawer";
+import SportScreen from "screens/SportScreen";
 
 const HomeStack = StackNavigator({
         Home: {
@@ -50,11 +51,26 @@ const SoonStack = StackNavigator({
         headerMode: "none"
     });
 
+const SportStack = StackNavigator({
+        SportRoot: {
+            screen: SportScreen,
+            path: '/sport/:sport/:league'
+        },
+        Event: {
+            screen: EventScreen,
+            path: '/liveEvent/:id'
+        }
+    },
+    {
+        headerMode: "none"
+    });
+
 const NavApp = DrawerNavigator(
     {
         Home: {screen: HomeStack},
         Live: {screen: LiveStack},
-        Soon: {screen: SoonStack}
+        Soon: {screen: SoonStack},
+        Sport: {screen: SportStack}
     },
     {
         contentComponent: props => <Drawer {...props} />,

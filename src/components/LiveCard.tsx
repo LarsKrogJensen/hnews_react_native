@@ -86,7 +86,7 @@ class LiveCardComponent extends React.Component<Props> {
                     <View style={{...teamRowStyle, marginBottom: 8}}>
                         {this.renderTeamColors(event.teamColors && event.teamColors.away)}
                         <Text style={textStyle}>{event.awayName}</Text>
-                        {this.renderServe(liveData, true)}
+                        {this.renderServe(liveData, false)}
                     </View>
                 </View>
                 {this.renderScoreColumns(liveData)}

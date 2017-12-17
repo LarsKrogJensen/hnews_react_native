@@ -1,9 +1,9 @@
 import * as React from "react"
 import {Button, Text, View} from "react-native"
-import {NavigationScreenProp} from "react-navigation";
+import {NavigationParams, NavigationScreenProp} from "react-navigation";
 
 interface Props {
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{params: NavigationParams}, {}>
 }
 
 export default class SearchScreen extends React.Component<Props> {

@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {NavigationScreenProp} from "react-navigation";
+import {NavigationActions, NavigationScreenProp} from "react-navigation";
 import {
     ActivityIndicator,
     Image,
@@ -56,7 +56,12 @@ class Drawer extends React.Component<Props> {
             <View style={{backgroundColor: "#333333", flex: 1, flexDirection: "column", paddingBottom: 12}}>
                 <View style={{height: 100, justifyContent: "center", alignItems: "center"}}>
                     <Image style={absoluteFill} source={{uri: banner}}/>
-                    <Text style={{color: "white", backgroundColor: "transparent", fontSize: 24, fontWeight: "bold"}}>PLAY</Text>
+                    <Text style={{
+                        color: "white",
+                        backgroundColor: "transparent",
+                        fontSize: 24,
+                        fontWeight: "bold"
+                    }}>PLAY</Text>
                 </View>
                 <View style={{flex: 1}}>
                     {this.renderBody()}
@@ -85,7 +90,7 @@ class Drawer extends React.Component<Props> {
                 title: "Popular",
                 data: this.props.highlights.map(group => ({
                     name: group.name,
-                    path: "Event",
+                    path: "Sport",
                     count: group.boCount,
                     category: group.pathTermId,
                     group
@@ -95,7 +100,7 @@ class Drawer extends React.Component<Props> {
                 title: "Sports",
                 data: this.props.sports.filter(group => group.sortOrder).map(group => ({
                     name: group.name,
-                    path: "Event",
+                    path: "Sport",
                     count: group.boCount,
                     group
                 }))
@@ -104,7 +109,7 @@ class Drawer extends React.Component<Props> {
                 title: "More Sports",
                 data: this.props.sports.filter(group => !group.sortOrder).map(group => ({
                     name: group.name,
-                    path: "Event",
+                    path: "/sport",
                     count: group.boCount,
                     group
                 }))
@@ -131,7 +136,12 @@ class Drawer extends React.Component<Props> {
                 <View style={{height: 44, flexDirection: "row", alignItems: "center"}}>
                     {item.live && <Text style={{color: "red", fontSize: 16, marginLeft: 16}}>Live</Text>}
                     <Text style={{color: "white", fontSize: 16, marginLeft: item.live ? 3 : 16}}>{item.name}</Text>
-                    <Text style={{color: "#dcdcdc", fontSize: 11, flex: 1, marginLeft: 8}}>{this.formatCategory(item.group)}</Text>
+                    <Text style={{
+                        color: "#dcdcdc",
+                        fontSize: 11,
+                        flex: 1,
+                        marginLeft: 8
+                    }}>{this.formatCategory(item.group)}</Text>
                     <Text style={{color: "#dcdcdc", fontSize: 11, marginRight: 8}}>{item.count}</Text>
                 </View>
             </Touchable>
@@ -182,7 +192,12 @@ class Drawer extends React.Component<Props> {
     @autobind
     private onItemClick(item: Item) {
         if (item.path) {
-            this.props.navigation.navigate(item.path)
+            this.props.navigation.navigate(item.path,
+                {sport: "icehockey", league: item.group && item.group.id},
+                NavigationActions.navigate({
+                    routeName: 'SportRoot',
+                    params: {sport: 'hello', league: item.group && item.group.id}
+                }))
         }
     }
 }
