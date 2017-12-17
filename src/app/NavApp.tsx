@@ -9,14 +9,8 @@ import Drawer from "app/Drawer";
 import SportScreen from "screens/SportScreen";
 
 const HomeStack = StackNavigator({
-        Home: {
-            screen: HomeScreen,
-            path: '/'
-        },
-        Event: {
-            screen: EventScreen,
-            path: '/liveEvent/:name'
-        }
+        Home: {screen: HomeScreen},
+        Event: {screen: EventScreen}
     },
     {
         headerMode: "none"
@@ -24,42 +18,24 @@ const HomeStack = StackNavigator({
 );
 
 const LiveStack = StackNavigator({
-        Live: {
-            screen: LiveScreen,
-            path: '/'
-        },
-        Event: {
-            screen: EventScreen,
-            path: '/liveEvent/:name'
-        }
+        Live: {screen: LiveScreen},
+        Event: {screen: EventScreen}
     },
     {
         headerMode: "none"
     });
 
 const SoonStack = StackNavigator({
-        Soon: {
-            screen: SoonScreen,
-            path: '/'
-        },
-        Event: {
-            screen: EventScreen,
-            path: '/liveEvent/:name'
-        }
+        Soon: {screen: SoonScreen},
+        Event: {screen: EventScreen}
     },
     {
         headerMode: "none"
     });
 
 const SportStack = StackNavigator({
-        SportRoot: {
-            screen: SportScreen,
-            path: '/sport/:sport/:league'
-        },
-        Event: {
-            screen: EventScreen,
-            path: '/liveEvent/:id'
-        }
+        SportRoot: {screen: SportScreen},
+        Event: {screen: EventScreen}
     },
     {
         headerMode: "none"

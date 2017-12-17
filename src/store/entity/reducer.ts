@@ -1,15 +1,18 @@
 import {LIVE_LOAD_SUCCESS} from "store/live/types"
+import {LANDING_LOAD_SUCCESS} from "store/landing/types";
+import {SOON_LOAD_SUCCESS} from "store/soon/types";
+import {SPORT_LOAD_SUCCESS} from "store/sport/types";
 import {LiveLoadAction} from "store/live/actions"
+import {SportLoadAction} from "store/sport/actions";
+import {SoonLoadAction} from "store/soon/actions";
+import {LandingLoadAction} from "store/landing/actions";
 import {BetOffer, EventWithBetOffers, LiveEvent, Outcome} from "api/typings";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {BetOfferEntity} from "model/BetOfferEntity";
+
 import {Map} from "immutable"
-import {LANDING_LOAD_SUCCESS} from "store/landing/types";
-import {LandingLoadAction} from "store/landing/actions";
 import * as _ from "lodash"
-import {SOON_LOAD_SUCCESS} from "store/soon/types";
-import {SoonLoadAction} from "store/soon/actions";
 
 export interface EntityStore {
     events: Map<number, EventEntity>
@@ -23,7 +26,7 @@ const initialState: EntityStore = {
     outcomes: Map<number, OutcomeEntity>()
 }
 
-export default function entityReducer(state: EntityStore = initialState, action: LiveLoadAction | LandingLoadAction | SoonLoadAction): EntityStore {
+export default function entityReducer(state: EntityStore = initialState, action: LiveLoadAction | LandingLoadAction | SoonLoadAction | SportLoadAction): EntityStore {
     switch (action.type) {
         case LIVE_LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;
@@ -42,6 +45,7 @@ export default function entityReducer(state: EntityStore = initialState, action:
                 outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers.map(bo => bo.outcomes)))
             }
         case SOON_LOAD_SUCCESS:
+        case SPORT_LOAD_SUCCESS:
             let soonEvents: EventWithBetOffers[] = action.data.events
             let betoffers2: BetOffer[] = _.flatMap(soonEvents.map(e => e.betOffers).filter(bo => bo));
 

@@ -19,7 +19,9 @@ export default class SportScreen extends React.Component<Props> {
 
         return (
             <Screen title="Sport" {...this.props} rootScreen>
-                <Text>Sports screen {params.sport} - {params.league}</Text>
+                <Text>Sports {params.sport}</Text>
+                <Text>Region {params.region}</Text>
+                <Text>League {params.league}</Text>
                 <Button title="Goto Event" onPress={() => navigation.navigate('Event', {name: 'Floorball'})}/>
             </Screen>
         )

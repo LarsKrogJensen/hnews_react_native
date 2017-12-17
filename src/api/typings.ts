@@ -250,3 +250,7 @@ export interface LandingPage {
 export interface SoonPage {
     events: EventWithBetOffers[];
 }
+
+export interface ListView {
+    events: EventWithBetOffers[];
+}

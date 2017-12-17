@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {NavigationActions, NavigationScreenProp} from "react-navigation";
+import {NavigationAction, NavigationActions, NavigationScreenProp} from "react-navigation";
 import {
     ActivityIndicator,
     Image,
@@ -43,7 +43,8 @@ interface Item {
     group?: EventGroup
     count?: number
     live?: boolean
-    path: string
+    path: string,
+    action?: NavigationAction
 }
 
 class Drawer extends React.Component<Props> {
@@ -93,7 +94,8 @@ class Drawer extends React.Component<Props> {
                     path: "Sport",
                     count: group.boCount,
                     category: group.pathTermId,
-                    group
+                    group,
+                    action: this.createNavigtionAction(group)
                 }))
             },
             {
@@ -102,7 +104,8 @@ class Drawer extends React.Component<Props> {
                     name: group.name,
                     path: "Sport",
                     count: group.boCount,
-                    group
+                    group,
+                    action: this.createNavigtionAction(group)
                 }))
             },
             {
@@ -111,7 +114,8 @@ class Drawer extends React.Component<Props> {
                     name: group.name,
                     path: "/sport",
                     count: group.boCount,
-                    group
+                    group,
+                    action: this.createNavigtionAction(group)
                 }))
             }
         ]
@@ -146,6 +150,30 @@ class Drawer extends React.Component<Props> {
                 </View>
             </Touchable>
         )
+    }
+
+    private createNavigtionAction(group: EventGroup): NavigationAction {
+        let sport = "all"
+        let region = "all"
+        let league = "all"
+
+        if (group.parentGroup) {
+            if (group.parentGroup.parentGroup) {
+                sport = group.parentGroup.parentGroup.termKey
+                region = group.parentGroup.termKey
+                league = group.termKey
+            } else {
+                sport = group.parentGroup.termKey
+                region = group.termKey
+            }
+        } else {
+            sport = group.termKey
+        }
+
+        return NavigationActions.navigate({
+            routeName: 'SportRoot',
+            params: {sport, region, league}
+        })
     }
 
     @autobind
@@ -192,12 +220,7 @@ class Drawer extends React.Component<Props> {
     @autobind
     private onItemClick(item: Item) {
         if (item.path) {
-            this.props.navigation.navigate(item.path,
-                {sport: "icehockey", league: item.group && item.group.id},
-                NavigationActions.navigate({
-                    routeName: 'SportRoot',
-                    params: {sport: 'hello', league: item.group && item.group.id}
-                }))
+            this.props.navigation.navigate(item.path, {}, item.action)
         }
     }
 }
