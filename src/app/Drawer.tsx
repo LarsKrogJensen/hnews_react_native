@@ -112,7 +112,7 @@ class Drawer extends React.Component<Props> {
                 title: "More Sports",
                 data: this.props.sports.filter(group => !group.sortOrder).map(group => ({
                     name: group.name,
-                    path: "/sport",
+                    path: "Sport",
                     count: group.boCount,
                     group,
                     action: this.createNavigtionAction(group)
@@ -134,9 +134,10 @@ class Drawer extends React.Component<Props> {
     @autobind
     private renderItem(info: ListRenderItemInfo<Item>) {
         const item: Item = info.item;
+        const navigation = this.props.navigation
 
         return (
-            <Touchable onPress={() => this.onItemClick(item)}>
+            <Touchable onPress={() => this.onItemClick(navigation, item)}>
                 <View style={{height: 44, flexDirection: "row", alignItems: "center"}}>
                     {item.live && <Text style={{color: "red", fontSize: 16, marginLeft: 16}}>Live</Text>}
                     <Text style={{color: "white", fontSize: 16, marginLeft: item.live ? 3 : 16}}>{item.name}</Text>
@@ -218,9 +219,9 @@ class Drawer extends React.Component<Props> {
     }
 
     @autobind
-    private onItemClick(item: Item) {
-        if (item.path) {
-            this.props.navigation.navigate(item.path, {}, item.action)
+    private onItemClick(navigation: NavigationScreenProp<any, any>, item: Item) {
+        if (navigation && item.path) {
+           navigation.navigate(item.path, {}, item.action)
         }
     }
 }

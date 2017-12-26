@@ -22,7 +22,6 @@ import {connect} from "react-redux";
 import {loadOpenForLive} from "store/live/actions";
 import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
-import {Set} from "immutable";
 import Touchable from "components/Touchable";
 import LiveEventListItem from "components/EventListItem";
 
@@ -47,32 +46,41 @@ type ComponentProps = StateProps & DispatchProps & ExternalProps
 
 interface DateSection extends SectionListData<EventEntity> {
     date: Date,
+    league: string
     count: number
 }
 
 class SportScreenComponent extends React.Component<ComponentProps> {
-    private today = new Date()
     private todayStr: string
-    private tomorrow = new Date()
     private toMorrowStr: string
 
 
     constructor() {
         super();
-        super();
-        this.todayStr = this.today.toDateString()
-        this.tomorrow.setDate(this.today.getDate() + 1)
-        this.toMorrowStr = this.tomorrow.toDateString()
+        const today = new Date()
+        const tomorrow = new Date()
+        this.todayStr = today.toDateString()
+        tomorrow.setDate(today.getDate() + 1)
+        this.toMorrowStr = tomorrow.toDateString()
 
     }
 
     componentDidMount(): void {
+        console.log("Did mount sport with: " + this.props.sport + "/" + this.props.region + "/" + this.props.league)
         this.props.loadData(true)
     }
 
-    public render() {
-        const {navigation, sport, region, league, events, loading} = this.props
 
+    componentWillUnmount(): void {
+        console.log("Will unmount sport with: " + this.props.sport + "/" + this.props.region + "/" + this.props.league)
+    }
+
+
+    componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
+        console.log("New props : " + nextProps.sport + "/" + nextProps.region + "/" + nextProps.league)
+    }
+
+    public render() {
         return (
             <Screen title="Sport" {...this.props} rootScreen>
                 {this.renderBody()}
@@ -95,14 +103,11 @@ class SportScreenComponent extends React.Component<ComponentProps> {
         const sections: DateSection[] = []
 
         for (let event of events) {
-            let date = new Date(event.start);
-            date.setMinutes(0)
-            date.setSeconds(0)
-            date.setMilliseconds(0)
+            let date = new Date(event.start)
 
             let section: DateSection | undefined = undefined
             for (let s of sections) {
-                if (s.date.getTime() === date.getTime()) {
+                if (s.date.getDate() === date.getDate()) {
                     section = s;
                     break;
                 }
@@ -110,6 +115,7 @@ class SportScreenComponent extends React.Component<ComponentProps> {
             if (!section) {
                 section = {
                     date: date,
+                    league: "",
                     data: [],
                     count: 0
                 }
@@ -126,7 +132,7 @@ class SportScreenComponent extends React.Component<ComponentProps> {
         return (
             <SectionList
                 stickySectionHeadersEnabled={true}
-                refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
+                refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh}/>}
                 sections={sections}
                 renderSectionHeader={this.renderSectionHeader}
                 keyExtractor={this.keyExtractor}
@@ -142,10 +148,11 @@ class SportScreenComponent extends React.Component<ComponentProps> {
 
     @autobind
     private renderItem(info: ListRenderItemInfo<EventEntity>) {
-        const event: EventEntity = info.item;
+        const {navigation} = this.props
+        const event: EventEntity = info.item
         let orient = orientation();
         return <LiveEventListItem eventId={event.id}
-                                  navigation={this.props.navigation}
+                                  navigation={navigation}
                                   orientation={orient}/>
     }
 
@@ -163,17 +170,10 @@ class SportScreenComponent extends React.Component<ComponentProps> {
             datum = dateStr
         }
 
-        let hour = ""
-        if (datum === "Today" && date.getHours() === this.today.getHours()) {
-            hour = "Next up"
-        } else {
-            hour = `${this.padHours(date.getHours())}:00 - ${this.padHours(date.getHours() + 1)}:00`
-        }
-
         return (
             <Touchable>
                 <View style={headerStyle}>
-                    <Text style={liveTextStyle}>{hour}</Text>
+                    {/*<Text style={liveTextStyle}>{hour}</Text>*/}
                     <Text style={sportTextStyle}>{datum}</Text>
                     <Text style={countTextStyle}>{info.section.count}</Text>
                 </View>
@@ -253,7 +253,15 @@ const countTextStyle: TextStyle = {
 
 // Redux connect
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => {
-    const {sport, region, league} = inputProps
+    let {sport, region, league} = inputProps
+    const params = inputProps.navigation.state.params
+
+    if (!sport && params) {
+        sport = params.sport
+        region = params.region
+        league = params.league
+    }
+
     const key = `${sport}.${region}.${league}`
 
     return {
@@ -263,7 +271,15 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => {
-    const {sport, region, league} = inputProps
+    let {sport, region, league} = inputProps
+
+    const params = inputProps.navigation.state.params
+
+    if (!sport && params) {
+        sport = params.sport
+        region = params.region
+        league = params.league
+    }
 
     return {
         loadData: (fireStartLoad: boolean) => {

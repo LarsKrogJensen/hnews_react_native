@@ -10,8 +10,16 @@ import {SportsScreen} from "screens/SportScreen";
 import {mapNavParamsToProps} from "lib/mapNavParamsToProps";
 
 const HomeStack = StackNavigator({
-        Home: {screen: HomeScreen},
-        Event: {screen: EventScreen}
+        Home: {
+            screen: HomeScreen,
+            path: "HomeScreen",
+            routeName: "HomeScreen"
+        },
+        Event: {
+            screen: EventScreen,
+            path: "EventScreen",
+            routeName: "EventScreen"
+        }
     },
     {
         headerMode: "none"
@@ -44,12 +52,34 @@ const SportStack = StackNavigator({
 
 const NavApp = DrawerNavigator(
     {
-        Home: {screen: HomeStack},
-        Live: {screen: LiveStack},
-        Soon: {screen: SoonStack},
-        Sport: {screen: SportStack}
+        Home: {
+            screen: HomeStack,
+            path: "home",
+            routeName: "home"
+        },
+        Live: {
+            screen: LiveStack,
+            path: "live",
+            routeName: "live"
+        },
+        Soon: {
+            screen: SoonStack,
+            path: "soon",
+            routeName: "soon"
+        },
+        Sport: {
+            screen: SportStack,
+            path: "sport",
+            routeName: "sport"
+        }
     },
     {
+        drawerOpenRoute: 'DrawerOpen',
+        drawerCloseRoute: 'DrawerClose',
+        drawerToggleRoute: 'DrawerToggle',
+        headerMode: 'none',
+        drawerWidth: 300,
+        drawerPosition: 'left',
         contentComponent: props => <Drawer {...props} />,
         initialRouteName: "Home"
     }
