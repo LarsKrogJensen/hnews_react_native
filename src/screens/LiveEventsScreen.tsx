@@ -56,8 +56,8 @@ interface LiveSection extends SectionListData<EventEntity> {
 
 class LiveEventsScreen extends React.Component<ComponentProps, State> {
 
-    constructor() {
-        super();
+    constructor(props: ComponentProps) {
+        super(props);
         this.state = {
             refreshing: false,
             expanded: Set([0])

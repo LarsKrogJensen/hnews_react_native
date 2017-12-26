@@ -57,8 +57,8 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     private tomorrow = new Date()
     private toMorrowStr: string
 
-    constructor() {
-        super();
+    constructor(props: ComponentProps) {
+        super(props);
         this.todayStr = this.today.toDateString()
         this.tomorrow.setDate(this.today.getDate() + 1)
         this.toMorrowStr = this.tomorrow.toDateString()

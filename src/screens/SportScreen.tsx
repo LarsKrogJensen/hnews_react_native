@@ -55,8 +55,8 @@ class SportScreenComponent extends React.Component<ComponentProps> {
     private toMorrowStr: string
 
 
-    constructor() {
-        super();
+    constructor(props: ComponentProps) {
+        super(props);
         const today = new Date()
         const tomorrow = new Date()
         this.todayStr = today.toDateString()
