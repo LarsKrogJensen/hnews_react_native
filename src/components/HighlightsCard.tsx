@@ -42,11 +42,18 @@ class HighlightsCardComponent extends React.Component<Props> {
     private renderBody() {
         const {events, navigation} = this.props;
 
+        const elements: React.ReactNode[] = []
+        let count = 0;
+        for (let eventId of events) {
+            if (count++ > 0) {
+                elements.push(<View key={`sep-${eventId}`} style={{borderBottomColor: 'rgba(0, 0, 0, 0.12)', borderBottomWidth: 1}}/>)
+            }
+            elements.push(<HighlightItem key={eventId} navigation={navigation} eventId={eventId}/>)
+
+        }
         return (
             <View style={bodyStyle}>
-                {events.map(id => (
-                   <HighlightItem key={id} navigation={navigation} eventId={id}/>
-                ))}
+                {elements}
             </View>
         )
     }
@@ -61,7 +68,8 @@ const headerStyle: ViewStyle = {
 }
 
 const bodyStyle: ViewStyle = {
-    padding: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     justifyContent: "flex-start",
     alignItems: "stretch"
 }
