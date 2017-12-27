@@ -42,6 +42,23 @@ class HomeScreen extends React.Component<ComponentProps> {
         this.props.loadData(true)
     }
 
+
+    shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<{}>, nextContext: any): boolean {
+        if (nextProps.loading !== this.props.loading) return true;
+        if (nextProps.liveRightNow.events.length !== this.props.liveRightNow.events.length) return true;
+        if (nextProps.popular.events.length !== this.props.popular.events.length) return true;
+        if (nextProps.shocker.events.length !== this.props.shocker.events.length) return true;
+        if (nextProps.nextOff.events.length !== this.props.nextOff.events.length) return true;
+        if (nextProps.startingSoon.events.length !== this.props.startingSoon.events.length) return true;
+
+        if (nextProps.popular.events.join() !== this.props.popular.events.join()) return true;
+        if (nextProps.shocker.events.join() !== this.props.shocker.events.join()) return true;
+        if (nextProps.nextOff.events.join() !== this.props.nextOff.events.join()) return true;
+        if (nextProps.startingSoon.events.join() !== this.props.startingSoon.events.join()) return true;
+
+        return false
+    }
+
     public render() {
 
         return (

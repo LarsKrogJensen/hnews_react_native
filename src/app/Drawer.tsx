@@ -14,6 +14,7 @@ import {loadGroups, loadHighlights} from "store/groups/actions";
 import {connect} from "react-redux";
 import {EventGroup} from "api/typings";
 import absoluteFill = StyleSheet.absoluteFill;
+import connectAppState from "components/AppStateRefresh";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -215,25 +216,6 @@ class Drawer extends React.Component<Props> {
     private onItemClick(navigation: NavigationScreenProp<any, any>, item: Item) {
         if (navigation && item.path) {
             if (item.action) {
-                // navigation.navigate(item.path, {},
-                //     NavigationActions.reset({
-                //             index: 0,
-                //             key: null,
-                //             actions: [item.action]
-                //         })
-                //     // NavigationActions.setParams( {
-                //     //     key: "Sport",
-                //     //     params: item.action.params
-                //     // })
-                // )
-
-                // navigation.dispatch(
-                //     NavigationActions.reset({
-                //         index: 0,
-                //         key: null,
-                //         actions: [item.action]
-                //     })
-                // )
                 navigation.navigate(item.path, item.action.params)
             } else {
                 navigation.navigate(item.path)
@@ -257,10 +239,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     }
 )
 
-// const WithAppStateRefresh: ComponentClass<Props> =
-//     connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
+const WithAppStateRefresh: ComponentClass<Props> =
+    connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
 
 const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(Drawer)
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 
 export default WithData
