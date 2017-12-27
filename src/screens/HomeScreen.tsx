@@ -82,10 +82,10 @@ class HomeScreen extends React.Component<ComponentProps> {
         return (
             <ScrollView
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
-                {this.renderHighlights()}
                 {this.renderLiveRightNow()}
-                {this.renderStartingSoon()}
                 {this.renderTrending()}
+                {this.renderHighlights()}
+                {this.renderStartingSoon()}
             </ScrollView>
         )
     }

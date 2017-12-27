@@ -33,7 +33,7 @@ class HighlightItemComponent extends React.Component<Props> {
         } else if (startTime.isAfter(now, "d")) {
             datum = "Tomorrow"
         } else {
-            datum = startTime.format("yyyy:mm:dd")
+            datum = startTime.format("yyyy:MM:dd")
         }
         return (
             <Touchable style={{paddingVertical: 8}} onPress={() => this.props.navigation.navigate("Event")}>
@@ -44,7 +44,7 @@ class HighlightItemComponent extends React.Component<Props> {
                     </View>
                     <View style={{flexDirection: "row"}}>
                         <EventPathItem event={event} style={{flex: 1}}/>
-                        <Text style={{color: "#333333"}}>{startTime.format("HH:MM")}</Text>
+                        <Text style={{color: "#333333"}}>{startTime.format("HH:mm")}</Text>
                     </View>
                 </View>
             </Touchable>
