@@ -7,44 +7,31 @@ interface ExternalProps {
     navigation: NavigationScreenProp<{ params: any }, {}>
 }
 
-interface State {
-    sport: string,
-    region: string,
-    league: string
-}
+// interface State {
+//     sport: string,
+//     region: string,
+//     league: string
+// }
 
 export class SportScreenRouter extends React.Component<ExternalProps> {
 
 
-    constructor(props: ExternalProps, context: any) {
-        super(props, context);
-        this.state = {
-            sport: props.navigation.state.params.sport,
-            region: props.navigation.state.params.region,
-            league: props.navigation.state.params.league
-        }
-    }
-
-    componentWillMount(): void {
-        console.log("SportScreen willMount")
-    }
-
-    componentDidMount(): void {
-        console.log("SportScreen didMount")
-    }
-
-    componentWillReceiveProps(nextProps: Readonly<ExternalProps>, nextContext: any): void {
-        console.log("SportScreen willReceiveNewProps")
-        this.setState({
-            sport: nextProps.navigation.state.params.sport,
-            region: nextProps.navigation.state.params.region,
-            league: nextProps.navigation.state.params.league
-        })
-    }
-
-    componentWillUnmount(): void {
-        console.log("SportScreen willUnmount")
-    }
+    // componentWillMount(): void {
+    //     console.log("SportScreen willMount")
+    // }
+    //
+    // componentDidMount(): void {
+    //     console.log("SportScreen didMount")
+    // }
+    //
+    // componentWillReceiveProps(nextProps: Readonly<ExternalProps>, nextContext: any): void {
+    //     console.log("SportScreen willReceiveNewProps")
+    //
+    // }
+    //
+    // componentWillUnmount(): void {
+    //     console.log("SportScreen willUnmount")
+    // }
 
     shouldComponentUpdate(nextProps: Readonly<ExternalProps>, nextState: Readonly<{}>, nextContext: any): boolean {
         const {navigation: {state: {params}}} = this.props;

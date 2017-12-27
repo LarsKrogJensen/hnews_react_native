@@ -6,7 +6,7 @@ import SoonScreen from "screens/StartingSoonScreen"
 import {NativeModules} from "react-native";
 import EventScreen from "screens/EventScreen";
 import Drawer from "app/Drawer";
-import {SportScreenRouter} from "screens/SportScreen2";
+import {SportScreenRouter} from "screens/SportScreenRouter";
 
 const HomeStack = StackNavigator({
         Home: {screen: HomeScreen},
