@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Card} from "react-native-material-ui";
+import {Card} from "components/Card";
 import {Text, View, ViewStyle} from "react-native";
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
@@ -25,7 +25,7 @@ type Props = StateProps & ExternalProps
 class StartingSoonCard extends React.Component<Props> {
     public render() {
         return (
-            <Card style={{container: cardStyle}} onPress={() => this.props.navigation.navigate("Event")}>
+            <Card onPress={() => this.props.navigation.navigate("Event")}>
                 <View>
                     {this.renderHeader()}
                     {this.renderBody()}

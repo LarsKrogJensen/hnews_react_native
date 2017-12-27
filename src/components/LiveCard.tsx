@@ -1,6 +1,5 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Card} from "react-native-material-ui";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
@@ -12,7 +11,7 @@ import {LiveData, ShirtColors} from "api/typings";
 import MatchClockItem from "components/MatchClockItem";
 import {CircularProgress} from 'react-native-circular-progress';
 import Svg, {Circle, Path} from "react-native-svg";
-import Touchable from "components/Touchable";
+import {Card} from "components/Card";
 
 
 interface ExternalProps {
@@ -30,14 +29,12 @@ type Props = StateProps & ExternalProps
 class LiveCardComponent extends React.Component<Props> {
     public render() {
         return (
-            <View style={cardStyle}>
-                <Touchable onPress={() => this.props.navigation.navigate("Event")}>
-                    <View>
-                        {this.renderHeader()}
-                        {this.renderBody()}
-                    </View>
-                </Touchable>
-            </View>
+            <Card onPress={() => this.props.navigation.navigate("Event")}>
+                <View>
+                    {this.renderHeader()}
+                    {this.renderBody()}
+                </View>
+            </Card>
         )
     }
 
@@ -175,10 +172,6 @@ class LiveCardComponent extends React.Component<Props> {
             </Svg>
         )
     }
-}
-
-const cardStyle: ViewStyle = {
-    backgroundColor: "#F6F6F6"
 }
 
 const liveTextStyle: TextStyle = {
