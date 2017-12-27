@@ -27,6 +27,7 @@ export function loadSport(sport: string, region: string, league: string, fireSta
             dispatch({type: types.SPORT_START_LOADING, key})
         }
 
+        console.log(`Fetching sport (${sport}/${region}/${league})`)
         try {
             const start = new Date().getTime();
             const response =

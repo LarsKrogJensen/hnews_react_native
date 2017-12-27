@@ -6,20 +6,11 @@ import SoonScreen from "screens/StartingSoonScreen"
 import {NativeModules} from "react-native";
 import EventScreen from "screens/EventScreen";
 import Drawer from "app/Drawer";
-import {SportsScreen} from "screens/SportScreen";
-import {mapNavParamsToProps} from "lib/mapNavParamsToProps";
+import {SportScreenRouter} from "screens/SportScreen2";
 
 const HomeStack = StackNavigator({
-        Home: {
-            screen: HomeScreen,
-            path: "HomeScreen",
-            routeName: "HomeScreen"
-        },
-        Event: {
-            screen: EventScreen,
-            path: "EventScreen",
-            routeName: "EventScreen"
-        }
+        Home: {screen: HomeScreen},
+        Event: {screen: EventScreen}
     },
     {
         headerMode: "none"
@@ -43,7 +34,8 @@ const SoonStack = StackNavigator({
     });
 
 const SportStack = StackNavigator({
-        SportRoot: {screen: mapNavParamsToProps(SportsScreen)},
+        Sport: {screen: SportScreenRouter},
+        // Sport: {screen: mapNavParamsToProps(SportsScreen)},
         Event: {screen: EventScreen}
     },
     {
@@ -53,24 +45,16 @@ const SportStack = StackNavigator({
 const NavApp = DrawerNavigator(
     {
         Home: {
-            screen: HomeStack,
-            path: "home",
-            routeName: "home"
+            screen: HomeStack
         },
         Live: {
-            screen: LiveStack,
-            path: "live",
-            routeName: "live"
+            screen: LiveStack
         },
         Soon: {
-            screen: SoonStack,
-            path: "soon",
-            routeName: "soon"
+            screen: SoonStack
         },
         Sport: {
-            screen: SportStack,
-            path: "sport",
-            routeName: "sport"
+            screen: SportScreenRouter
         }
     },
     {

@@ -65,30 +65,39 @@ class SportScreenComponent extends React.Component<ComponentProps> {
 
     }
 
+
+    shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<{}>, nextContext: any): boolean {
+        if (nextProps.loading !== this.props.loading) return true
+        if (nextProps.region !== this.props.region) return true
+        if (nextProps.sport !== this.props.sport) return true
+        if (nextProps.league !== this.props.league) return true
+        if (nextProps.events.length !== this.props.events.length) return true
+        if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) return true
+        
+        return false
+    }
+
     componentDidMount(): void {
-        console.log("Did mount sport with: " + this.props.sport + "/" + this.props.region + "/" + this.props.league)
+        console.log("XXXX: Did mount sport with: " + this.props.sport + "/" + this.props.region + "/" + this.props.league)
         this.props.loadData(true)
     }
 
 
     componentWillUnmount(): void {
-        console.log("Will unmount sport with: " + this.props.sport + "/" + this.props.region + "/" + this.props.league)
+        console.log("XXXX: Will unmount sport with: " + this.props.sport + "/" + this.props.region + "/" + this.props.league)
     }
 
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
-        console.log("New props : " + nextProps.sport + "/" + nextProps.region + "/" + nextProps.league)
+        console.log("XXXX: New props : " + nextProps.sport + "/" + nextProps.region + "/" + nextProps.league)
+        if (nextProps.region !== this.props.region ||
+            nextProps.sport !== this.props.sport ||
+            nextProps.league !== this.props.league) {
+            nextProps.loadData(true)
+        }
     }
 
     public render() {
-        return (
-            <Screen title="Sport" {...this.props} rootScreen>
-                {this.renderBody()}
-            </Screen>
-        )
-    }
-
-    private renderBody() {
         const {loading, events} = this.props;
         // const {expanded} = this.state
 
@@ -292,7 +301,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     }
 }
 
-export const WithAppStateRefresh: ComponentClass<ComponentProps> =
+const WithAppStateRefresh: ComponentClass<ComponentProps> =
     connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(SportScreenComponent)
 
 export const SportsScreen: ComponentClass<ExternalProps> =

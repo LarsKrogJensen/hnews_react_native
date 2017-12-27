@@ -1,14 +1,8 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {NavigationAction, NavigationActions, NavigationScreenProp} from "react-navigation";
+import {NavigationActions, NavigationNavigateAction, NavigationScreenProp} from "react-navigation";
 import {
-    ActivityIndicator,
-    Image,
-    ListRenderItemInfo,
-    SectionList,
-    SectionListData,
-    StyleSheet,
-    Text,
+    ActivityIndicator, Image, ListRenderItemInfo, SectionList, SectionListData, StyleSheet, Text,
     View
 } from "react-native";
 import banner from "images/banner";
@@ -17,7 +11,6 @@ import Touchable from "components/Touchable";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {loadGroups, loadHighlights} from "store/groups/actions";
-import connectAppState from "components/AppStateRefresh";
 import {connect} from "react-redux";
 import {EventGroup} from "api/typings";
 import absoluteFill = StyleSheet.absoluteFill;
@@ -44,7 +37,7 @@ interface Item {
     count?: number
     live?: boolean
     path: string,
-    action?: NavigationAction
+    action?: NavigationNavigateAction
 }
 
 class Drawer extends React.Component<Props> {
@@ -153,7 +146,7 @@ class Drawer extends React.Component<Props> {
         )
     }
 
-    private createNavigtionAction(group: EventGroup): NavigationAction {
+    private createNavigtionAction(group: EventGroup): NavigationNavigateAction {
         let sport = "all"
         let region = "all"
         let league = "all"
@@ -172,7 +165,7 @@ class Drawer extends React.Component<Props> {
         }
 
         return NavigationActions.navigate({
-            routeName: 'SportRoot',
+            routeName: 'Sport',
             params: {sport, region, league}
         })
     }
@@ -221,7 +214,30 @@ class Drawer extends React.Component<Props> {
     @autobind
     private onItemClick(navigation: NavigationScreenProp<any, any>, item: Item) {
         if (navigation && item.path) {
-           navigation.navigate(item.path, {}, item.action)
+            if (item.action) {
+                // navigation.navigate(item.path, {},
+                //     NavigationActions.reset({
+                //             index: 0,
+                //             key: null,
+                //             actions: [item.action]
+                //         })
+                //     // NavigationActions.setParams( {
+                //     //     key: "Sport",
+                //     //     params: item.action.params
+                //     // })
+                // )
+
+                // navigation.dispatch(
+                //     NavigationActions.reset({
+                //         index: 0,
+                //         key: null,
+                //         actions: [item.action]
+                //     })
+                // )
+                navigation.navigate(item.path, item.action.params)
+            } else {
+                navigation.navigate(item.path)
+            }
         }
     }
 }
@@ -241,10 +257,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     }
 )
 
-const WithAppStateRefresh: ComponentClass<Props> =
-    connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
+// const WithAppStateRefresh: ComponentClass<Props> =
+//     connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
 
 const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(Drawer)
 
 export default WithData
