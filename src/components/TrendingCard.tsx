@@ -10,7 +10,6 @@ import BetOfferItem from "components/BetOfferItem"
 import {Orientation} from "lib/device";
 import EventPathItem from "components/EventPathItem";
 import * as moment from "moment";
-import {months} from "moment";
 
 interface ExternalProps {
     eventId: number
@@ -43,13 +42,13 @@ class TrendingCard extends React.Component<Props> {
         if (startTime.isSame(now, "d")) {
             datum = "Today " + startTime.format("HH:mm")
         } else if (startTime.isAfter(now, "d")) {
-            datum = "Tomorrow "  + startTime.format("HH:mm")
+            datum = "Tomorrow " + startTime.format("HH:mm")
         } else {
             datum = startTime.format("yyyy:mm:dd HH:mm")
         }
         return (
             <View style={headerStyle}>
-                <Text style={{fontWeight: "500", flex: 1}}>TRENDING</Text>
+                <Text style={{fontWeight: "500", flex: 1, color: "#333333"}}>TRENDING</Text>
                 <Text>{datum}</Text>
             </View>
         )
@@ -61,7 +60,7 @@ class TrendingCard extends React.Component<Props> {
             <View style={bodyStyle}>
                 <Text style={{fontSize: 20, marginTop: 8, textAlign: "center"}}>{event.name}</Text>
                 <EventPathItem event={event}
-                               style={{marginBottom: 8, alignSelf: "center"}}/>
+                               style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
                 <BetOfferItem orientation={Orientation.Portrait}
                               betofferId={event.mainBetOfferId}/>
             </View>

@@ -37,7 +37,7 @@ class StartingSoonCard extends React.Component<Props> {
     private renderHeader() {
         return (
             <View style={headerStyle}>
-                <Text style={{fontWeight: "500", flex: 1}}>STARTING SOON</Text>
+                <Text style={{fontWeight: "500", flex: 1, color: "#333333"}}>STARTING SOON</Text>
                 <CountDown start={this.props.event.start} format="HH:mm:ss"/>
             </View>
         )
@@ -49,7 +49,7 @@ class StartingSoonCard extends React.Component<Props> {
             <View style={bodyStyle}>
                 <Text style={{fontSize: 20, marginTop: 8, textAlign: "center"}}>{event.name}</Text>
                 <EventPathItem event={event}
-                               style={{marginBottom: 8, alignSelf: "center"}}/>
+                               style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
                 <BetOfferItem orientation={Orientation.Portrait}
                               betofferId={event.mainBetOfferId}/>
             </View>

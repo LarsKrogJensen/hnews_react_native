@@ -12,6 +12,7 @@ import MatchClockItem from "components/MatchClockItem";
 import {CircularProgress} from 'react-native-circular-progress';
 import Svg, {Circle, Path} from "react-native-svg";
 import {Card} from "components/Card";
+import EventPathItem from "components/EventPathItem";
 
 
 interface ExternalProps {
@@ -43,9 +44,11 @@ class LiveCardComponent extends React.Component<Props> {
         return (
             <View style={headerStyle}>
                 <Text style={liveTextStyle}>Live</Text>
-                <View style={pathStyle}>
-                    {this.renderPath(event)}
-                </View>
+                <EventPathItem
+                    event={event}
+                    style={{flex: 1}}
+                    textStyle={{fontSize: 16, color: "#717171"}}
+                />
                 {liveData && <MatchClockItem matchClock={liveData.matchClock}/>}
             </View>
         )
@@ -145,20 +148,6 @@ class LiveCardComponent extends React.Component<Props> {
         return null;
     }
 
-    private renderPath(event: EventEntity): JSX.Element[] {
-        const pathArray: JSX.Element[] = []
-        event.path.forEach((path, index) => {
-            if (index > 0) {
-                pathArray.push(<Text key={index + "sep"} style={pathSeparatorStyle}>/</Text>)
-            }
-            pathArray.push(<Text key={index}
-                                 numberOfLines={1}
-                                 ellipsizeMode="tail"
-                                 style={pathEntryStyle}>{path.name}</Text>)
-        })
-        return pathArray;
-    }
-
     private renderTeamColors(colors: ShirtColors | undefined) {
 
         if (!colors) return null
@@ -195,21 +184,6 @@ const bodyStyle: ViewStyle = {
     alignItems: "stretch"
 }
 
-const pathStyle: ViewStyle = {
-    flex: 1,
-    flexDirection: "row"
-}
-
-const pathEntryStyle: TextStyle = {
-    fontSize: 16,
-    color: "#717171"
-}
-
-const pathSeparatorStyle: TextStyle = {
-    ...pathEntryStyle,
-    paddingLeft: 4,
-    paddingRight: 4
-}
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     event: state.entityStore.events.get(inputProps.eventId),

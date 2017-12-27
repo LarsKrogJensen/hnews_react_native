@@ -4,16 +4,17 @@ import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
 
 interface Props {
-    event: EventEntity,
+    event: EventEntity
     style?: ViewStyle
+    textStyle?: TextStyle
 }
 
 export default class EventPathItem extends React.Component<Props> {
 
     public render() {
         const style: ViewStyle = {
-            ...this.props.style,
-            ...pathStyle
+            ...pathStyle,
+            ...this.props.style
         }
 
         return (
@@ -24,6 +25,15 @@ export default class EventPathItem extends React.Component<Props> {
     @autobind
     private renderPath(event: EventEntity): JSX.Element[] {
         const pathArray: JSX.Element[] = []
+        const textStyle: TextStyle = {
+            ...pathEntryStyle,
+            ...this.props.textStyle
+        }
+        const separatorStyle: TextStyle = {
+            ...pathSeparatorStyle,
+            ...this.props.textStyle
+        }
+
         event.path.forEach((path, index) => {
             if (index > 0) {
                 pathArray.push(<Text key={index + "sep"} style={pathSeparatorStyle}>/</Text>)
@@ -31,7 +41,7 @@ export default class EventPathItem extends React.Component<Props> {
             pathArray.push(<Text key={index}
                                  numberOfLines={1}
                                  ellipsizeMode="tail"
-                                 style={pathEntryStyle}>{path.name}</Text>)
+                                 style={textStyle}>{path.name}</Text>)
         })
         return pathArray;
     }
@@ -39,10 +49,8 @@ export default class EventPathItem extends React.Component<Props> {
 }
 
 const pathStyle: ViewStyle = {
-    flex: 1,
-    paddingLeft: 16,
     flexDirection: "row",
-    marginTop: 4
+    alignItems: "center"
 }
 
 const pathEntryStyle: TextStyle = {

@@ -14,6 +14,7 @@ import StartingSoonCard from "components/StartingSoonCard";
 import TrendingCard from "components/TrendingCard";
 import autobind from "autobind-decorator";
 import LiveCard from "components/LiveCard";
+import {HighlightsCard} from "components/HighlightsCard";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -22,7 +23,6 @@ interface ExternalProps {
 interface StateProps {
     liveRightNow: EventCollection
     popular: EventCollection
-    highlights: EventCollection
     shocker: EventCollection
     nextOff: EventCollection
     startingSoon: EventCollection
@@ -82,6 +82,7 @@ class HomeScreen extends React.Component<ComponentProps> {
         return (
             <ScrollView
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
+                {this.renderHighlights()}
                 {this.renderLiveRightNow()}
                 {this.renderStartingSoon()}
                 {this.renderTrending()}
@@ -89,12 +90,19 @@ class HomeScreen extends React.Component<ComponentProps> {
         )
     }
 
+    private renderHighlights() {
+        return (
+            <HighlightsCard key="highlight"
+                      navigation={this.props.navigation}/>
+        )
+    }
+
     private renderLiveRightNow() {
         return this.props.liveRightNow.events.map(eventId =>
-                <LiveCard key={`lrn${eventId}`}
-                          eventId={eventId}
-                          navigation={this.props.navigation}/>
-            )
+            <LiveCard key={`lrn${eventId}`}
+                      eventId={eventId}
+                      navigation={this.props.navigation}/>
+        )
     }
 
     private renderStartingSoon() {
@@ -125,7 +133,6 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     loading: state.landingStore.loading,
     liveRightNow: state.landingStore.liveRightNow,
     popular: state.landingStore.popular,
-    highlights: state.landingStore.highlights,
     shocker: state.landingStore.shocker,
     nextOff: state.landingStore.nextOff,
     startingSoon: state.landingStore.startingSoon
