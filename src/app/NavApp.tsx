@@ -7,10 +7,14 @@ import {NativeModules} from "react-native";
 import EventScreen from "screens/EventScreen";
 import Drawer from "app/Drawer";
 import {SportScreenRouter} from "screens/SportScreenRouter";
+import {TopBarDemo2} from "screens/TabBarDemo2";
+import {SportsMockScreen} from "screens/SportsMockScreen";
+
 
 const HomeStack = StackNavigator({
-        Home: {screen: HomeScreen},
-        Event: {screen: EventScreen}
+        Hemma: {screen: HomeScreen},
+        Event: {screen: EventScreen},
+        // Sport: {screen: SportsMockScreen}
     },
     {
         headerMode: "none"
@@ -19,7 +23,8 @@ const HomeStack = StackNavigator({
 
 const LiveStack = StackNavigator({
         Live: {screen: LiveScreen},
-        Event: {screen: EventScreen}
+        Event: {screen: EventScreen},
+        // Sport: {screen: SportsMockScreen}
     },
     {
         headerMode: "none"
@@ -27,14 +32,15 @@ const LiveStack = StackNavigator({
 
 const SoonStack = StackNavigator({
         Soon: {screen: SoonScreen},
-        Event: {screen: EventScreen}
+        Event: {screen: EventScreen},
+        // Sport: {screen: SportsMockScreen},
     },
     {
         headerMode: "none"
     });
 
 const SportStack = StackNavigator({
-        Sport: {screen: SportScreenRouter},
+        Spring: {screen: SportScreenRouter},
         // Sport: {screen: mapNavParamsToProps(SportsScreen)},
         Event: {screen: EventScreen}
     },
@@ -44,6 +50,9 @@ const SportStack = StackNavigator({
 
 const NavApp = DrawerNavigator(
     {
+        Test: {
+            screen: TopBarDemo2
+        },
         Home: {
             screen: HomeStack
         },
@@ -54,7 +63,7 @@ const NavApp = DrawerNavigator(
             screen: SoonStack
         },
         Sport: {
-            screen: SportScreenRouter
+            screen: SportStack
         }
     },
     {
@@ -65,7 +74,7 @@ const NavApp = DrawerNavigator(
         drawerWidth: 300,
         drawerPosition: 'left',
         contentComponent: props => <Drawer {...props} />,
-        initialRouteName: "Home"
+        initialRouteName: "Test"
     }
 );
 

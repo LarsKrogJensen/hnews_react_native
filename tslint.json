@@ -44,7 +44,7 @@
 		"no-unused-expression": false,
 		"no-use-before-declare": true,
 		"no-var-keyword": true,
-		"radix": true,
+		"radix": false,
 		"switch-default": true,
 		"triple-equals": [true, "allow-undefined-check"],
 		"eofline": false,
@@ -54,7 +54,7 @@
 		"no-trailing-whitespace": false,
 		"object-literal-sort-keys": false,
 		"trailing-comma": [
-			true,
+			false,
 			{
 				"multiline": "never",
 				"singleline": "never"

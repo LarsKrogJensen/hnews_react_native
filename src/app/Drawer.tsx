@@ -13,8 +13,8 @@ import {Dispatch} from "redux";
 import {loadGroups, loadHighlights} from "store/groups/actions";
 import {connect} from "react-redux";
 import {EventGroup} from "api/typings";
-import absoluteFill = StyleSheet.absoluteFill;
 import connectAppState from "components/AppStateRefresh";
+import absoluteFill = StyleSheet.absoluteFill;
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -76,6 +76,7 @@ class Drawer extends React.Component<Props> {
             {
                 title: "",
                 data: [
+                    {name: "Test", path: "Test"},
                     {name: "Home", path: "Home"},
                     {name: "Right Now", path: "Live", live: true},
                     {name: "Starting Soon", path: "Soon"}
@@ -166,7 +167,7 @@ class Drawer extends React.Component<Props> {
         }
 
         return NavigationActions.navigate({
-            routeName: 'Sport',
+            routeName: 'Spring',
             params: {sport, region, league}
         })
     }
@@ -216,7 +217,17 @@ class Drawer extends React.Component<Props> {
     private onItemClick(navigation: NavigationScreenProp<any, any>, item: Item) {
         if (navigation && item.path) {
             if (item.action) {
-                navigation.navigate(item.path, item.action.params)
+                // navigation.navigate(item.path, {}, item.action)
+                let action = NavigationActions.reset({
+                        index: 0,
+                        key: null,
+                        actions: [
+                            item.action
+                        ]
+                    }
+                );
+                navigation.navigate(item.path, {}, action)
+                // navigation.dispatch(action)
             } else {
                 navigation.navigate(item.path)
             }
@@ -243,6 +254,6 @@ const WithAppStateRefresh: ComponentClass<Props> =
     connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
 
 const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(Drawer)
 
 export default WithData
