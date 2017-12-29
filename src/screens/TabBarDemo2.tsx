@@ -140,7 +140,7 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
                             key={"flatlistexample"}
                             data={data}
                             onScroll={this._onScroll}
-                            renderItem={({item}) => <Text key={item}>{item}</Text>}
+                            renderItem={({item}) => <View key={item}><Text>{item}</Text></View>}
                         />
                     </View>
                 );

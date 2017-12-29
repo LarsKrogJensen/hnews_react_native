@@ -6,9 +6,8 @@ import SoonScreen from "screens/StartingSoonScreen"
 import {NativeModules} from "react-native";
 import EventScreen from "screens/EventScreen";
 import Drawer from "app/Drawer";
-import {SportScreenRouter} from "screens/SportScreenRouter";
+import {SportScreen} from "screens/SportScreen";
 import {TopBarDemo2} from "screens/TabBarDemo2";
-import {SportsMockScreen} from "screens/SportsMockScreen";
 
 
 const HomeStack = StackNavigator({
@@ -40,8 +39,7 @@ const SoonStack = StackNavigator({
     });
 
 const SportStack = StackNavigator({
-        Spring: {screen: SportScreenRouter},
-        // Sport: {screen: mapNavParamsToProps(SportsScreen)},
+        Spring: {screen: SportScreen},
         Event: {screen: EventScreen}
     },
     {
@@ -74,7 +72,8 @@ const NavApp = DrawerNavigator(
         drawerWidth: 300,
         drawerPosition: 'left',
         contentComponent: props => <Drawer {...props} />,
-        initialRouteName: "Test"
+        initialRouteName: "Home",
+        // backBehavior: 'none'
     }
 );
 

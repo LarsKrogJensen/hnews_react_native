@@ -168,7 +168,7 @@ class Drawer extends React.Component<Props> {
 
         return NavigationActions.navigate({
             routeName: 'Spring',
-            params: {sport, region, league}
+            params: {sport, region, league, group}
         })
     }
 
@@ -254,6 +254,6 @@ const WithAppStateRefresh: ComponentClass<Props> =
     connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
 
 const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(Drawer)
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 
 export default WithData
