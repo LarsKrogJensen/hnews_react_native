@@ -11,22 +11,22 @@ interface Props {
 }
 
 interface State {
-    opacity: Animated.Value
+    animation: Animated.Value
 }
 
 export class HideableView extends Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {
-            opacity: new Animated.Value(this.props.visible ? 64 : 0)
+            animation: new Animated.Value(this.props.visible ? 50 : 0)
         }
     }
 
     animate(show) {
         const duration = this.props.duration ? this.props.duration : 500;
         Animated.timing(
-            this.state.opacity, {
-                toValue: show ? 64 : 0,
+            this.state.animation, {
+                toValue: show ? 50 : 0,
                 duration: !this.props.noAnimation ? duration : 0
             }
         ).start();
@@ -48,7 +48,7 @@ export class HideableView extends Component<Props, State> {
         }
 
         return (
-            <Animated.View style={[this.props.style, {height: this.state.opacity}]}>
+            <Animated.View style={[this.props.style, {height: this.state.animation}]}>
                 {this.props.children}
             </Animated.View>
         )

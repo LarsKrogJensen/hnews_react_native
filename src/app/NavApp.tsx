@@ -8,6 +8,7 @@ import EventScreen from "screens/EventScreen";
 import Drawer from "app/Drawer";
 import {SportScreen} from "screens/SportScreen";
 import {TopBarDemo2} from "screens/TabBarDemo2";
+import {CollapsableScreen} from "screens/CollapsableScreen";
 
 
 const HomeStack = StackNavigator({
@@ -51,6 +52,9 @@ const NavApp = DrawerNavigator(
         Test: {
             screen: TopBarDemo2
         },
+        Test2: {
+            screen: CollapsableScreen
+        },
         Home: {
             screen: HomeStack
         },
@@ -72,7 +76,7 @@ const NavApp = DrawerNavigator(
         drawerWidth: 300,
         drawerPosition: 'left',
         contentComponent: props => <Drawer {...props} />,
-        initialRouteName: "Home",
+        initialRouteName: "Test2",
         // backBehavior: 'none'
     }
 );

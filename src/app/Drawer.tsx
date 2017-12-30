@@ -76,10 +76,11 @@ class Drawer extends React.Component<Props> {
             {
                 title: "",
                 data: [
-                    {name: "Test", path: "Test"},
                     {name: "Home", path: "Home"},
                     {name: "Right Now", path: "Live", live: true},
-                    {name: "Starting Soon", path: "Soon"}
+                    {name: "Starting Soon", path: "Soon"},
+                    {name: "Tabs test", path: "Test"},
+                    {name: "Collapse test", path: "Test2"}
                 ]
             },
             {

@@ -3625,6 +3625,12 @@ react-devtools-core@^2.5.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
+react-native-animatable@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.2.4.tgz#b5fb7657e8f6edadbc26697057a327fb920b3039"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-circular-progress@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/react-native-circular-progress/-/react-native-circular-progress-0.1.2.tgz#49bf297fe58c1431e08c09bf653d283680abda9f"

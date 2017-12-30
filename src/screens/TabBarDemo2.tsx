@@ -10,9 +10,8 @@ import {TabViewAnimated} from "react-native-tab-view";
 import {Toolbar} from "react-native-material-ui";
 import autobind from "autobind-decorator";
 import {NavigationScreenProp} from "react-navigation";
-import {HideableView} from "components/HideableView";
+import * as Animatable from "react-native-animatable"
 import absoluteFill = StyleSheet.absoluteFill;
-
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
@@ -42,7 +41,6 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
     static backgroundColor = '#f4f4f4';
     static tintColor = '#222';
     static appbarElevation = 4;
-
     state = {
         headerVisible: true,
         index: 0,
@@ -54,6 +52,10 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
             {key: '5', title: 'Updates', icon: 'ios-download'}
         ]
     };
+
+    private animate: any
+    private visible: boolean = true
+    private y: number = 0;
 
     _handleIndexChange = index =>
         this.setState({
@@ -103,7 +105,7 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
     };
 
     _renderFooter = props => (
-        <HideableView style={styles.tabbar} visible={this.state.headerVisible} removeWhenHidden={false}>
+        <Animatable.View ref={(r) => this.animate = r} style={styles.tabbar}>
             {props.navigationState.routes.map((route, index) => {
                 return (
                     <TouchableWithoutFeedback
@@ -117,12 +119,26 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
                     </TouchableWithoutFeedback>
                 );
             })}
-        </HideableView>
+        </Animatable.View>
     );
 
     _onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        if (event.nativeEvent.velocity)
-            console.log("Velocity: " + event.nativeEvent.velocity.y)
+        let y = event.nativeEvent.contentOffset.y;
+
+        const diff = y - this.y
+        console.log("diff: " + diff + ", y: " + y)
+        if (diff > 64 && this.visible) {
+            this.animate.animate("slideOutDown", 500)
+            this.visible = false
+            this.y = y
+        } else if ((diff < -64 || y < 64) && !this.visible) {
+            this.animate.animate("slideInUp", 500)
+            this.visible = true
+            this.y = y
+        }
+
+
+        // console.log("Offset: " + y)
     }
 
     _renderScene = ({route}) => {
@@ -134,11 +150,15 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
                 return (
                     <View style={[styles.page, {backgroundColor: '#E3F4DD'}]}>
                         <Button title="Hide/show"
-                                onPress={() => this.setState(prev => ({headerVisible: !prev.headerVisible}))}/>
+                                onPress={() => {
+                                    this.animate.animate(this.visible ? "slideOutDown" : "slideInUp", 500)
+                                    this.visible = !this.visible
+                                }}/>
                         <FlatList
                             style={{flex: 1}}
                             key={"flatlistexample"}
                             data={data}
+                            keyExtractor={({item}) => item}
                             onScroll={this._onScroll}
                             renderItem={({item}) => <View key={item}><Text>{item}</Text></View>}
                         />
@@ -185,16 +205,15 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
                     <View style={{backgroundColor: "transparent", height: 24}}/>
 
 
-                    <HideableView visible={this.state.headerVisible} removeWhenHidden>
-                        <Toolbar leftElement={this.leftMenuIcon()}
-                                 onLeftElementPress={this.onLeftClick}
-                                 centerElement={"Test"}
-                                 searchable={{
-                                     autoFocus: true,
-                                     placeholder: 'Search'
-                                 }}
-                        />
-                    </HideableView>
+                    <Toolbar leftElement={this.leftMenuIcon()}
+                             onLeftElementPress={this.onLeftClick}
+                             centerElement={"Test"}
+                             searchable={{
+                                 autoFocus: true,
+                                 placeholder: 'Search'
+                             }}
+                    />
+
                 </View>
                 <View style={{flex: 1}}>
                     <TabViewAnimated
@@ -233,7 +252,11 @@ const styles = StyleSheet.create({
     tabbar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: '#f4f4f4'
+        backgroundColor: '#f4f4f4',
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
     },
     tab: {
         flex: 1,
