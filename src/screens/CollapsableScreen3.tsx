@@ -1,11 +1,12 @@
 import * as React from "react"
+import {ReactNode} from "react"
 
 import {
-    Animated, Image, ImageStyle, ListView, ListViewDataSource, Platform, StatusBar, StyleSheet, TextStyle, View,
-    ViewStyle
+    Animated, ImageStyle, ListView, NativeScrollEvent, NativeSyntheticEvent, Platform, StatusBar, StyleSheet,
+    TextStyle, View, ViewStyle
 } from 'react-native';
 
-import data from './data';
+// import {data, TestData} from './data';
 import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
 import autobind from "autobind-decorator";
@@ -16,10 +17,9 @@ import absoluteFill = StyleSheet.absoluteFill;
 const NAVBAR_HEIGHT = 64;
 const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
 
-const AnimatedListView = Animated.createAnimatedComponent(ListView);
+// const AnimatedListView: FlatList<TestData> = Animated.createAnimatedComponent(FlatList);
 
 interface State {
-    dataSource: ListViewDataSource
     scrollAnim: Animated.Value
     offsetAnim: Animated.Value
     clampedScroll: AnimatedDiffClamp
@@ -29,9 +29,19 @@ interface Props {
     title: string
     rootScreen?: boolean
     navigation: NavigationScreenProp<{}, {}>
+    renderBody: (scrollProps: ScrollProps) => ReactNode
 }
 
-export class CollapsableScreen extends React.Component<Props, State> {
+export interface ScrollProps {
+    onMomentumScrollBegin: (event?: NativeSyntheticEvent<NativeScrollEvent>) => void;
+    onMomentumScrollEnd: (event?: NativeSyntheticEvent<NativeScrollEvent>) => void;
+    onScrollEndDrag: (event?: NativeSyntheticEvent<NativeScrollEvent>) => void;
+    onScroll: (event?: NativeSyntheticEvent<NativeScrollEvent>) => void;
+    contentContainerStyle: ViewStyle,
+    scrollEventThrottle: number
+}
+
+export class CollapsableScreen3 extends React.Component<Props, State> {
     public static defaultProps: Partial<Props> = {
         rootScreen: true,
         title: "Hej Hopp"
@@ -45,13 +55,10 @@ export class CollapsableScreen extends React.Component<Props, State> {
     constructor(props) {
         super(props);
 
-        const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
 
         this.state = {
-            dataSource: dataSource.cloneWithRows(data),
             scrollAnim,
             offsetAnim,
             clampedScroll: Animated.diffClamp(
@@ -102,27 +109,26 @@ export class CollapsableScreen extends React.Component<Props, State> {
             extrapolate: 'clamp',
         });
 
+        const scrollProps: ScrollProps = {
+            onMomentumScrollBegin: this.onMomentumScrollBegin,
+            onMomentumScrollEnd: this.onMomentumScrollEnd,
+            onScrollEndDrag: this.onScrollEndDrag,
+            contentContainerStyle: styles.contentContainer,
+            scrollEventThrottle: 1,
+            onScroll: Animated.event(
+                [{nativeEvent: {contentOffset: {y: this.state.scrollAnim}}}],
+                {useNativeDriver: true},
+            )
+        }
         return (
             <View style={styles.fill}>
-                <AnimatedListView
-                    contentContainerStyle={styles.contentContainer}
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderRow}
-                    scrollEventThrottle={1}
-                    onMomentumScrollBegin={this.onMomentumScrollBegin}
-                    onMomentumScrollEnd={this.onMomentumScrollEnd}
-                    onScrollEndDrag={this.onScrollEndDrag}
-                    onScroll={Animated.event(
-                        [{nativeEvent: {contentOffset: {y: this.state.scrollAnim}}}],
-                        {useNativeDriver: true},
-                    )}
-                />
+                {this.props.renderBody(scrollProps)}
 
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent/>
                     {/*<View style={{backgroundColor: "transparent", height: 24}}/>*/}
-                    <Image style={absoluteFill}
-                           source={{uri: banner}}
+                    <Animated.Image style={[absoluteFill, {opacity: navbarOpacity}]}
+                                    source={{uri: banner}}
                     />
                     <Animated.View style={[styles.toolbar, {opacity: navbarOpacity}]}>
                         <Toolbar leftElement={this.leftMenuIcon()}
@@ -164,12 +170,6 @@ export class CollapsableScreen extends React.Component<Props, State> {
         }).start();
     };
 
-    @autobind
-    private renderRow(rowData, sectionId, rowId) {
-        return (
-            <Image key={rowId} style={styles.row} source={{uri: rowData.image}} resizeMode="cover"/>
-        )
-    }
 
     @autobind
     private onLeftClick() {
@@ -211,7 +211,6 @@ const styles: Styles = {
         left: 0,
         right: 0,
         alignItems: 'center',
-        backgroundColor: 'green',
         borderBottomColor: '#dedede',
         borderBottomWidth: 0,
         height: NAVBAR_HEIGHT,

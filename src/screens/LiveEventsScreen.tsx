@@ -1,7 +1,7 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator,
+    ActivityIndicator, Animated, FlatList,
     ListRenderItemInfo,
     RefreshControl,
     SectionList,
@@ -26,6 +26,7 @@ import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
 import Screen from "screens/Screen";
 import Touchable from "components/Touchable";
+import {CollapsableScreen3, ScrollProps} from "screens/CollapsableScreen3";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -54,6 +55,8 @@ interface LiveSection extends SectionListData<EventEntity> {
     order: number
 }
 
+const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedComponent(SectionList);
+
 class LiveEventsScreen extends React.Component<ComponentProps, State> {
 
     constructor(props: ComponentProps) {
@@ -77,13 +80,12 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
 
     public render() {
         return (
-            <Screen title="Live right now" {...this.props} rootScreen>
-                {this.renderBody()}
-            </Screen>
+            <CollapsableScreen3 title="Live right now" {...this.props} rootScreen renderBody={this.renderBody}/>
         )
     }
 
-    public renderBody() {
+    @autobind
+    private renderBody(scrollProps: ScrollProps) {
         const {loading, events, groups, favorites} = this.props;
         let { expanded} = this.state
 
@@ -126,7 +128,8 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
 
 
         return (
-            <SectionList
+            <AnimatedSectionList
+                {...scrollProps}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                 sections={sections}

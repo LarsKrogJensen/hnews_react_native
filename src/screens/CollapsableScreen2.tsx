@@ -1,11 +1,11 @@
 import * as React from "react"
 
 import {
-    Animated, Image, ImageStyle, ListView, ListViewDataSource, Platform, StatusBar, StyleSheet, TextStyle, View,
-    ViewStyle
+    Animated, FlatList, Image, ImageStyle, ListRenderItemInfo, ListView, Platform, StatusBar, StyleSheet, TextStyle,
+    View, ViewStyle
 } from 'react-native';
 
-import data from './data';
+import {data, TestData} from './data';
 import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
 import autobind from "autobind-decorator";
@@ -16,10 +16,10 @@ import absoluteFill = StyleSheet.absoluteFill;
 const NAVBAR_HEIGHT = 64;
 const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
 
-const AnimatedListView = Animated.createAnimatedComponent(ListView);
+const AnimatedListView: FlatList<TestData> = Animated.createAnimatedComponent(FlatList);
 
 interface State {
-    dataSource: ListViewDataSource
+    dataSource: TestData[]
     scrollAnim: Animated.Value
     offsetAnim: Animated.Value
     clampedScroll: AnimatedDiffClamp
@@ -31,7 +31,7 @@ interface Props {
     navigation: NavigationScreenProp<{}, {}>
 }
 
-export class CollapsableScreen extends React.Component<Props, State> {
+export class CollapsableScreen2 extends React.Component<Props, State> {
     public static defaultProps: Partial<Props> = {
         rootScreen: true,
         title: "Hej Hopp"
@@ -51,7 +51,7 @@ export class CollapsableScreen extends React.Component<Props, State> {
         const offsetAnim = new Animated.Value(0);
 
         this.state = {
-            dataSource: dataSource.cloneWithRows(data),
+            dataSource: data,
             scrollAnim,
             offsetAnim,
             clampedScroll: Animated.diffClamp(
@@ -106,8 +106,9 @@ export class CollapsableScreen extends React.Component<Props, State> {
             <View style={styles.fill}>
                 <AnimatedListView
                     contentContainerStyle={styles.contentContainer}
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderRow}
+                    data={this.state.dataSource}
+                    renderItem={this.renderRow}
+                    keyExtractor={this.keyExtractor}
                     scrollEventThrottle={1}
                     onMomentumScrollBegin={this.onMomentumScrollBegin}
                     onMomentumScrollEnd={this.onMomentumScrollEnd}
@@ -121,8 +122,8 @@ export class CollapsableScreen extends React.Component<Props, State> {
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent/>
                     {/*<View style={{backgroundColor: "transparent", height: 24}}/>*/}
-                    <Image style={absoluteFill}
-                           source={{uri: banner}}
+                    <Animated.Image style={[absoluteFill, {opacity: navbarOpacity}]}
+                                    source={{uri: banner}}
                     />
                     <Animated.View style={[styles.toolbar, {opacity: navbarOpacity}]}>
                         <Toolbar leftElement={this.leftMenuIcon()}
@@ -165,10 +166,15 @@ export class CollapsableScreen extends React.Component<Props, State> {
     };
 
     @autobind
-    private renderRow(rowData, sectionId, rowId) {
+    private renderRow(listItem: ListRenderItemInfo<TestData>) {
         return (
-            <Image key={rowId} style={styles.row} source={{uri: rowData.image}} resizeMode="cover"/>
+            <Image key={listItem.item.title} style={styles.row} source={{uri: listItem.item.image}} resizeMode="cover"/>
         )
+    }
+
+    @autobind
+    private keyExtractor(item: TestData) {
+        return item.key
     }
 
     @autobind
@@ -211,7 +217,6 @@ const styles: Styles = {
         left: 0,
         right: 0,
         alignItems: 'center',
-        backgroundColor: 'green',
         borderBottomColor: '#dedede',
         borderBottomWidth: 0,
         height: NAVBAR_HEIGHT,

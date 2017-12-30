@@ -9,12 +9,12 @@ import {loadLanding} from "store/landing/actions";
 import {loadOpenForLive} from "store/live/actions";
 import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/AppStateRefresh";
-import Screen from "screens/Screen";
 import StartingSoonCard from "components/StartingSoonCard";
 import TrendingCard from "components/TrendingCard";
 import autobind from "autobind-decorator";
 import LiveCard from "components/LiveCard";
 import {HighlightsCard} from "components/HighlightsCard";
+import {CollapsableScreen3, ScrollProps} from "screens/CollapsableScreen3";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -62,13 +62,12 @@ class HomeScreen extends React.Component<ComponentProps> {
     public render() {
 
         return (
-            <Screen title="Home" {...this.props} rootScreen>
-                {this.renderBody()}
-            </Screen>
+            <CollapsableScreen3 title="Home" {...this.props} rootScreen renderBody={this.renderBody}/>
         )
     }
 
-    private renderBody() {
+    @autobind
+    private renderBody(scrollProps: ScrollProps) {
         const {loading} = this.props
 
         if (loading) {
@@ -81,6 +80,7 @@ class HomeScreen extends React.Component<ComponentProps> {
 
         return (
             <ScrollView
+                {...scrollProps}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
                 {this.renderLiveRightNow()}
                 {this.renderTrending()}
