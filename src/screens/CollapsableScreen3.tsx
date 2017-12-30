@@ -5,7 +5,6 @@ import {
     Animated, ImageStyle, NativeScrollEvent, NativeSyntheticEvent, Platform, StatusBar, StyleSheet, TextStyle, View,
     ViewStyle
 } from 'react-native';
-// import {data, TestData} from './data';
 import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
 import autobind from "autobind-decorator";
@@ -47,7 +46,7 @@ export class CollapsableScreen3 extends React.Component<Props, State> {
     private offsetValue = 0;
     private scrollValue = 0;
     private scrollEndTimer: number;
-    private statusBarVisible: boolean = true
+    private statusBarHidden: boolean = false
 
 
     constructor(props) {
@@ -82,10 +81,20 @@ export class CollapsableScreen3 extends React.Component<Props, State> {
                 Math.max(this.clampedScrollValue + diff, 0),
                 NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
             );
-
+            // console.log("Clamped: " + this.clampedScrollValue)
+            if (this.clampedScrollValue > 5 && !this.statusBarHidden) {
+                StatusBar.setHidden(true, "slide")
+                this.statusBarHidden = true
+                console.log("HIDING at clampValue: " + this.clampedScrollValue)
+            } else if (this.clampedScrollValue < 5  && this.statusBarHidden) {
+                StatusBar.setHidden(false, "slide")
+                this.statusBarHidden = false
+                console.log("SHOWING at clampValue: " + this.clampedScrollValue)
+            }
         });
         this.state.offsetAnim.addListener(({value}) => {
             this.offsetValue = value;
+            // console.log("Offet anim value: " + value)
         });
     }
 
@@ -119,13 +128,11 @@ export class CollapsableScreen3 extends React.Component<Props, State> {
                 {useNativeDriver: true},
             )
         }
-        this.statusBarVisible = !this.statusBarVisible
         return (
             <View style={styles.fill}>
                 {this.props.renderBody(scrollProps)}
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
-                    <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarVisible}/>
-                    {/*<View style={{backgroundColor: "transparent", height: 24}}/>*/}
+                    <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarHidden}/>
                     <Animated.Image style={[absoluteFill, {opacity: navbarOpacity}]}
                                     source={{uri: banner}}
                     />

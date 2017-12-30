@@ -1,7 +1,8 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle, View,
+    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
+    View,
     ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
@@ -17,13 +18,15 @@ import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
 import LiveEventListItem from "components/EventListItem";
 import {is, Set} from "immutable";
+import {ScrollProps} from "screens/CollapsableScreen3";
 
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: any }, {}>
     sport: string,
     region: string,
-    league: string
+    league: string,
+    scrollProps: ScrollProps
 }
 
 interface ComponentState {
@@ -45,6 +48,8 @@ type GroupBy = (event: EventEntity, sections: SportSection[]) => SportSection
 type SortBy = (a: SportSection, b: SportSection) => number
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps
+
+const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedComponent(SectionList);
 
 interface SportSection extends SectionListData<EventEntity> {
     date: Date,
@@ -122,7 +127,8 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
 
 
         return (
-            <SectionList
+            <AnimatedSectionList
+                {...this.props.scrollProps}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}
