@@ -18,7 +18,7 @@ import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
 import LiveEventListItem from "components/EventListItem";
 import {is, Set} from "immutable";
-import {ScrollProps} from "screens/CollapsableScreen3";
+import {NAVBAR_HEIGHT, ScrollProps} from "screens/CollapsableHeaderScreen";
 
 
 interface ExternalProps {
@@ -31,7 +31,7 @@ interface ExternalProps {
 
 interface ComponentState {
     sections: SportSection[]
-    expanded: Set<string>,
+    expanded: Set<string>
     hasInitExpanded: boolean
 }
 
@@ -54,7 +54,7 @@ const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedCom
 interface SportSection extends SectionListData<EventEntity> {
     date: Date,
     events: EventEntity[]
-    key: string,
+    key: string
     live: boolean,
     league: string
     count: number
@@ -113,7 +113,7 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
 
             return (
                 <View>
-                    <ActivityIndicator style={{marginTop: 8}}/>
+                    <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
                 </View>
             )
         }

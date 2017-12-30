@@ -1,7 +1,7 @@
 import * as React from "react"
 import {NavigationScreenProp} from "react-navigation";
 import {SportView} from "views/SportView";
-import {CollapsableScreen3, ScrollProps} from "screens/CollapsableScreen3";
+import {CollapsableHeaderScreen, ScrollProps} from "screens/CollapsableHeaderScreen";
 import autobind from "autobind-decorator";
 
 interface ExternalProps {
@@ -26,10 +26,10 @@ export class SportScreen extends React.Component<ExternalProps> {
         const {navigation: {state: {params}}} = this.props;
         console.log("SportScreen render")
         return (
-            <CollapsableScreen3 title={params.group.englishName}
-                                rootScreen={true}
-                                navigation={this.props.navigation}
-                                renderBody={props => (this.renderBody(props, params))}
+            <CollapsableHeaderScreen title={params.group.englishName}
+                                     rootScreen={true}
+                                     navigation={this.props.navigation}
+                                     renderBody={props => (this.renderBody(props, params))}
             />
         )
     }

@@ -37,7 +37,7 @@ export interface ScrollProps {
     scrollEventThrottle: number
 }
 
-export class CollapsableScreen3 extends React.Component<Props, State> {
+export class CollapsableHeaderScreen extends React.Component<Props, State> {
     public static defaultProps: Partial<Props> = {
         rootScreen: true,
         title: "Title"

@@ -24,7 +24,15 @@ interface StateProps {
 
 type Props = StateProps & ExternalProps
 
-class ListEventListItem extends React.PureComponent<Props> {
+class ListEventListItem extends React.Component<Props> {
+
+    public shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (nextProps.orientation !== this.props.orientation) return true
+        if (nextProps.event.mainBetOfferId !== this.props.event.mainBetOfferId) return true
+
+        return false
+    }
 
     public render() {
         const orient = this.props.orientation

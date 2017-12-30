@@ -1,20 +1,13 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, FlatList,
-    ListRenderItemInfo,
-    RefreshControl,
-    SectionList,
-    SectionListData,
-    Text,
-    TextStyle,
-    View,
-    ViewStyle
+    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
+    View, ViewStyle
 } from "react-native"
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Set} from "immutable"
+import {is, Set} from "immutable"
 import {NavigationScreenProp} from "react-navigation";
-import {EventGroup, LiveEvent} from "api/typings";
+import {EventGroup} from "api/typings";
 import EventListItem from "components/EventListItem";
 import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
@@ -24,9 +17,8 @@ import {connect} from "react-redux";
 import * as LiveActions from "store/live/actions"
 import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
-import Screen from "screens/Screen";
 import Touchable from "components/Touchable";
-import {CollapsableScreen3, NAVBAR_HEIGHT, ScrollProps, STATUS_BAR_HEIGHT} from "screens/CollapsableScreen3";
+import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollProps} from "screens/CollapsableHeaderScreen";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -47,12 +39,17 @@ type ComponentProps = StateProps & DispatchProps & ExternalProps
 
 interface State {
     refreshing: boolean
-    expanded: Set<number>
+    expanded: Set<string>
+    sections: LiveSection[]
+    hasInitExpanded: boolean
 }
 
 interface LiveSection extends SectionListData<EventEntity> {
-    count: number,
-    order: number
+    count: number
+    events: EventEntity[]
+    key: string
+    sport: string
+    sortOrder: number
 }
 
 const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedComponent(SectionList);
@@ -63,31 +60,45 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         super(props);
         this.state = {
             refreshing: false,
-            expanded: Set([0])
+            expanded: Set(),
+            sections: [],
+            hasInitExpanded: false
         }
     }
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
-        return nextProps.loading !== this.props.loading ||
-            nextProps.favorites.count() !== this.props.favorites.count() ||
-            nextProps.events.length !== this.props.events.length ||
-            nextState.expanded !== this.state.expanded
+        if (nextProps.loading !== this.props.loading) return true
+        if (nextProps.events.length !== this.props.events.length) return true
+        if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) return true
+        if (!is(nextProps.favorites, this.props.favorites)) return true
+        if (!is(nextState.expanded, this.state.expanded)) return true
+
+        return false
     }
 
     componentDidMount(): void {
         this.props.loadData(true)
     }
 
+    componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
+        if (!nextProps.loading) {
+            this.prepareData(nextProps.events, nextProps.groups, nextProps.favorites)
+        }
+    }
+
     public render() {
         return (
-            <CollapsableScreen3 title="Live right now" {...this.props} rootScreen renderBody={this.renderBody}/>
+            <CollapsableHeaderScreen {...this.props}
+                                     title="Live right now"
+                                     rootScreen
+                                     renderBody={this.renderBody}/>
         )
     }
 
     @autobind
     private renderBody(scrollProps: ScrollProps) {
-        const {loading, events, groups, favorites} = this.props;
-        let { expanded} = this.state
+        const {loading} = this.props;
+        let {expanded, sections} = this.state
 
 
         if (loading) {
@@ -96,35 +107,10 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             </View>
         }
 
-        const sections: LiveSection[] = groups.map(group => ({
-            title: group.englishName,
-            sport: group.sport,
-            sortOrder: group.sortOrder && parseInt(group.sortOrder, 10) || 100,
-            data: events.filter(event => event.sport === group.sport),
-            order: 0,
-            count: 0
-        })).sort((a, b) => a.sortOrder - b.sortOrder);
-
-        if (!favorites.isEmpty()) {
-            sections.unshift({
-                title: "Favorites",
-                sport: "arne",
-                sortOrder: 0,
-                data: events.filter(event => favorites.contains(event.id)),
-                order: 0,
-                count: 0
-            })
-        }
-
-        let i = 0;
-        for (let sec of sections) {
-            sec.order = i
-            sec.count = sec.data.length
-            if (!expanded.has(i)) {
-                sec.data = []
-            }
-            i++;
-        }
+        const sectionsView = sections.map(section => ({
+            ...section,
+            data: expanded.has(section.key) ? section.events : []
+        }));
 
 
         return (
@@ -132,7 +118,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
                 {...scrollProps}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
-                sections={sections}
+                sections={sectionsView}
                 renderSectionHeader={this.renderSectionHeader}
                 keyExtractor={this.keyExtractor}
                 renderItem={this.renderItem}
@@ -172,7 +158,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             )
         }
         return (
-            <Touchable onPress={() => this.toggleSection(info.section.order)}>
+            <Touchable onPress={() => this.toggleSection(info.section.key)}>
                 <View style={headerStyle}>
                     <Text style={liveTextStyle}>Live</Text>
                     <Text style={sportTextStyle}>{info.section.title}</Text>
@@ -182,15 +168,53 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         )
     }
 
+    @autobind
     private keyExtractor(event: EventEntity): string {
         return event.id.toString()
     }
 
+    private prepareData(events: EventEntity[],
+                        groups: EventGroup[],
+                        favorites: Set<number>) {
+        const sections: LiveSection[] = groups.map(group => ({
+            title: group.englishName,
+            sport: group.sport,
+            sortOrder: group.sortOrder && parseInt(group.sortOrder) || 100,
+            events: events.filter(event => event.sport === group.sport),
+            data: [],
+            count: 0,
+            key: group.englishName
+        })).sort((a, b) => a.sortOrder - b.sortOrder);
+
+        if (!favorites.isEmpty()) {
+            sections.unshift({
+                key: "favorites",
+                title: "Favorites",
+                sport: "arne",
+                sortOrder: 0,
+                events: events.filter(event => favorites.contains(event.id)),
+                count: 0,
+                data: []
+            })
+        }
+
+
+        for (let sec of sections) {
+            sec.count = sec.events.length
+        }
+
+        this.setState(prevState => ({
+            sections,
+            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? [sections[0].key] : []),
+            hasInitExpanded: prevState.hasInitExpanded || sections.length > 0
+        }))
+    }
+
     @autobind
-    private toggleSection(order: number) {
+    private toggleSection(key: string) {
         this.setState(prevState => {
-                let expanded: Set<number> = prevState.expanded
-                expanded = expanded.has(order) ? expanded.delete(order) : expanded.add(order)
+                let expanded: Set<string> = prevState.expanded
+                expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
                 return {
                     expanded: expanded
                 }

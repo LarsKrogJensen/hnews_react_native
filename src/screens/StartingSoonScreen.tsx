@@ -1,15 +1,8 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator,
-    ListRenderItemInfo,
-    RefreshControl,
-    SectionList,
-    SectionListData,
-    Text,
-    TextStyle,
-    View,
-    ViewStyle
+    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
+    View, ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import LiveEventListItem from "components/EventListItem";
@@ -21,9 +14,9 @@ import {connect} from "react-redux";
 import * as SoonActions from "store/soon/actions"
 import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
-import Screen from "screens/Screen";
 import Touchable from "components/Touchable";
-import {Set} from "immutable"
+import {is, Set} from "immutable"
+import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollProps} from "screens/CollapsableHeaderScreen";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -43,15 +36,21 @@ type ComponentProps = StateProps & DispatchProps & ExternalProps
 interface State {
     refreshing: boolean
     expanded: Set<string>
+    sections: DateSection[]
+    hasInitExpanded: boolean
 }
 
 interface DateSection extends SectionListData<EventEntity> {
-    date: Date,
+    date: Date
+    key: string
     count: number
+    events: EventEntity[]
 }
 
+
+const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedComponent(SectionList);
+
 class StartingSoonScreen extends React.Component<ComponentProps, State> {
-    // private
     private today = new Date()
     private todayStr: string
     private tomorrow = new Date()
@@ -64,74 +63,63 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         this.toMorrowStr = this.tomorrow.toDateString()
         this.state = {
             refreshing: false,
-            expanded: Set()
+            expanded: Set(),
+            sections: [],
+            hasInitExpanded: false
         }
     }
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
-        return nextProps.loading !== this.props.loading ||
-            nextProps.events.length !== this.props.events.length ||
-            nextState.expanded !== this.state.expanded
+        if (nextProps.loading !== this.props.loading) return true
+        if (nextProps.events.length !== this.props.events.length) return true
+        if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) return true
+        if (!is(nextState.expanded, this.state.expanded)) return true
+
+        return false
     }
 
     componentDidMount(): void {
         this.props.loadData(true)
     }
 
+    componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
+        if (!nextProps.loading) {
+            this.prepareData(nextProps.events)
+        }
+    }
+
     public render() {
         return (
-            <Screen title="Starting Soon" {...this.props} rootScreen>
-                {this.renderBody()}
-            </Screen>
+            <CollapsableHeaderScreen {...this.props}
+                                     title="Starting Soon"
+                                     rootScreen
+                                     renderBody={this.renderBody}/>
         )
     }
 
-    private renderBody() {
-        const {loading, events} = this.props;
-        const {expanded} = this.state
+    @autobind
+    private renderBody(scrollProps: ScrollProps) {
+        const {loading} = this.props;
+        const {expanded, sections} = this.state
 
         if (loading) {
             return <View>
-                <ActivityIndicator style={{marginTop: 8}}/>
+                <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
             </View>
         }
 
-        const sections: DateSection[] = []
-
-        for (let event of events) {
-            let date = new Date(event.start);
-            date.setMinutes(0)
-            date.setSeconds(0)
-            date.setMilliseconds(0)
-
-            let section: DateSection | undefined = undefined
-            for (let s of sections) {
-                if (s.date.getTime() === date.getTime()) {
-                    section = s;
-                    break;
-                }
-            }
-            if (!section) {
-                section = {
-                    date: date,
-                    data: [],
-                    count: 0
-                }
-                sections.push(section)
-            }
-
-            if (expanded.has(date.toISOString())) {
-                section.data.push(event)
-            }
-            section.count++
-        }
+        const sectionsView = sections.map(section => ({
+            ...section,
+            data: expanded.has(section.key) ? section.events : []
+        }));
 
 
         return (
-            <SectionList
+            <AnimatedSectionList
+                {...scrollProps}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
-                sections={sections}
+                sections={sectionsView}
                 renderSectionHeader={this.renderSectionHeader}
                 keyExtractor={this.keyExtractor}
                 renderItem={this.renderItem}
@@ -175,7 +163,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         }
 
         return (
-            <Touchable onPress={() => this.toggleSection(info.section.date.toISOString())}>
+            <Touchable onPress={() => this.toggleSection(info.section.key)}>
                 <View style={headerStyle}>
                     <Text style={liveTextStyle}>{hour}</Text>
                     <Text style={sportTextStyle}>{datum}</Text>
@@ -185,11 +173,49 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         )
     }
 
+    private prepareData(events: EventEntity[]) {
+        const sections: DateSection[] = []
+
+        for (let event of events) {
+            let date = new Date(event.start);
+            date.setMinutes(0)
+            date.setSeconds(0)
+            date.setMilliseconds(0)
+
+            let section: DateSection | undefined = undefined
+            for (let s of sections) {
+                if (s.date.getTime() === date.getTime()) {
+                    section = s;
+                    break;
+                }
+            }
+            if (!section) {
+                section = {
+                    key: date.toISOString(),
+                    date: date,
+                    data: [],
+                    events: [],
+                    count: 0
+                }
+                sections.push(section)
+            }
+
+            section.events.push(event)
+            section.count++
+        }
+
+        this.setState(prevState => ({
+            sections,
+            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? [sections[0].key] : []),
+            hasInitExpanded: prevState.hasInitExpanded || sections.length > 0
+        }))
+    }
+
     @autobind
-    private toggleSection(name: string) {
+    private toggleSection(key: string) {
         this.setState(prevState => {
                 let expanded: Set<string> = prevState.expanded
-                expanded = expanded.has(name) ? expanded.delete(name) : expanded.add(name)
+                expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
                 return {
                     expanded
                 }

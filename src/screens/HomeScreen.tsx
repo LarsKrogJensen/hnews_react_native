@@ -14,7 +14,7 @@ import TrendingCard from "components/TrendingCard";
 import autobind from "autobind-decorator";
 import LiveCard from "components/LiveCard";
 import {HighlightsCard} from "components/HighlightsCard";
-import {CollapsableScreen3, ScrollProps} from "screens/CollapsableScreen3";
+import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollProps} from "screens/CollapsableHeaderScreen"
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -64,7 +64,7 @@ class HomeScreen extends React.Component<ComponentProps> {
     public render() {
 
         return (
-            <CollapsableScreen3 title="Home" {...this.props} rootScreen renderBody={this.renderBody}/>
+            <CollapsableHeaderScreen title="Home" {...this.props} rootScreen renderBody={this.renderBody}/>
         )
     }
 
@@ -75,7 +75,7 @@ class HomeScreen extends React.Component<ComponentProps> {
         if (loading) {
             return (
                 <View>
-                    <ActivityIndicator style={{marginTop: 8}}/>
+                    <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
                 </View>
             )
         }
