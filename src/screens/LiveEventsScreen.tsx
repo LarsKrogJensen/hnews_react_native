@@ -26,7 +26,7 @@ import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
 import Screen from "screens/Screen";
 import Touchable from "components/Touchable";
-import {CollapsableScreen3, ScrollProps} from "screens/CollapsableScreen3";
+import {CollapsableScreen3, NAVBAR_HEIGHT, ScrollProps, STATUS_BAR_HEIGHT} from "screens/CollapsableScreen3";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -92,7 +92,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
 
         if (loading) {
             return <View>
-                <ActivityIndicator style={{marginTop: 8}}/>
+                <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
             </View>
         }
 

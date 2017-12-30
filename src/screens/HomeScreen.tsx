@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {ActivityIndicator, RefreshControl, ScrollView, View} from "react-native"
+import {ActivityIndicator, Animated, RefreshControl, ScrollView, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
@@ -35,6 +35,8 @@ interface DispatchProps {
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps
 
+
+const AnimatedScrollView: ScrollView = Animated.createAnimatedComponent(ScrollView);
 
 class HomeScreen extends React.Component<ComponentProps> {
 
@@ -79,14 +81,14 @@ class HomeScreen extends React.Component<ComponentProps> {
         }
 
         return (
-            <ScrollView
+            <AnimatedScrollView
                 {...scrollProps}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
                 {this.renderLiveRightNow()}
                 {this.renderTrending()}
                 {this.renderHighlights()}
                 {this.renderStartingSoon()}
-            </ScrollView>
+            </AnimatedScrollView>
         )
     }
 

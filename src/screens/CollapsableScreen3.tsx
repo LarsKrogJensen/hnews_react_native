@@ -2,10 +2,9 @@ import * as React from "react"
 import {ReactNode} from "react"
 
 import {
-    Animated, ImageStyle, ListView, NativeScrollEvent, NativeSyntheticEvent, Platform, StatusBar, StyleSheet,
-    TextStyle, View, ViewStyle
+    Animated, ImageStyle, NativeScrollEvent, NativeSyntheticEvent, Platform, StatusBar, StyleSheet, TextStyle, View,
+    ViewStyle
 } from 'react-native';
-
 // import {data, TestData} from './data';
 import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
@@ -14,10 +13,8 @@ import {NavigationScreenProp} from "react-navigation";
 import AnimatedDiffClamp = Animated.AnimatedDiffClamp;
 import absoluteFill = StyleSheet.absoluteFill;
 
-const NAVBAR_HEIGHT = 64;
-const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
-
-// const AnimatedListView: FlatList<TestData> = Animated.createAnimatedComponent(FlatList);
+export const NAVBAR_HEIGHT = 64;
+export const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
 
 interface State {
     scrollAnim: Animated.Value
@@ -44,12 +41,13 @@ export interface ScrollProps {
 export class CollapsableScreen3 extends React.Component<Props, State> {
     public static defaultProps: Partial<Props> = {
         rootScreen: true,
-        title: "Hej Hopp"
+        title: "Title"
     }
     private clampedScrollValue = 0;
     private offsetValue = 0;
     private scrollValue = 0;
     private scrollEndTimer: number;
+    private statusBarVisible: boolean = true
 
 
     constructor(props) {
@@ -84,6 +82,7 @@ export class CollapsableScreen3 extends React.Component<Props, State> {
                 Math.max(this.clampedScrollValue + diff, 0),
                 NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
             );
+
         });
         this.state.offsetAnim.addListener(({value}) => {
             this.offsetValue = value;
@@ -96,14 +95,14 @@ export class CollapsableScreen3 extends React.Component<Props, State> {
     }
 
     render() {
-        const {clampedScroll} = this.state;
+        const {clampedScroll, scrollAnim} = this.state;
 
         const navbarTranslate = clampedScroll.interpolate({
             inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
             outputRange: [0, -(NAVBAR_HEIGHT - STATUS_BAR_HEIGHT)],
             extrapolate: 'clamp',
         });
-        const navbarOpacity = clampedScroll.interpolate({
+        const navbarOpacity: Animated.AnimatedInterpolation = clampedScroll.interpolate({
             inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
             outputRange: [1, 0],
             extrapolate: 'clamp',
@@ -116,16 +115,16 @@ export class CollapsableScreen3 extends React.Component<Props, State> {
             contentContainerStyle: styles.contentContainer,
             scrollEventThrottle: 1,
             onScroll: Animated.event(
-                [{nativeEvent: {contentOffset: {y: this.state.scrollAnim}}}],
+                [{nativeEvent: {contentOffset: {y: scrollAnim}}}],
                 {useNativeDriver: true},
             )
         }
+        this.statusBarVisible = !this.statusBarVisible
         return (
             <View style={styles.fill}>
                 {this.props.renderBody(scrollProps)}
-
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
-                    <StatusBar backgroundColor="transparent" translucent/>
+                    <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarVisible}/>
                     {/*<View style={{backgroundColor: "transparent", height: 24}}/>*/}
                     <Animated.Image style={[absoluteFill, {opacity: navbarOpacity}]}
                                     source={{uri: banner}}
@@ -168,8 +167,7 @@ export class CollapsableScreen3 extends React.Component<Props, State> {
             duration: 350,
             useNativeDriver: true,
         }).start();
-    };
-
+    }
 
     @autobind
     private onLeftClick() {
