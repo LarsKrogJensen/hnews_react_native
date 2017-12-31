@@ -81,6 +81,17 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
                 Math.max(this.clampedScrollValue + diff, 0),
                 NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
             );
+
+            // console.log("Clamped: " + this.clampedScrollValue + ", Scroll value: " + this.scrollValue + ", Offset: " + this.offsetValue)
+            if (this.clampedScrollValue > 5 && !this.statusBarHidden && this.scrollValue > STATUS_BAR_HEIGHT) {
+                StatusBar.setHidden(true, "slide")
+                this.statusBarHidden = true
+                // console.log("HIDING at clampValue: " + this.clampedScrollValue)
+            } else if (this.clampedScrollValue < 5 && this.statusBarHidden) {
+                StatusBar.setHidden(false, "slide")
+                this.statusBarHidden = false
+                // console.log("SHOWING at clampValue: " + this.clampedScrollValue)
+            }
         });
         this.state.offsetAnim.addListener(({value}) => {
             this.offsetValue = value;
@@ -101,23 +112,28 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
             outputRange: [0, -(NAVBAR_HEIGHT - STATUS_BAR_HEIGHT)],
             extrapolate: 'clamp',
         });
+        // const contentTranslate = clampedScroll.interpolate({
+        //     inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
+        //     outputRange: [NAVBAR_HEIGHT, STATUS_BAR_HEIGHT],
+        //     extrapolate: 'clamp',
+        // });
         const navbarOpacity: Animated.AnimatedInterpolation = clampedScroll.interpolate({
             inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
             outputRange: [1, 0],
             extrapolate: 'clamp',
         });
-        const contentPadding: Animated.AnimatedInterpolation = clampedScroll.interpolate({
-            inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
-            outputRange: [NAVBAR_HEIGHT, STATUS_BAR_HEIGHT],
-            extrapolate: 'clamp',
-        });
+        // const contentPadding: Animated.AnimatedInterpolation = clampedScroll.interpolate({
+        //     inputRange: [0, NAVBAR_HEIGHT],
+        //     outputRange: [NAVBAR_HEIGHT, 0],
+        //     extrapolate: 'clamp',
+        // });
 
         const scrollProps: ScrollProps = {
             onMomentumScrollBegin: this.onMomentumScrollBegin,
             onMomentumScrollEnd: this.onMomentumScrollEnd,
             onScrollEndDrag: this.onScrollEndDrag,
-            contentContainerStyle: {},
-            scrollEventThrottle: 1,
+            scrollEventThrottle: 16,
+            contentContainerStyle: styles.contentContainer,
             onScroll: Animated.event(
                 [{nativeEvent: {contentOffset: {y: scrollAnim}}}],
                 {useNativeDriver: true},
@@ -125,9 +141,9 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         }
         return (
             <View style={styles.fill}>
-                <Animated.View style={{transform: [{translateY: contentPadding}]}}>
-                    {this.props.renderBody(scrollProps)}
-                </Animated.View>
+                {/*<Animated.View style={{transform: [{translateY: contentTranslate}]}}>*/}
+                {this.props.renderBody(scrollProps)}
+                {/*</Animated.View>*/}
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarHidden}/>
 
@@ -198,7 +214,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
 interface Styles {
     fill: ViewStyle,
     navbar: ViewStyle,
-    statusbar: ViewStyle,
+    // statusbar: ViewStyle,
     contentContainer: ViewStyle,
     toolbar: ViewStyle,
     rowText: TextStyle,
@@ -217,18 +233,18 @@ const styles: Styles = {
         alignItems: 'center',
         borderBottomColor: '#dedede',
         borderBottomWidth: 0,
-        backgroundColor: "#00ADC9",
+        backgroundColor: "transparent",
         height: NAVBAR_HEIGHT,
         justifyContent: 'center',
         paddingTop: STATUS_BAR_HEIGHT,
     },
-    statusbar: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: STATUS_BAR_HEIGHT
-    },
+    // statusbar: {
+    //     position: 'absolute',
+    //     top: 0,
+    //     left: 0,
+    //     right: 0,
+    //     height: STATUS_BAR_HEIGHT
+    // },
     contentContainer: {
         paddingTop: NAVBAR_HEIGHT,
     },

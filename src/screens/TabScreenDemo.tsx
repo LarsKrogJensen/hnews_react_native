@@ -66,9 +66,9 @@ const styles = StyleSheet.create({
         flex: 1
     },
     tabbar: {
-        backgroundColor: 'white'
+        backgroundColor: 'black'
     },
     indicator: {
-        backgroundColor: 'black'
+        backgroundColor: 'white'
     }
 });
