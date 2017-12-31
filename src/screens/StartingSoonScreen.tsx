@@ -206,7 +206,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
         this.setState(prevState => ({
             sections,
-            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? [sections[0].key] : []),
+            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? sections.map(s => s.key) : []),
             hasInitExpanded: prevState.hasInitExpanded || sections.length > 0
         }))
     }

@@ -81,16 +81,6 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
                 Math.max(this.clampedScrollValue + diff, 0),
                 NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
             );
-            // console.log("Clamped: " + this.clampedScrollValue)
-            if (this.clampedScrollValue > 5 && !this.statusBarHidden) {
-                StatusBar.setHidden(true, "slide")
-                this.statusBarHidden = true
-                console.log("HIDING at clampValue: " + this.clampedScrollValue)
-            } else if (this.clampedScrollValue < 5  && this.statusBarHidden) {
-                StatusBar.setHidden(false, "slide")
-                this.statusBarHidden = false
-                console.log("SHOWING at clampValue: " + this.clampedScrollValue)
-            }
         });
         this.state.offsetAnim.addListener(({value}) => {
             this.offsetValue = value;
@@ -116,12 +106,17 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
             outputRange: [1, 0],
             extrapolate: 'clamp',
         });
+        const contentPadding: Animated.AnimatedInterpolation = clampedScroll.interpolate({
+            inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
+            outputRange: [NAVBAR_HEIGHT, STATUS_BAR_HEIGHT],
+            extrapolate: 'clamp',
+        });
 
         const scrollProps: ScrollProps = {
             onMomentumScrollBegin: this.onMomentumScrollBegin,
             onMomentumScrollEnd: this.onMomentumScrollEnd,
             onScrollEndDrag: this.onScrollEndDrag,
-            contentContainerStyle: styles.contentContainer,
+            contentContainerStyle: {},
             scrollEventThrottle: 1,
             onScroll: Animated.event(
                 [{nativeEvent: {contentOffset: {y: scrollAnim}}}],
@@ -130,9 +125,12 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         }
         return (
             <View style={styles.fill}>
-                {this.props.renderBody(scrollProps)}
+                <Animated.View style={{transform: [{translateY: contentPadding}]}}>
+                    {this.props.renderBody(scrollProps)}
+                </Animated.View>
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarHidden}/>
+
                     <Animated.Image style={[absoluteFill, {opacity: navbarOpacity}]}
                                     source={{uri: banner}}
                     />
@@ -200,6 +198,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
 interface Styles {
     fill: ViewStyle,
     navbar: ViewStyle,
+    statusbar: ViewStyle,
     contentContainer: ViewStyle,
     toolbar: ViewStyle,
     rowText: TextStyle,
@@ -218,9 +217,17 @@ const styles: Styles = {
         alignItems: 'center',
         borderBottomColor: '#dedede',
         borderBottomWidth: 0,
+        backgroundColor: "#00ADC9",
         height: NAVBAR_HEIGHT,
         justifyContent: 'center',
         paddingTop: STATUS_BAR_HEIGHT,
+    },
+    statusbar: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: STATUS_BAR_HEIGHT
     },
     contentContainer: {
         paddingTop: NAVBAR_HEIGHT,
