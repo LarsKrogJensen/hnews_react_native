@@ -18,7 +18,7 @@ import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
 import LiveEventListItem from "components/EventListItem";
 import {is, Set} from "immutable";
-import {NAVBAR_HEIGHT, ScrollProps} from "screens/CollapsableHeaderScreen";
+import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 
 
 interface ExternalProps {
@@ -26,7 +26,7 @@ interface ExternalProps {
     sport: string,
     region: string,
     league: string,
-    scrollProps: ScrollProps
+    scrollHooks: ScrollHooks
 }
 
 interface ComponentState {
@@ -128,7 +128,7 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
 
         return (
             <AnimatedSectionList
-                {...this.props.scrollProps}
+                {...this.props.scrollHooks}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}

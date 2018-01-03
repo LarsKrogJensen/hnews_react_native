@@ -18,7 +18,7 @@ import * as LiveActions from "store/live/actions"
 import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
 import Touchable from "components/Touchable";
-import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollProps} from "screens/CollapsableHeaderScreen";
+import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -96,7 +96,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
     }
 
     @autobind
-    private renderBody(scrollProps: ScrollProps) {
+    private renderBody(scrollHooks: ScrollHooks) {
         const {loading} = this.props;
         let {expanded, sections} = this.state
 
@@ -112,10 +112,10 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             data: expanded.has(section.key) ? section.events : []
         }));
 
-
+        console.log("Rendering LRN")
         return (
             <AnimatedSectionList
-                {...scrollProps}
+                {...scrollHooks}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}
