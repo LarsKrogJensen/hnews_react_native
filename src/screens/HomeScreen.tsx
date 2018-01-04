@@ -14,7 +14,7 @@ import TrendingCard from "components/TrendingCard";
 import autobind from "autobind-decorator";
 import LiveCard from "components/LiveCard";
 import {HighlightsCard} from "components/HighlightsCard";
-import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollProps} from "screens/CollapsableHeaderScreen"
+import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen"
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -69,7 +69,7 @@ class HomeScreen extends React.Component<ComponentProps> {
     }
 
     @autobind
-    private renderBody(scrollProps: ScrollProps) {
+    private renderBody(scrollHooks: ScrollHooks) {
         const {loading} = this.props
 
         if (loading) {
@@ -82,7 +82,7 @@ class HomeScreen extends React.Component<ComponentProps> {
 
         return (
             <AnimatedScrollView
-                {...scrollProps}
+                {...scrollHooks}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
                 {this.renderLiveRightNow()}
                 {this.renderTrending()}

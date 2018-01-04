@@ -25,10 +25,10 @@ interface Props {
     title: string
     rootScreen?: boolean
     navigation: NavigationScreenProp<{}, {}>
-    renderBody: (scrollProps: ScrollProps) => ReactNode
+    renderBody: (scrollHooks: ScrollHooks) => ReactNode
 }
 
-export interface ScrollProps {
+export interface ScrollHooks {
     onMomentumScrollBegin: (event?: NativeSyntheticEvent<NativeScrollEvent>) => void;
     onMomentumScrollEnd: (event?: NativeSyntheticEvent<NativeScrollEvent>) => void;
     onScrollEndDrag: (event?: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -130,7 +130,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         //     extrapolate: 'clamp',
         // });
 
-        const scrollProps: ScrollProps = {
+        const scrollHooks: ScrollHooks = {
             onMomentumScrollBegin: this.onMomentumScrollBegin,
             onMomentumScrollEnd: this.onMomentumScrollEnd,
             onScrollEndDrag: this.onScrollEndDrag,
@@ -144,7 +144,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         return (
             <View style={styles.fill}>
                 {/*<Animated.View style={{transform: [{translateY: contentTranslate}]}}>*/}
-                {this.props.renderBody(scrollProps)}
+                {this.props.renderBody(scrollHooks)}
                 {/*</Animated.View>*/}
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarHidden}/>

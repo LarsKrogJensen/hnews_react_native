@@ -17,7 +17,7 @@ import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
 import Touchable from "components/Touchable";
 import {is, Set} from "immutable"
-import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollProps} from "screens/CollapsableHeaderScreen";
+import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -103,7 +103,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     }
 
     @autobind
-    private renderBody(scrollProps: ScrollProps) {
+    private renderBody(scrollHooks: ScrollHooks) {
         const {loading} = this.props;
         const {expanded, sections} = this.state
 
@@ -120,10 +120,9 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
             data: expanded.has(section.key) ? section.events : []
         }));
 
-
         return (
             <AnimatedSectionList
-                {...scrollProps}
+                {...scrollHooks}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}
