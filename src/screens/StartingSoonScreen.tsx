@@ -1,7 +1,8 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
+    ActivityIndicator, Animated, InteractionManager, ListRenderItemInfo, RefreshControl, SectionList, SectionListData,
+    Text, TextStyle,
     View, ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
@@ -71,8 +72,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
-        if (nextProps.events.length !== this.props.events.length) return true
-        if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) return true
+        if (this.hasPropsChanges(nextProps, this.props)) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
 
         return false
@@ -80,15 +80,20 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
     componentDidMount(): void {
         this.props.loadData(true)
+        if (this.props.events.length) {
+            this.prepareData(this.props.events)
+        }
     }
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
-        if (!nextProps.loading) {
+        if (!nextProps.loading && this.hasPropsChanges(nextProps, this.props)) {
             this.prepareData(nextProps.events)
         }
     }
 
     public render() {
+        console.log("StartingSoon.render")
+
         return (
             <CollapsableHeaderScreen {...this.props}
                                      title="Starting Soon"
@@ -103,9 +108,11 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         const {expanded, sections} = this.state
 
         if (loading) {
-            return <View>
-                <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
-            </View>
+            return (
+                <View>
+                    <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
+                </View>
+            )
         }
 
         const sectionsView = sections.map(section => ({
@@ -130,6 +137,11 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     @autobind
     private onRefresh() {
         this.props.loadData(true)
+    }
+
+    private hasPropsChanges(nextProps: ComponentProps, props: ComponentProps): boolean {
+        return nextProps.events.length !== props.events.length ||
+            nextProps.events.map(e => e.id).join() !== props.events.map(e => e.id).join()
     }
 
     @autobind
@@ -174,6 +186,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     }
 
     private prepareData(events: EventEntity[]) {
+        console.log("StartingSoon.prepareData")
         const sections: DateSection[] = []
 
         for (let event of events) {
@@ -206,21 +219,23 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
         this.setState(prevState => ({
             sections,
-            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? sections.map(s => s.key) : []),
+            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? [sections[0].key] : []),
             hasInitExpanded: prevState.hasInitExpanded || sections.length > 0
         }))
     }
 
     @autobind
     private toggleSection(key: string) {
-        this.setState(prevState => {
-                let expanded: Set<string> = prevState.expanded
-                expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
-                return {
-                    expanded
+        InteractionManager.runAfterInteractions(() => {
+            this.setState(prevState => {
+                    let expanded: Set<string> = prevState.expanded
+                    expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
+                    return {
+                        expanded
+                    }
                 }
-            }
-        )
+            )
+        });
     }
 
     @autobind

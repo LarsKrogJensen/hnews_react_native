@@ -29,7 +29,7 @@ class EventInfoItem extends React.PureComponent<Props> {
         return (
             <View style={{...viewStyle, flexDirection: "row", flex: 1, height: 68}}>
                 {this.renderScoreOrTime(event, liveData)}
-                <EventDetailsItem style={{flex: 1}} event={event}/>
+                <EventDetailsItem style={{flex: 1}} event={event} liveData={liveData}/>
             </View>
         )
     }

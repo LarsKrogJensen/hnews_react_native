@@ -78,10 +78,17 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
 
     componentDidMount(): void {
         this.props.loadData(true)
+        if (this.props.events.length) {
+            this.prepareData(this.props.events, this.props.groups, this.props.favorites)
+        }
     }
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
-        if (!nextProps.loading) {
+        if (!nextProps.loading && (
+                nextProps.events.length !== this.props.events.length ||
+                nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join() ||
+                !is(nextProps.favorites, this.props.favorites))
+        ) {
             this.prepareData(nextProps.events, nextProps.groups, nextProps.favorites)
         }
     }
@@ -112,7 +119,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             data: expanded.has(section.key) ? section.events : []
         }));
 
-
+        // console.log("Rendering LiveScreen sections: " + sectionsView.length)
         return (
             <AnimatedSectionList
                 {...scrollProps}
@@ -143,18 +150,18 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
     @autobind
     private renderSectionHeader(info: { section: LiveSection }) {
         if (info.section.title === "Favorites") {
-            if (info.section.data.length === 0) {
-                return null
-            }
+
             return (
-                <View style={headerStyle}>
-                    <Icon style={{padding: 0}}
-                          name="ios-star"
-                          size={30}
-                          color="darkorange"/>
-                    <Text style={sportTextStyle}>{info.section.title}</Text>
-                    <Text style={countTextStyle}>{info.section.data.length}</Text>
-                </View>
+                <Touchable onPress={() => this.toggleSection(info.section.key)}>
+                    <View style={headerStyle}>
+                        <Icon style={{padding: 0}}
+                              name="ios-star"
+                              size={30}
+                              color="darkorange"/>
+                        <Text style={sportTextStyle}>{info.section.title}</Text>
+                        <Text style={countTextStyle}>{info.section.count}</Text>
+                    </View>
+                </Touchable>
             )
         }
         return (
@@ -176,6 +183,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
     private prepareData(events: EventEntity[],
                         groups: EventGroup[],
                         favorites: Set<number>) {
+        // console.log("Prepare live data")
         const sections: LiveSection[] = groups.map(group => ({
             title: group.englishName,
             sport: group.sport,

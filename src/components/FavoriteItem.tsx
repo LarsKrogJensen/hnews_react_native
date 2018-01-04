@@ -1,5 +1,4 @@
 import * as React from "react"
-import PlatformIcon from "components/PlatformIcon";
 import {TouchableHighlight, ViewStyle} from "react-native";
 import * as Actions from "store/favorite/actions"
 import {AppStore} from "store/store";

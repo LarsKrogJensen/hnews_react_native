@@ -52,10 +52,12 @@ class BetOfferItem extends React.Component<Props> {
                     key={outcomeId}
                     orientation={Orientation.Portrait}
                     outcomeId={outcomeId}
-                    eventId={bo.eventId}/>
+                    eventId={bo.eventId}
+                    betOfferId={bo.id}/>
             ))
 
-            items.push(<Touchable key={123345}><Text style={{textAlign: "center", padding: 8}}>View all {outcomes.length} participants</Text></Touchable>)
+            items.push(<Touchable key={123345}><Text style={{textAlign: "center", padding: 8}}>View
+                all {outcomes.length} participants</Text></Touchable>)
             return items;
         }
 
@@ -65,7 +67,8 @@ class BetOfferItem extends React.Component<Props> {
                 style={{}}
                 orientation={this.props.orientation}
                 outcomeId={outcomeId}
-                eventId={bo.eventId}/>
+                eventId={bo.eventId}
+                betOfferId={bo.id}/>
         ))
     }
 }

@@ -105,6 +105,8 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
     }
 
     render() {
+        // console.log("CollapsableHeaderScreen.render")
+
         const {clampedScroll, scrollAnim} = this.state;
 
         const navbarTranslate = clampedScroll.interpolate({

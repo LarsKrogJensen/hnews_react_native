@@ -24,7 +24,7 @@ export class SportScreen extends React.Component<ExternalProps> {
 
     render(): React.ReactNode {
         const {navigation: {state: {params}}} = this.props;
-        console.log("SportScreen render")
+        // console.log("SportScreen render")
         return (
             <CollapsableHeaderScreen title={params.group.englishName}
                                      rootScreen={true}

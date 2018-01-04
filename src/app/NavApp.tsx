@@ -78,7 +78,7 @@ const NavApp = DrawerNavigator(
         drawerWidth: 300,
         drawerPosition: 'left',
         contentComponent: props => <Drawer {...props} />,
-        initialRouteName: "Test",
+        initialRouteName: "Live",
         // backBehavior: 'none'
     }
 );

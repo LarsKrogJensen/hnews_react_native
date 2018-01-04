@@ -7,12 +7,12 @@ import {connect} from "react-redux";
 import {AppStore} from "store/store";
 import BetOfferItem from "components/BetOfferItem"
 import {Orientation} from "lib/device";
-import {LiveData, ShirtColors} from "api/typings";
+import {LiveData} from "api/typings";
 import MatchClockItem from "components/MatchClockItem";
 import {CircularProgress} from 'react-native-circular-progress';
-import Svg, {Circle, Path} from "react-native-svg";
 import {Card} from "components/Card";
 import EventPathItem from "components/EventPathItem";
+import {renderServe, renderTeamColors} from "components/RenderUtils";
 
 
 interface ExternalProps {
@@ -79,14 +79,14 @@ class LiveCardComponent extends React.Component<Props> {
             <View style={{flexDirection: "row", marginRight: 8}}>
                 <View style={{flexDirection: "column", flex: 1}}>
                     <View style={teamRowStyle}>
-                        {this.renderTeamColors(event.teamColors && event.teamColors.home)}
+                        {renderTeamColors(event.teamColors && event.teamColors.home)}
                         <Text style={textStyle}>{event.homeName}</Text>
-                        {this.renderServe(liveData, true)}
+                        {renderServe(liveData, true)}
                     </View>
                     <View style={{...teamRowStyle, marginBottom: 8}}>
-                        {this.renderTeamColors(event.teamColors && event.teamColors.away)}
+                        {renderTeamColors(event.teamColors && event.teamColors.away)}
                         <Text style={textStyle}>{event.awayName}</Text>
-                        {this.renderServe(liveData, false)}
+                        {renderServe(liveData, false)}
                     </View>
                 </View>
                 {this.renderScoreColumns(liveData)}
@@ -136,31 +136,6 @@ class LiveCardComponent extends React.Component<Props> {
         return null;
     }
 
-    private renderServe(liveData: LiveData, home: boolean) {
-        if (liveData && liveData.statistics && liveData.statistics.sets && liveData.statistics.sets.homeServe === home) {
-            return (
-                <Svg width={16} height={16} style={{flex: 1}}>
-                    <Circle cx={8} cy={8} r={4} fill="#F7CE00"/>
-                </Svg>
-            )
-        }
-
-        return null;
-    }
-
-    private renderTeamColors(colors: ShirtColors | undefined) {
-
-        if (!colors) return null
-
-        return (
-            <Svg width={20} height={20}>
-                <Circle cx={10} cy={10} r={7} fill={colors.shirtColor1 || "none"}/>
-                <Path d="M3,10 a1,1 0 0,0 14,0" fill={colors.shirtColor2 || "none"} rotation={-45} originX={10}
-                      originY={10}/>
-                <Circle cx={10} cy={10} r={7} stroke="darkgrey" fill="none"/>
-            </Svg>
-        )
-    }
 }
 
 const liveTextStyle: TextStyle = {
