@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
     } as ViewStyle,
     entry: {
         fontSize: 12,
-        color: "#717171"
+        color: "#717171",
+        flexShrink: 1
     } as TextStyle,
     divider: {
         paddingLeft: 4,
