@@ -1,5 +1,4 @@
 - optimize sport screen in the same way as soon and live screens
-- disabled outcomes ( betoffer. suspended = true)
 - rotation support
 - review icon
 - collapse section delay, request animate frame? improve perf

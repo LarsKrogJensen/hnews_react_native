@@ -43,7 +43,7 @@ class HighlightItemComponent extends React.Component<Props> {
                         <Text style={{color: "#333333"}}>{datum}</Text>
                     </View>
                     <View style={{flexDirection: "row"}}>
-                        <EventPathItem event={event} style={{flex: 1}}/>
+                        <EventPathItem path={event.path} style={{flex: 1}}/>
                         <Text style={{color: "#333333"}}>{startTime.format("HH:mm")}</Text>
                     </View>
                 </View>

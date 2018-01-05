@@ -45,7 +45,7 @@ class LiveCardComponent extends React.Component<Props> {
             <View style={headerStyle}>
                 <Text style={liveTextStyle}>Live</Text>
                 <EventPathItem
-                    event={event}
+                    path={event.path}
                     style={{flex: 1}}
                     textStyle={{fontSize: 16, color: "#717171"}}
                 />

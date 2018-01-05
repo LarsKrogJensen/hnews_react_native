@@ -5,6 +5,7 @@ import {NavigationScreenProp} from "react-navigation";
 import autobind from "autobind-decorator";
 import banner from "images/banner";
 import absoluteFill = StyleSheet.absoluteFill;
+import {Orientation, orientation} from "lib/device";
 
 interface Props {
     title: string
@@ -12,7 +13,19 @@ interface Props {
     navigation: NavigationScreenProp<{}, {}>
 }
 
-export default class Screen extends React.Component<Props> {
+interface State {
+    orientation: Orientation
+}
+
+export default class Screen extends React.Component<Props, State> {
+
+    constructor(props: Props, context: any) {
+        super(props, context);
+        this.state = {
+            orientation: orientation()
+        }
+    }
+
 
     render() {
         return (

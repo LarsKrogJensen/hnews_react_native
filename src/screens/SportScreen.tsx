@@ -3,6 +3,7 @@ import {NavigationScreenProp} from "react-navigation";
 import {SportView} from "views/SportView";
 import {CollapsableHeaderScreen, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import autobind from "autobind-decorator";
+import {OrientationProps} from "components/OrientationChange";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: any }, {}>

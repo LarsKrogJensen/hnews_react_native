@@ -9,7 +9,6 @@ import {is, Set} from "immutable"
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup} from "api/typings";
 import EventListItem from "components/EventListItem";
-import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
@@ -19,6 +18,7 @@ import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
 import Touchable from "components/Touchable";
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
+import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -35,7 +35,7 @@ interface StateProps {
     favorites: Set<number>
 }
 
-type ComponentProps = StateProps & DispatchProps & ExternalProps
+type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
 
 interface State {
     refreshing: boolean
@@ -72,6 +72,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) return true
         if (!is(nextProps.favorites, this.props.favorites)) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
+        if (nextProps.orientation !== this.props.orientation) return true;
 
         return false
     }
@@ -141,10 +142,10 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
     @autobind
     private renderItem(info: ListRenderItemInfo<EventEntity>) {
         const event: EventEntity = info.item;
-        let orient = orientation();
+
         return <EventListItem eventId={event.id}
                               navigation={this.props.navigation}
-                              orientation={orient}/>
+                              orientation={this.props.orientation}/>
     }
 
     @autobind
@@ -290,10 +291,12 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     }
 )
 
-const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps) => props.loadData(false))(LiveEventsScreen)
+const WithOrientationChange = withOrientationChange(LiveEventsScreen)
 
-export const LiveEventsWithData: ComponentClass<ExternalProps> =
+const WithAppStateRefresh: ComponentClass<ComponentProps> =
+    connectAppState((props: ComponentProps) => props.loadData(false))(WithOrientationChange)
+
+const LiveEventsWithData: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 
 export default LiveEventsWithData

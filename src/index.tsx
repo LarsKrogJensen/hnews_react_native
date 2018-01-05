@@ -18,6 +18,8 @@ const uiTheme = {
     }
 };
 
+// __DEV__ = false
+
 export default function AppContainer() {
     return (
         <Provider store={store}>

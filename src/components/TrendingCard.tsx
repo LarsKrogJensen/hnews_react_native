@@ -59,7 +59,7 @@ class TrendingCard extends React.Component<Props> {
         return (
             <View style={bodyStyle}>
                 <Text style={{fontSize: 20, marginTop: 8, textAlign: "center"}}>{event.name}</Text>
-                <EventPathItem event={event}
+                <EventPathItem path={event.path}
                                style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
                 <BetOfferItem orientation={Orientation.Portrait}
                               betofferId={event.mainBetOfferId}/>

@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Text, TextStyle, View, ViewStyle} from "react-native";
+import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import FavoriteItem from "components/FavoriteItem";
 import {EventEntity} from "model/EventEntity";
 import EventPathItem from "components/EventPathItem";
@@ -12,7 +12,7 @@ interface Props {
     liveData: LiveData
 }
 
-export default class EventDetailsItem extends React.PureComponent<Props> {
+export default class EventDetailsItem extends React.Component<Props> {
 
     public render() {
         const {event, style, liveData} = this.props;
@@ -26,29 +26,23 @@ export default class EventDetailsItem extends React.PureComponent<Props> {
             <View style={viewStyle}>
                 <View style={{flexDirection: "row"}}>
                     <View style={{flexDirection: "column", flex: 1}}>
-                        <View style={{flexDirection: "row", alignItems: "center"}}>
+                        <View style={styles.participant}>
                             {homeServe}
                             <Text numberOfLines={1}
                                   ellipsizeMode={"tail"}
-                                  style={[participantStyle, {paddingLeft: homeServe ? 0 : 16}]}>{event.homeName}</Text>
+                                  style={[styles.participantText, {paddingLeft: homeServe ? 0 : 16}]}>{event.homeName}</Text>
                         </View>
-                        <View style={{flexDirection: "row", alignItems: "center"}}>
+                        <View style={styles.participant}>
                             {awayServe}
                             <Text numberOfLines={1}
                                   ellipsizeMode={"tail"}
-                                  style={[participantStyle, {paddingLeft: awayServe ? 0 : 16}]}>{event.awayName}</Text>
+                                  style={[styles.participantText, {paddingLeft: awayServe ? 0 : 16}]}>{event.awayName}</Text>
                         </View>
-                        <EventPathItem event={event} style={{paddingLeft: 16, marginTop: 2}}/>
+                        <EventPathItem path={event.path} style={{paddingLeft: 16, marginTop: 2}}/>
                     </View>
                     <View style={{justifyContent: "center", flexDirection: "row", alignItems: "center"}}>
                         <FavoriteItem eventId={event.id} style={{justifyContent: "center"}}/>
-                        <Text style={{
-                            minWidth: 48,
-                            fontSize: 12,
-                            padding: 8,
-                            color: "#717171",
-                            textAlign: "right"
-                        }}>+{event.liveBoCount || event.nonLiveBoCount}</Text>
+                        <Text style={styles.betOfferCount}>+{event.liveBoCount || event.nonLiveBoCount}</Text>
                     </View>
                 </View>
 
@@ -56,10 +50,24 @@ export default class EventDetailsItem extends React.PureComponent<Props> {
         )
     }
 }
-const participantStyle: TextStyle = {
-    color: "#202020",
-    fontSize: 16,
-    fontWeight: "400",
-    paddingLeft: 0
-}
+
+const styles = StyleSheet.create({
+    participant: {
+        flexDirection: "row",
+        alignItems: "center"
+    } as ViewStyle,
+    participantText: {
+        color: "#202020",
+        fontSize: 16,
+        fontWeight: "400",
+        paddingLeft: 0
+    } as TextStyle,
+    betOfferCount: {
+        minWidth: 48,
+        fontSize: 12,
+        padding: 8,
+        color: "#717171",
+        textAlign: "right"
+    } as TextStyle
+})
 

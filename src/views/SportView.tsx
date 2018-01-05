@@ -2,8 +2,7 @@ import * as React from "react"
 import {ComponentClass} from "react"
 import {
     ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
-    View,
-    ViewStyle
+    View, ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
@@ -13,12 +12,12 @@ import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {loadOpenForLive} from "store/live/actions";
-import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
 import LiveEventListItem from "components/EventListItem";
 import {is, Set} from "immutable";
 import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
+import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 
 
 interface ExternalProps {
@@ -47,7 +46,7 @@ interface StateProps {
 type GroupBy = (event: EventEntity, sections: SportSection[]) => SportSection
 type SortBy = (a: SportSection, b: SportSection) => number
 
-type ComponentProps = StateProps & DispatchProps & ExternalProps
+type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
 
 const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedComponent(SectionList);
 
@@ -89,6 +88,8 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
         if (nextProps.events.length !== this.props.events.length) return true
         if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
+        if (nextProps.orientation !== this.props.orientation) return true;
+
         return false
     }
 
@@ -258,12 +259,12 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
 
     @autobind
     private renderItem(info: ListRenderItemInfo<EventEntity>) {
-        const {navigation} = this.props
+        const {navigation, orientation} = this.props
         const event: EventEntity = info.item
-        let orient = orientation();
+
         return <LiveEventListItem eventId={event.id}
                                   navigation={navigation}
-                                  orientation={orient}/>
+                                  orientation={orientation}/>
     }
 
     @autobind
@@ -409,7 +410,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
 }
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(SportScreenComponent)
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(SportScreenComponent))
 
 export const SportView: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)

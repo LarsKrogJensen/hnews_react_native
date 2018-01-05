@@ -7,8 +7,6 @@ import {NativeModules} from "react-native";
 import EventScreen from "screens/EventScreen";
 import Drawer from "app/Drawer";
 import {SportScreen} from "screens/SportScreen";
-import {TopBarDemo2} from "screens/TabBarDemo2";
-import {CollapsableScreen} from "screens/CollapsableScreen";
 import {CollapsableScreen2} from "screens/CollapsableScreen2";
 import {TabScreenDemo} from "screens/TabScreenDemo";
 

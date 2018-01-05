@@ -1,13 +1,11 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, InteractionManager, ListRenderItemInfo, RefreshControl, SectionList, SectionListData,
-    Text, TextStyle,
-    View, ViewStyle
+    ActivityIndicator, Animated, InteractionManager, ListRenderItemInfo, RefreshControl, SectionList,
+    SectionListData, Text, TextStyle, View, ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import LiveEventListItem from "components/EventListItem";
-import {orientation} from "lib/device";
 import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
@@ -18,6 +16,7 @@ import connectAppState from "components/AppStateRefresh";
 import Touchable from "components/Touchable";
 import {is, Set} from "immutable"
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
+import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -32,7 +31,7 @@ interface StateProps {
     events: EventEntity[]
 }
 
-type ComponentProps = StateProps & DispatchProps & ExternalProps
+type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
 
 interface State {
     refreshing: boolean
@@ -74,6 +73,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         if (nextProps.loading !== this.props.loading) return true
         if (this.hasPropsChanges(nextProps, this.props)) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
+        if (nextProps.orientation !== this.props.orientation) return true;
 
         return false
     }
@@ -145,11 +145,12 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
     @autobind
     private renderItem(info: ListRenderItemInfo<EventEntity>) {
+        const {orientation, navigation} = this.props
         const event: EventEntity = info.item;
-        let orient = orientation();
+
         return <LiveEventListItem eventId={event.id}
-                                  navigation={this.props.navigation}
-                                  orientation={orient}/>
+                                  navigation={navigation}
+                                  orientation={orientation}/>
     }
 
     @autobind
@@ -308,7 +309,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
 )
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(StartingSoonScreen)
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(StartingSoonScreen))
 
 export const LiveEventsWithData: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
