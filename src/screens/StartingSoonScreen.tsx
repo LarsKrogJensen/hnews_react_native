@@ -17,6 +17,7 @@ import Touchable from "components/Touchable";
 import {is, Set} from "immutable"
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
+import {formatDateTime} from "lib/dates";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -51,16 +52,10 @@ interface DateSection extends SectionListData<EventEntity> {
 const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedComponent(SectionList);
 
 class StartingSoonScreen extends React.Component<ComponentProps, State> {
-    private today = new Date()
-    private todayStr: string
-    private tomorrow = new Date()
-    private toMorrowStr: string
 
     constructor(props: ComponentProps) {
         super(props);
-        this.todayStr = this.today.toDateString()
-        this.tomorrow.setDate(this.today.getDate() + 1)
-        this.toMorrowStr = this.tomorrow.toDateString()
+
         this.state = {
             refreshing: false,
             expanded: Set(),
@@ -73,6 +68,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         if (nextProps.loading !== this.props.loading) return true
         if (this.hasPropsChanges(nextProps, this.props)) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
+        // noinspection RedundantIfStatementJS
         if (nextProps.orientation !== this.props.orientation) return true;
 
         return false
@@ -155,20 +151,12 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
     @autobind
     private renderSectionHeader(info: { section: DateSection }) {
-        const date = info.section.date;
-        const dateStr = date.toDateString()
-
-        let datum = ""
-        if (dateStr === this.todayStr) {
-            datum = "Today"
-        } else if (dateStr === this.toMorrowStr) {
-            datum = "Tomorrow"
-        } else {
-            datum = dateStr
-        }
+        const date = info.section.date
+        const {date: datum} = formatDateTime(date.toISOString())
 
         let hour = ""
-        if (datum === "Today" && date.getHours() === this.today.getHours()) {
+        const today = new Date()
+        if (datum === "Today" && date.getHours() === today.getHours()) {
             hour = "Next up"
         } else {
             hour = `${this.padHours(date.getHours())}:00 - ${this.padHours(date.getHours() + 1)}:00`
@@ -297,12 +285,12 @@ function mapEvents(state: AppStore): EventEntity[] {
     return events
 }
 
-const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+const mapStateToProps = (state: AppStore): StateProps => ({
     loading: state.soonStore.loading,
     events: mapEvents(state)
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => (
     {
         loadData: (fireStartLoad: boolean): any => dispatch(SoonActions.load(fireStartLoad))
     }

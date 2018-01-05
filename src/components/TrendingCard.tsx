@@ -10,6 +10,7 @@ import BetOfferItem from "components/BetOfferItem"
 import {Orientation} from "lib/device";
 import EventPathItem from "components/EventPathItem";
 import * as moment from "moment";
+import {formatDateTime} from "lib/dates";
 
 interface ExternalProps {
     eventId: number
@@ -35,21 +36,11 @@ class TrendingCard extends React.Component<Props> {
     }
 
     private renderHeader() {
-        const now = moment.utc(moment.now())
-        const startTime = moment.utc(this.props.event.start).local()
-
-        let datum = ""
-        if (startTime.isSame(now, "d")) {
-            datum = "Today " + startTime.format("HH:mm")
-        } else if (startTime.isAfter(now, "d")) {
-            datum = "Tomorrow " + startTime.format("HH:mm")
-        } else {
-            datum = startTime.format("yyyy:mm:dd HH:mm")
-        }
+        const {date, time} = formatDateTime(this.props.event.start)
         return (
             <View style={headerStyle}>
                 <Text style={{fontWeight: "500", flex: 1, color: "#333333"}}>TRENDING</Text>
-                <Text>{datum}</Text>
+                <Text>{`${date} ${time}`}</Text>
             </View>
         )
     }

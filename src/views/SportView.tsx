@@ -1,8 +1,8 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
-    View, ViewStyle
+    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, StyleSheet, Text,
+    TextStyle, View, ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
@@ -18,6 +18,7 @@ import LiveEventListItem from "components/EventListItem";
 import {is, Set} from "immutable";
 import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
+import {formatDateTime} from "lib/dates";
 
 
 interface ExternalProps {
@@ -60,17 +61,8 @@ interface SportSection extends SectionListData<EventEntity> {
 }
 
 class SportScreenComponent extends React.Component<ComponentProps, ComponentState> {
-    private todayStr: string
-    private toMorrowStr: string
-
-
     constructor(props: ComponentProps) {
         super(props);
-        const today = new Date()
-        const tomorrow = new Date()
-        this.todayStr = today.toDateString()
-        tomorrow.setDate(today.getDate() + 1)
-        this.toMorrowStr = tomorrow.toDateString()
 
         this.state = {
             sections: [],
@@ -95,6 +87,9 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
 
     componentDidMount(): void {
         this.props.loadData(true)
+        if (this.props.events.length) {
+            this.prepareData(this.props.events)
+        }
     }
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
@@ -103,7 +98,11 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
             nextProps.league !== this.props.league) {
             nextProps.loadData(true)
         }
-        if (!nextProps.loading) {
+        if (!nextProps.loading &&
+            (nextProps.league !== this.props.league ||
+                nextProps.events.length !== this.props.events.length ||
+                nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join())
+        ) {
             this.prepareData(nextProps.events)
         }
     }
@@ -270,27 +269,21 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
     @autobind
     private renderSectionHeader(info: { section: SportSection }) {
         const section = info.section
-        const date = section.date;
-        const dateStr = date.toDateString()
 
-        let datum = ""
+        let title = ""
         if (info.section.live) {
-            datum = "LIVE"
+            title = "LIVE"
         } else if (section.league) {
-            datum = section.league
-        } else if (dateStr === this.todayStr) {
-            datum = "Today"
-        } else if (dateStr === this.toMorrowStr) {
-            datum = "Tomorrow"
+            title = section.league
         } else {
-            datum = dateStr
+            title = formatDateTime(section.date.toISOString()).date
         }
 
         return (
             <Touchable onPress={() => this.toggleSection(section.key)}>
-                <View style={headerStyle}>
-                    <Text style={section.live ? liveTextStyle : sportTextStyle}>{datum}</Text>
-                    <Text style={countTextStyle}>{section.count}</Text>
+                <View style={styles.header}>
+                    <Text style={section.live ? styles.liveText : styles.sportText}>{title}</Text>
+                    <Text style={styles.countText}>{section.count}</Text>
                 </View>
             </Touchable>
         )
@@ -335,37 +328,35 @@ function mapEvents(state: AppStore, key: string): EventEntity[] {
 }
 
 // styles
-
-const headerStyle: ViewStyle = {
-    padding: 8,
-    height: 44,
-    backgroundColor: "white",
-    borderBottomColor: "#D1D1D1",
-    borderBottomWidth: 1,
-    flexDirection: "row",
-    alignItems: "center"
-}
-
-const liveTextStyle: TextStyle = {
-    color: "red",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 8,
-    flex: 1
-}
-
-const sportTextStyle: TextStyle = {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 8,
-    flex: 1
-}
-
-const countTextStyle: TextStyle = {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginRight: 8
-}
+const styles = StyleSheet.create({
+    header: {
+        padding: 8,
+        height: 44,
+        backgroundColor: "white",
+        borderBottomColor: "#D1D1D1",
+        borderBottomWidth: 1,
+        flexDirection: "row",
+        alignItems: "center"
+    } as ViewStyle,
+    liveText: {
+        color: "red",
+        fontSize: 16,
+        fontWeight: "bold",
+        marginLeft: 8,
+        flex: 1,
+    } as TextStyle,
+    sportText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginLeft: 8,
+        flex: 1
+    } as TextStyle,
+    countText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginRight: 8
+    }
+})
 
 
 // Redux connect

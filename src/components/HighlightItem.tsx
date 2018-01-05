@@ -8,6 +8,7 @@ import {connect} from "react-redux";
 import EventPathItem from "components/EventPathItem";
 import * as moment from "moment";
 import Touchable from "components/Touchable";
+import {formatDateTime} from "lib/dates";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>,
@@ -24,27 +25,18 @@ class HighlightItemComponent extends React.Component<Props> {
 
     public render() {
         const {event} = this.props
-        const startTime = moment.utc(this.props.event.start).local()
-        const now = moment.utc(moment.now())
 
-        let datum = ""
-        if (startTime.isSame(now, "d")) {
-            datum = "Today"
-        } else if (startTime.isAfter(now, "d")) {
-            datum = "Tomorrow"
-        } else {
-            datum = startTime.format("yyyy:MM:dd")
-        }
+        const {date, time} = formatDateTime(event.start)
         return (
             <Touchable style={{paddingVertical: 8}} onPress={() => this.props.navigation.navigate("Event")}>
                 <View>
                     <View style={{flexDirection: "row"}}>
                         <Text style={{color: "#333333", flex: 1}}>{event.homeName} - {event.awayName}</Text>
-                        <Text style={{color: "#333333"}}>{datum}</Text>
+                        <Text style={{color: "#333333"}}>{date}</Text>
                     </View>
                     <View style={{flexDirection: "row"}}>
                         <EventPathItem path={event.path} style={{flex: 1}}/>
-                        <Text style={{color: "#333333"}}>{startTime.format("HH:mm")}</Text>
+                        <Text style={{color: "#333333"}}>{time}</Text>
                     </View>
                 </View>
             </Touchable>
