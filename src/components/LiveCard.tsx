@@ -43,7 +43,7 @@ class LiveCardComponent extends React.Component<Props> {
         const {event, liveData} = this.props
         return (
             <View style={headerStyle}>
-                <Text style={liveTextStyle}>Live</Text>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={liveTextStyle}>Live</Text>
                 <EventPathItem
                     path={event.path}
                     style={{flex: 1}}
@@ -80,12 +80,12 @@ class LiveCardComponent extends React.Component<Props> {
                 <View style={{flexDirection: "column", flex: 1}}>
                     <View style={teamRowStyle}>
                         {renderTeamColors(event.teamColors && event.teamColors.home)}
-                        <Text style={textStyle}>{event.homeName}</Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={textStyle}>{event.homeName}</Text>
                         {renderServe(liveData, true)}
                     </View>
                     <View style={{...teamRowStyle, marginBottom: 8}}>
                         {renderTeamColors(event.teamColors && event.teamColors.away)}
-                        <Text style={textStyle}>{event.awayName}</Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={textStyle}>{event.awayName}</Text>
                         {renderServe(liveData, false)}
                     </View>
                 </View>

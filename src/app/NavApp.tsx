@@ -9,6 +9,7 @@ import Drawer from "app/Drawer";
 import {SportScreen} from "screens/SportScreen";
 import {CollapsableScreen2} from "screens/CollapsableScreen2";
 import {TabScreenDemo} from "screens/TabScreenDemo";
+import {Row, Col} from "react-native-flexbox-grid"
 
 
 const HomeStack = StackNavigator({
@@ -76,7 +77,7 @@ const NavApp = DrawerNavigator(
         drawerWidth: 300,
         drawerPosition: 'left',
         contentComponent: props => <Drawer {...props} />,
-        initialRouteName: "Live",
+        initialRouteName: "Home",
         // backBehavior: 'none'
     }
 );
