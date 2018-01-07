@@ -30,7 +30,7 @@ type Props = StateProps & ExternalProps
 class LiveCardComponent extends React.Component<Props> {
     public render() {
         return (
-            <Card onPress={() => this.props.navigation.navigate("Event")}>
+            <Card onPress={() => this.props.navigation.navigate("Event", {eventId: this.props.eventId})}>
                 <View>
                     {this.renderHeader()}
                     {this.renderBody()}

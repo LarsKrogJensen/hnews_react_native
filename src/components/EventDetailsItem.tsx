@@ -38,16 +38,24 @@ export default class EventDetailsItem extends React.Component<Props> {
                                   ellipsizeMode={"tail"}
                                   style={[styles.participantText, {paddingLeft: awayServe ? 0 : 16}]}>{event.awayName}</Text>
                         </View>
-                        <EventPathItem path={event.path} style={{paddingLeft: 16, marginTop: 2}}/>
+                        <View style={{flexDirection: "row", paddingLeft: 16, marginTop: 2}}>
+                            {this.renderLiveText(event)}
+                            <EventPathItem path={event.path}/>
+                        </View>
                     </View>
                     <View style={{justifyContent: "center", flexDirection: "row", alignItems: "center"}}>
                         <FavoriteItem eventId={event.id} style={{justifyContent: "center"}}/>
-                        <Text style={styles.betOfferCount}>+{event.liveBoCount || event.nonLiveBoCount}</Text>
+                        {/*<Text style={styles.betOfferCount}>+{event.liveBoCount || event.nonLiveBoCount}</Text>*/}
                     </View>
                 </View>
-
             </View>
         )
+    }
+
+    private renderLiveText(event: EventEntity) {
+        if (!event.openForLiveBetting && event.liveBetOffers) {
+            return <Text style={styles.liveText}>Live</Text>
+        }
     }
 }
 
@@ -68,6 +76,13 @@ const styles = StyleSheet.create({
         padding: 8,
         color: "#717171",
         textAlign: "right"
-    } as TextStyle
+    } as TextStyle,
+    liveText: {
+        color: "red",
+        fontSize: 12,
+        fontStyle: "italic",
+        marginRight: 4
+    } as TextStyle,
+
 })
 

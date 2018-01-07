@@ -13,7 +13,6 @@ import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import * as LiveActions from "store/live/actions"
 import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
 import Touchable from "components/Touchable";
@@ -287,7 +286,9 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
     {
-        loadData: (fireStartLoad: boolean): any => dispatch(LiveActions.loadOpenForLive(fireStartLoad))
+        loadData: (fireStartLoad: boolean): any => {
+            console.log("live load ignored")
+        }
     }
 )
 

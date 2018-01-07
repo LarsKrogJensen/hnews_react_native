@@ -15,6 +15,7 @@ import {connect} from "react-redux";
 import {EventGroup} from "api/typings";
 import connectAppState from "components/AppStateRefresh";
 import absoluteFill = StyleSheet.absoluteFill;
+import {loadOpenForLive} from "store/live/actions";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -247,6 +248,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
         loadData: (fireStartLoad: boolean) => {
             dispatch(loadGroups(fireStartLoad))
             dispatch(loadHighlights(fireStartLoad))
+            dispatch(loadOpenForLive(false))
         }
     }
 )

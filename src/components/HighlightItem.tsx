@@ -28,7 +28,7 @@ class HighlightItemComponent extends React.Component<Props> {
 
         const {date, time} = formatDateTime(event.start)
         return (
-            <Touchable style={{paddingVertical: 8}} onPress={() => this.props.navigation.navigate("Event")}>
+            <Touchable style={{paddingVertical: 8}} onPress={() => this.props.navigation.navigate("Event", {eventId: this.props.eventId})}>
                 <View>
                     <View style={{flexDirection: "row"}}>
                         <Text style={{color: "#333333", flex: 1}}>{event.homeName} - {event.awayName}</Text>

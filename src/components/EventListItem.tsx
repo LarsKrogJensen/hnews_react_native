@@ -53,7 +53,7 @@ class ListEventListItem extends React.Component<Props> {
 
     @autobind
     private handleItemClick() {
-        this.props.navigation.navigate('Event', {event: this.props.event})
+        this.props.navigation.navigate('Event', {eventId: this.props.eventId})
     }
 }
 

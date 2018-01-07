@@ -166,7 +166,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     {
         loadData: (fireStartLoad: boolean) => {
             dispatch(loadLanding(fireStartLoad))
-            dispatch(loadOpenForLive(fireStartLoad))
+            // dispatch(loadOpenForLive(fireStartLoad))
         }
     }
 )

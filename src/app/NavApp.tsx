@@ -4,7 +4,7 @@ import HomeScreen from "screens/HomeScreen"
 import LiveScreen from "screens/LiveEventsScreen"
 import SoonScreen from "screens/StartingSoonScreen"
 import {NativeModules} from "react-native";
-import EventScreen from "screens/EventScreen";
+import {EventScreen} from "screens/EventScreen";
 import Drawer from "app/Drawer";
 import {SportScreen} from "screens/SportScreen";
 import {CollapsableScreen2} from "screens/CollapsableScreen2";
