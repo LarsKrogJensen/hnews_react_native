@@ -24,7 +24,7 @@
     "react-native-svg": "^6.0.1-rc.1",
     "react-native-tab-view": "^0.0.74",
     "react-native-vector-icons": "^4.4.3",
-    "react-navigation": "1.0.0-beta.22",
+    "react-navigation": "1.0.0-beta.23",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.6",
@@ -32,9 +32,9 @@
     "tslib": "^1.8.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.88",
+    "@types/lodash": "^4.14.92",
     "@types/react": "16.0.31",
-    "@types/react-native": "0.51.0",
+    "@types/react-native": "0.51.9",
     "@types/react-native-material-ui": "^1.12.2",
     "@types/react-native-tab-view": "^0.0.1",
     "@types/react-native-vector-icons": "^4.4.2",

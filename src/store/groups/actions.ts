@@ -1,31 +1,42 @@
-import * as types from "./types"
 import {EventGroup, RootGroup} from "api/typings";
 import {Dispatch} from "redux";
 
+export enum GroupActions {
+    START_LOADING = "GROUPS_START_LOADING",
+    LOAD_SUCCESS = "GROUPS_LOAD_SUCCESS",
+    LOAD_FAILED = "GROUPS_LOAD_FAILED"
+}
+
+export enum HighlightActions {
+    START_LOADING = "HIGHLIGHTS_START_LOADING",
+    LOAD_SUCCESS = "HIGHLIGHTS_LOAD_SUCCESS",
+    LOAD_FAILED = "HIGHLIGHTS_LOAD_FAILED"
+}
+
 export interface GroupsStartLoadAction {
-    type: types.GROUPS_START_LOADING_TYPE
+    type: GroupActions.START_LOADING
 }
 
 export interface GroupsLoadSuccessAction {
-    type: types.GROUPS_LOAD_SUCCESS_TYPE,
+    type: GroupActions.LOAD_SUCCESS
     data: RootGroup
 }
 
 export interface GroupsLoadFailedAction {
-    type: types.GROUPS_LOAD_FAILED_TYPE
+    type: GroupActions.LOAD_FAILED
 }
 
 export interface HighlightsStartLoadAction {
-    type: types.HIGHLIGHTS_START_LOADING_TYPE
+    type: HighlightActions.START_LOADING
 }
 
 export interface HighlightsLoadSuccessAction {
-    type: types.HIGHLIGHTS_LOAD_SUCCESS_TYPE,
+    type: HighlightActions.LOAD_SUCCESS
     data: { groups: EventGroup[] }
 }
 
 export interface HighlightsLoadFailedAction {
-    type: types.HIGHLIGHTS_LOAD_FAILED_TYPE
+    type: HighlightActions.LOAD_FAILED
 }
 
 export type GroupsLoadAction = GroupsStartLoadAction | GroupsLoadSuccessAction | GroupsLoadFailedAction |
@@ -34,7 +45,7 @@ export type GroupsLoadAction = GroupsStartLoadAction | GroupsLoadSuccessAction |
 export function loadGroups(fireStartLoad: boolean = true): Dispatch<GroupsLoadAction> {
     return async dispatch => {
         if (fireStartLoad) {
-            dispatch({type: types.GROUPS_START_LOADING})
+            dispatch({type: GroupActions.START_LOADING})
         }
 
         try {
@@ -45,12 +56,12 @@ export function loadGroups(fireStartLoad: boolean = true): Dispatch<GroupsLoadAc
             const end = new Date().getTime();
             console.log("Fetch groups data took " + (end - start) + " ms.")
             dispatch({
-                type: types.GROUPS_LOAD_SUCCESS,
+                type: GroupActions.LOAD_SUCCESS,
                 data: responseJson
             });
         } catch (error) {
             console.error(error);
-            dispatch({type: types.GROUPS_LOAD_FAILED})
+            dispatch({type: GroupActions.LOAD_FAILED})
         }
     };
 }
@@ -58,7 +69,7 @@ export function loadGroups(fireStartLoad: boolean = true): Dispatch<GroupsLoadAc
 export function loadHighlights(fireStartLoad: boolean = false): Dispatch<GroupsLoadAction> {
     return async dispatch => {
         if (fireStartLoad) {
-            dispatch({type: types.HIGHLIGHTS_START_LOADING})
+            dispatch({type: HighlightActions.START_LOADING})
         }
 
         try {
@@ -69,12 +80,12 @@ export function loadHighlights(fireStartLoad: boolean = false): Dispatch<GroupsL
             const end = new Date().getTime();
             console.log("Fetch highlights data took " + (end - start) + " ms.")
             dispatch({
-                type: types.HIGHLIGHTS_LOAD_SUCCESS,
+                type: HighlightActions.LOAD_SUCCESS,
                 data: responseJson
             });
         } catch (error) {
             console.error(error);
-            dispatch({type: types.HIGHLIGHTS_LOAD_FAILED})
+            dispatch({type: GroupActions.LOAD_FAILED})
         }
     };
 }

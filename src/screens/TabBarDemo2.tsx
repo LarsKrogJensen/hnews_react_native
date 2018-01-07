@@ -105,7 +105,7 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
                     renderScene={this._renderScene}
                     renderFooter={this._renderFooter}
                     onIndexChange={this._handleIndexChange}
-                    useNativeDriver
+                    // useNativeDriver
                     initialLayout={initialLayout}
                 />
             </Screen>

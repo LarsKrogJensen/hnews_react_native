@@ -1,5 +1,4 @@
-import { ADD_FAVORITE, REMOVE_FAVORITE } from "./types"
-import {FavoriteAction} from "./actions"
+import {FavoriteAction, FavoriteActions} from "./actions"
 import {Set} from "immutable"
 
 export interface FavoriteStore {
@@ -11,11 +10,11 @@ const initialState: FavoriteStore = {
 
 export default function favoriteReducer(state: FavoriteStore = initialState, action: FavoriteAction): FavoriteStore {
     switch (action.type) {
-        case ADD_FAVORITE:
+        case FavoriteActions.ADD:
             return {
                 favorites: state.favorites.add(action.eventId)
             }
-        case REMOVE_FAVORITE:
+        case FavoriteActions.REMOVE:
             return {
                 favorites: state.favorites.remove(action.eventId)
             }

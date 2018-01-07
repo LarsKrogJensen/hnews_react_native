@@ -1,5 +1,4 @@
-import {SPORT_LOAD_FAILED, SPORT_LOAD_SUCCESS, SPORT_START_LOADING} from "./types"
-import {SportLoadAction} from "./actions"
+import {SportActions, SportLoadAction} from "./actions"
 import {Map, Set} from "immutable"
 
 export interface SportEventsStore {
@@ -14,17 +13,17 @@ const initialState: SportEventsStore = {
 
 export default function sportReducer(state: SportEventsStore = initialState, action: SportLoadAction): SportEventsStore {
     switch (action.type) {
-        case SPORT_START_LOADING:
+        case SportActions.START_LOADING:
             return {
                 events: state.events,
                 loading: state.loading.add(action.key)
             }
-        case SPORT_LOAD_SUCCESS:
+        case SportActions.LOAD_SUCCESS:
             return {
                 events: state.events.set(action.key, action.data.events.map(liveEvent => liveEvent.event.id)),
                 loading: state.loading.remove(action.key)
             }
-        case SPORT_LOAD_FAILED:
+        case SportActions.LOAD_FAILED:
             return {
                 events: state.events,
                 loading: state.loading.remove(action.key)

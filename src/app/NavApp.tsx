@@ -9,7 +9,6 @@ import Drawer from "app/Drawer";
 import {SportScreen} from "screens/SportScreen";
 import {CollapsableScreen2} from "screens/CollapsableScreen2";
 import {TabScreenDemo} from "screens/TabScreenDemo";
-import {Row, Col} from "react-native-flexbox-grid"
 
 
 const HomeStack = StackNavigator({

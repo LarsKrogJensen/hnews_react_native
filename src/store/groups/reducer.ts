@@ -1,14 +1,7 @@
-import {
-    GROUPS_LOAD_FAILED,
-    GROUPS_LOAD_SUCCESS,
-    GROUPS_START_LOADING,
-    HIGHLIGHTS_LOAD_FAILED,
-    HIGHLIGHTS_LOAD_SUCCESS,
-    HIGHLIGHTS_START_LOADING
-} from "./types"
 import {Map} from "immutable"
 import {GroupsLoadAction} from "./actions"
 import {EventGroup} from "api/typings";
+import {GroupActions, HighlightActions} from "store/groups/actions";
 
 
 export interface GroupStore {
@@ -29,36 +22,36 @@ const initialState: GroupStore = {
 
 export default function groupsReducer(state: GroupStore = initialState, action: GroupsLoadAction): GroupStore {
     switch (action.type) {
-        case GROUPS_START_LOADING:
+        case GroupActions.START_LOADING:
             return {
                 ...state,
                 groupsLoading: true
             }
-        case GROUPS_LOAD_SUCCESS:
+        case GroupActions.LOAD_SUCCESS:
             return {
                 ...state,
                 groupsLoading: false,
                 groupById: flattenGroups(undefined, action.data.group.groups || [], state.groupById),
                 sports: (action.data.group.groups || []).map(group => group.id)
             }
-        case GROUPS_LOAD_FAILED:
+        case GroupActions.LOAD_FAILED:
             return {
                 ...state,
                 groupsLoading: false
             }
-        case HIGHLIGHTS_START_LOADING:
+        case HighlightActions.START_LOADING:
             return {
                 ...state,
                 highlightsLoading: true
             }
-        case HIGHLIGHTS_LOAD_SUCCESS:
+        case HighlightActions.LOAD_SUCCESS:
             return {
                 ...state,
                 highlights: action.data.groups.map(group => group.id),
                 highlightsLoading: false
 
             }
-        case HIGHLIGHTS_LOAD_FAILED:
+        case HighlightActions.LOAD_FAILED:
             return {
                 ...state,
                 highlightsLoading: false

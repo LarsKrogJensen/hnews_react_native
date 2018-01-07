@@ -1,9 +1,7 @@
-import {LIVE_LOAD_SUCCESS} from "store/live/types"
-import {LiveLoadAction} from "store/live/actions"
+import {LiveActions, LiveLoadAction} from "store/live/actions"
 import {EventWithBetOffers, LiveData} from "api/typings";
 import {Map} from "immutable"
-import {LANDING_LOAD_SUCCESS} from "store/landing/types";
-import {LandingLoadAction} from "store/landing/actions";
+import {LandingActions, LandingLoadAction} from "store/landing/actions";
 import * as _ from "lodash"
 
 export interface StatsStore {
@@ -16,12 +14,12 @@ const initialState: StatsStore = {
 
 export default function statsReducer(state: StatsStore = initialState, action: LiveLoadAction | LandingLoadAction): StatsStore {
     switch (action.type) {
-        case LIVE_LOAD_SUCCESS:
+        case LiveActions.LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;
             return {
                 liveData: mergeLiveData(state.liveData, liveEvents.map(evt => evt.liveData))
             }
-        case LANDING_LOAD_SUCCESS:
+        case LandingActions.LOAD_SUCCESS:
             let landingEvents: EventWithBetOffers[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
             let liveData = landingEvents.map(evt => evt.liveData).filter(ld => ld != undefined)
 

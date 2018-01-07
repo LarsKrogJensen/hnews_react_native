@@ -1,8 +1,5 @@
-- optimize sport screen in the same way as soon and live screens
-- home multi column in landscape
 - review icon
 - collapse section delay, request animate frame? improve perf
-- event path overdraw (also in trending header)
 - realtime socket.js support (major)
 - event page (major)
 - tabbed sports page (inluclude league an explore)

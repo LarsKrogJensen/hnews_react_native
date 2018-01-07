@@ -1,5 +1,4 @@
-import {LANDING_LOAD_FAILED, LANDING_LOAD_SUCCESS, LANDING_START_LOADING} from "./types"
-import {LandingLoadAction} from "./actions"
+import {LandingActions, LandingLoadAction} from "./actions"
 import {LandingPageSection} from "api/typings";
 import {Range} from "api/typings";
 
@@ -30,12 +29,12 @@ const initialState: LandingStore = {
 
 export default function landingReducer(state: LandingStore = initialState, action: LandingLoadAction): LandingStore {
     switch (action.type) {
-        case LANDING_START_LOADING:
+        case LandingActions.START_LOADING:
             return {
                 ...state,
                 loading: true
             }
-        case LANDING_LOAD_SUCCESS:
+        case LandingActions.LOAD_SUCCESS:
             return {
                 ...state,
                 loading: false,
@@ -46,7 +45,7 @@ export default function landingReducer(state: LandingStore = initialState, actio
                 nextOff: mapEvents("nextoff", action.data.result),
                 startingSoon: mapEvents("startingsoon", action.data.result)
             }
-        case LANDING_LOAD_FAILED:
+        case LandingActions.LOAD_FAILED:
             return {
                 ...state,
                 loading: false

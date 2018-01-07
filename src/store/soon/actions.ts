@@ -1,18 +1,23 @@
-import * as types from "./types"
 import {SoonPage} from "api/typings";
 import {Dispatch} from "redux";
 
+export enum SoonActions {
+    START_LOADING = "SOON_START_LOADING",
+    LOAD_SUCCESS = "SOON_LOAD_SUCCESS",
+    LOAD_FAILED = "SOON_LOAD_FAILED"
+}
+
 export interface SoonStartLoadAction {
-    type: types.SOON_START_LOADING_TYPE
+    type: SoonActions.START_LOADING
 }
 
 export interface SoonLoadSuccessAction {
-    type: types.SOON_LOAD_SUCCESS_TYPE,
+    type: SoonActions.LOAD_SUCCESS
     data: SoonPage
 }
 
 export interface SoonLoadFailedAction {
-    type: types.SOON_LOAD_FAILED_TYPE
+    type: SoonActions.LOAD_FAILED
 }
 
 export type SoonLoadAction = SoonStartLoadAction | SoonLoadSuccessAction | SoonLoadFailedAction
@@ -20,7 +25,7 @@ export type SoonLoadAction = SoonStartLoadAction | SoonLoadSuccessAction | SoonL
 export function load(fireStartLoad: boolean = true): Dispatch<SoonLoadAction> {
     return async dispatch => {
         if (fireStartLoad) {
-            dispatch({type: types.SOON_START_LOADING})
+            dispatch({type: SoonActions.START_LOADING})
         }
 
         try {
@@ -31,12 +36,12 @@ export function load(fireStartLoad: boolean = true): Dispatch<SoonLoadAction> {
             const end = new Date().getTime();
             console.log("Fetch starting soon took " + (end - start) + " ms.")
             dispatch({
-                type: types.SOON_LOAD_SUCCESS,
+                type: SoonActions.LOAD_SUCCESS,
                 data: responseJson
             });
         } catch (error) {
             console.error(error);
-            dispatch({type: types.SOON_LOAD_FAILED})
+            dispatch({type: SoonActions.LOAD_FAILED})
         }
     };
 }
