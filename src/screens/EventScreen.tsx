@@ -6,6 +6,7 @@ import {NavigationParams, NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
+import {PrematchEventView} from "views/PrematchEventView";
 
 
 interface ExternalProps {
@@ -30,12 +31,21 @@ class EventScreenComponent extends React.Component<Props> {
     }
 
     public render() {
-        const {event} = this.props
         return (
             <Screen title="Event" {...this.props}>
-                <Text>Event screen {event.name} state {event.state}</Text>
+                {this.renderBody()}
             </Screen>
         )
+    }
+
+    private renderBody() {
+        const {event, navigation} = this.props
+
+        if (!event.openForLiveBetting) {
+            return <PrematchEventView eventId={event.id} navigation={navigation}/>
+        } else {
+            return <Text>Event screen {event.name} state {event.state}</Text>
+        }
     }
 }
 
@@ -49,10 +59,6 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
         event: state.entityStore.events.get(eventId)
     }
 }
-
-//
-// const WithAppStateRefresh: ComponentClass<Props> =
-//     connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(SportScreenComponent))
 
 export const EventScreen: ComponentClass<ExternalProps> =
     connect<StateProps, ExternalProps>(mapStateToProps)(EventScreenComponent)

@@ -254,3 +254,8 @@ export interface SoonPage {
 export interface ListView {
     events: EventWithBetOffers[];
 }
+
+export interface EventView {
+    betoffers: BetOffer[]
+    events: Event[]
+}

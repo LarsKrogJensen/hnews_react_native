@@ -3,6 +3,7 @@ import {Participant, Path, Stream, TeamColors} from "api/typings";
 export interface EventEntity {
     readonly id: number;
     readonly mainBetOfferId?: number;
+    readonly betOffers: number[];
     readonly name: string;
     readonly homeName: string;
     readonly awayName: string;

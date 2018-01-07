@@ -5,7 +5,6 @@ import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import BetOfferItem from "components/BetOfferItem"
 import {Orientation} from "lib/device";
 import {LiveData} from "api/typings";
 import MatchClockItem from "components/MatchClockItem";
@@ -13,6 +12,7 @@ import {CircularProgress} from 'react-native-circular-progress';
 import {Card} from "components/Card";
 import EventPathItem from "components/EventPathItem";
 import {renderServe, renderTeamColors} from "components/RenderUtils";
+import {BetOfferItem} from "components/BetOfferItem";
 
 
 interface ExternalProps {

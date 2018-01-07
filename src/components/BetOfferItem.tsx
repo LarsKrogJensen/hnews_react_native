@@ -20,7 +20,7 @@ interface StateProps {
 
 type Props = StateProps & ExternalProps
 
-class BetOfferItem extends React.Component<Props> {
+class BetOfferItemComponent extends React.Component<Props> {
 
     public render() {
         const bo = this.props.betoffer;
@@ -78,7 +78,6 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     betoffer: inputProps.betofferId && state.entityStore.betoffers.get(inputProps.betofferId) || undefined
 })
 
-const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, {}, ExternalProps>(mapStateToProps)(BetOfferItem)
+export const BetOfferItem: ComponentClass<ExternalProps> =
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(BetOfferItemComponent)
 
-export default WithData

@@ -1,8 +1,8 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, InteractionManager, ListRenderItemInfo, RefreshControl, SectionList,
-    SectionListData, Text, TextStyle, View, ViewStyle
+    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
+    View, ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import LiveEventListItem from "components/EventListItem";
@@ -214,16 +214,14 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
     @autobind
     private toggleSection(key: string) {
-        InteractionManager.runAfterInteractions(() => {
-            this.setState(prevState => {
-                    let expanded: Set<string> = prevState.expanded
-                    expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
-                    return {
-                        expanded
-                    }
+        this.setState(prevState => {
+                let expanded: Set<string> = prevState.expanded
+                expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
+                return {
+                    expanded
                 }
-            )
-        });
+            }
+        )
     }
 
     @autobind

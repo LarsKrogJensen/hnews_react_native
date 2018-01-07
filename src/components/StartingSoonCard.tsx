@@ -6,10 +6,10 @@ import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import BetOfferItem from "components/BetOfferItem"
 import {Orientation} from "lib/device";
 import EventPathItem from "components/EventPathItem";
 import CountDown from "components/CountDown";
+import {BetOfferItem} from "components/BetOfferItem";
 
 interface ExternalProps {
     eventId: number

@@ -1,6 +1,5 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import BetOfferItem from "components/BetOfferItem";
 import LiveEventInfoItem from "components/EventInfoItem";
 import Touchable from "components/Touchable";
 import {Orientation} from "lib/device";
@@ -10,6 +9,7 @@ import autobind from "autobind-decorator";
 import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
+import {BetOfferItem} from "components/BetOfferItem";
 
 
 interface ExternalProps {
