@@ -1,9 +1,10 @@
+import {BetOfferType, Criterion} from "api/typings";
 
 export interface BetOfferEntity {
     readonly id: number;
     readonly live: boolean;
-    // criterion: Criterion;
-    // betOfferType: BetOfferType;
+    criterion: Criterion;
+    betOfferType: BetOfferType;
     readonly eventId: number;
     // pba: Pba;
     readonly cashIn: boolean;

@@ -156,6 +156,7 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
         const betOffer: BetOfferEntity = info.item
 
         return <BetOfferItem betofferId={betOffer.id}
+                             showType
                              orientation={orientation}/>
     }
 

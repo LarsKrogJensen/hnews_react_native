@@ -140,7 +140,7 @@ function mergeBetOffers(state: Map<number, BetOfferEntity>, betoffers: (BetOffer
         }
 
         // noinspection JSUnusedLocalSymbols
-        const {outcomes, criterion, oddsStats, betOfferType, pba, ...rest} = bo
+        const {outcomes, oddsStats, pba, ...rest} = bo
         let outcomesIds = outcomes && outcomes.map(oc => oc.id) || [];
 
         // TODO: should merge in changes

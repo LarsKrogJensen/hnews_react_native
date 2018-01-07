@@ -12,6 +12,7 @@ import Touchable from "components/Touchable";
 interface ExternalProps {
     betofferId?: number
     orientation: Orientation
+    showType?: boolean
 }
 
 interface StateProps {
@@ -29,12 +30,15 @@ class BetOfferItemComponent extends React.Component<Props> {
             const outcomes: number[] = [...bo.outcomes] || []
 
             return (
-                <View style={{
-                    flex: 1,
-                    flexDirection: outcomes.length > 3 ? 'column' : 'row',
-                    alignItems: outcomes.length > 3 ? "stretch" : "center"
-                }}>
-                    {this.renderOutcomes(outcomes, bo)}
+                <View>
+                    {this.props.showType && <Text>Type: {bo.betOfferType.englishName} Criterion: {bo.criterion.englishLabel}</Text>}
+                    <View style={{
+                        flex: 1,
+                        flexDirection: outcomes.length > 3 ? 'column' : 'row',
+                        alignItems: outcomes.length > 3 ? "stretch" : "center"
+                    }}>
+                        {this.renderOutcomes(outcomes, bo)}
+                    </View>
                 </View>
             )
         }
