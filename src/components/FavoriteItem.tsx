@@ -1,9 +1,9 @@
 import * as React from "react"
-import {TouchableHighlight, ViewStyle} from "react-native";
-import * as Actions from "store/favorite/actions"
+import {ComponentClass} from "react"
+import {ViewStyle} from "react-native";
+import {addFavorite, removeFavorite} from "store/favorite/actions"
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
-import {ComponentClass} from "react";
 import {connect} from "react-redux";
 import {IconToggle} from "react-native-material-ui";
 
@@ -49,9 +49,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     {
         setFavorite: (favorite) => {
             if (favorite) {
-                dispatch(Actions.addFavorite(inputProps.eventId))
+                dispatch(addFavorite(inputProps.eventId))
             } else {
-                dispatch(Actions.removeFavorite(inputProps.eventId))
+                dispatch(removeFavorite(inputProps.eventId))
             }
         }
     }

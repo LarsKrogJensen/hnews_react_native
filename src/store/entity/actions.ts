@@ -1,6 +1,7 @@
 import {EventView} from "api/typings";
-import {Dispatch} from "redux";
 import {API} from "store/API";
+import {ThunkAction} from "redux-thunk";
+import {AppStore} from "store/store";
 
 export enum BetOfferActions {
     START_LOADING = "BETOFFERS_START_LOADING",
@@ -27,9 +28,9 @@ export interface BetOffersLoadFailedAction {
 export type BetOffersLoadAction = BetOffersStartLoadAction | BetOffersLoadSuccessAction | BetOffersLoadFailedAction
 
 
-export function loadBetOffers(eventId: number, fireStartLoad: boolean = true): Dispatch<BetOffersLoadAction> {
-    return async (dispatch: Dispatch<BetOffersLoadAction>) => {
-        fireStartLoad && dispatch({type: BetOfferActions.START_LOADING})
+export function loadBetOffers(eventId: number, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
+    return async dispatch => {
+        fireStartLoad && dispatch<BetOffersStartLoadAction>({type: BetOfferActions.START_LOADING, eventId})
         
         try {
             console.time(`Loading betOffers for event ${eventId}`)
@@ -37,14 +38,14 @@ export function loadBetOffers(eventId: number, fireStartLoad: boolean = true): D
                 await fetch(`${API.host}/offering/api/v2/${API.offering}/betoffer/event/${eventId}.json?lang=${API.lang}&market=${API.market}`);
             const responseJson = await response.json();
             console.timeEnd(`Loading betOffers for event ${eventId}`)
-            dispatch({
+            dispatch<BetOffersLoadSuccessAction>({
                 type: BetOfferActions.LOAD_SUCCESS,
                 data: responseJson,
                 eventId
             });
         } catch (error) {
             console.error(error);
-            dispatch({type: BetOfferActions.LOAD_FAILED, eventId})
+            dispatch<BetOffersLoadFailedAction>({type: BetOfferActions.LOAD_FAILED, eventId})
         }
     };
 }
