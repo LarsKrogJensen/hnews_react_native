@@ -16,14 +16,14 @@ export interface EntityStore {
     events: Map<number, EventEntity>
     betoffers: Map<number, BetOfferEntity>
     outcomes: Map<number, OutcomeEntity>
-    loading: Set<number>
+    betOffersLoading: Set<number>
 }
 
 const initialState: EntityStore = {
     events: Map<number, EventEntity>(),
     betoffers: Map<number, BetOfferEntity>(),
     outcomes: Map<number, OutcomeEntity>(),
-    loading: Set()
+    betOffersLoading: Set()
 }
 
 type Actions = LiveLoadAction | LandingLoadAction | SoonLoadAction | SportLoadAction | BetOffersLoadAction
@@ -35,7 +35,7 @@ export default function entityReducer(state: EntityStore = initialState, action:
                 events: mergeLiveEvents(state.events, liveEvents),
                 betoffers: mergeBetOffers(state.betoffers, liveEvents.map(e => e.mainBetOffer)),
                 outcomes: mergeOutcomes(state.outcomes, flatMapOutcomes(liveEvents.map(e => e.mainBetOffer))),
-                loading: state.loading
+                betOffersLoading: state.betOffersLoading
             }
         case LandingActions.LOAD_SUCCESS:
             let landingEvents: EventWithBetOffers[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
@@ -45,7 +45,7 @@ export default function entityReducer(state: EntityStore = initialState, action:
                 events: mergeEventWithBetOffers(state.events, landingEvents),
                 betoffers: mergeBetOffers(state.betoffers, betoffers),
                 outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers.map(bo => bo.outcomes))),
-                loading: state.loading
+                betOffersLoading: state.betOffersLoading
             }
         case SoonActions.LOAD_SUCCESS:
         case SportActions.LOAD_SUCCESS:
@@ -56,24 +56,24 @@ export default function entityReducer(state: EntityStore = initialState, action:
                 events: mergeEventWithBetOffers(state.events, events),
                 betoffers: mergeBetOffers(state.betoffers, betoffers2),
                 outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers2.map(bo => bo.outcomes))),
-                loading: state.loading
+                betOffersLoading: state.betOffersLoading
             }
         case BetOfferActions.START_LOADING:
             return {
                 ...state,
-                loading: state.loading.add(action.eventId)
+                betOffersLoading: state.betOffersLoading.add(action.eventId)
             }
         case BetOfferActions.LOAD_SUCCESS:
             return {
                 events: mergeEventView(state.events, action.data),
                 betoffers: mergeBetOffers(state.betoffers, action.data.betoffers),
                 outcomes: mergeOutcomes(state.outcomes, flatMapOutcomes(action.data.betoffers)),
-                loading: state.loading.remove(action.eventId)
+                betOffersLoading: state.betOffersLoading.remove(action.eventId)
             }
         case BetOfferActions.LOAD_FAILED:
             return {
                 ...state,
-                loading: state.loading.remove(action.eventId)
+                betOffersLoading: state.betOffersLoading.remove(action.eventId)
             }
         default:
             return state

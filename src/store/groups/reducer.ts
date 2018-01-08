@@ -1,7 +1,10 @@
 import {Map, Set} from "immutable"
 import {GroupsLoadAction} from "./actions"
 import {BetOfferCategory, EventGroup} from "api/typings";
-import {GroupActions, HighlightActions, PrematchCategoryActions} from "store/groups/actions";
+import {
+    GroupActions, HighlightActions, HighlightsLoadAction, PrematchCategoryActions,
+    PrematchCategoryLoadAction
+} from "store/groups/actions";
 
 
 export interface GroupStore {
@@ -25,7 +28,7 @@ const initialState: GroupStore = {
 }
 
 
-export default function groupsReducer(state: GroupStore = initialState, action: GroupsLoadAction): GroupStore {
+export default function groupsReducer(state: GroupStore = initialState, action: GroupsLoadAction | HighlightsLoadAction | PrematchCategoryLoadAction): GroupStore {
     switch (action.type) {
         case GroupActions.START_LOADING:
             return {

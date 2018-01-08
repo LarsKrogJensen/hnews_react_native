@@ -238,7 +238,7 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     const event = state.entityStore.events.get(inputProps.eventId);
     const betOffers = event && event.betOffers.map(betOfferId => state.entityStore.betoffers.get(betOfferId)).filter(id => id) || []
     return {
-        loading: state.entityStore.loading.has(inputProps.eventId) || state.groupStore.loadingPrematchCategories.has(event.groupId),
+        loading: state.entityStore.betOffersLoading.has(inputProps.eventId) || state.groupStore.loadingPrematchCategories.has(event.groupId),
         event,
         betOffers,
         categories: state.groupStore.prematchCategories.get(event.groupId) || []
