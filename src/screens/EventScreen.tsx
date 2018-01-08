@@ -42,7 +42,9 @@ class EventScreenComponent extends React.Component<Props> {
         const {event, navigation} = this.props
 
         if (!event.openForLiveBetting) {
-            return <PrematchEventView eventId={event.id} navigation={navigation}/>
+            return <PrematchEventView eventId={event.id}
+                                      eventGroupid={event.groupId}
+                                      navigation={navigation}/>
         } else {
             return <Text>Event screen {event.name} state {event.state}</Text>
         }

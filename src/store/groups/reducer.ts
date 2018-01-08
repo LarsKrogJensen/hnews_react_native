@@ -1,7 +1,7 @@
-import {Map} from "immutable"
+import {Map, Set} from "immutable"
 import {GroupsLoadAction} from "./actions"
-import {EventGroup} from "api/typings";
-import {GroupActions, HighlightActions} from "store/groups/actions";
+import {BetOfferCategory, EventGroup} from "api/typings";
+import {GroupActions, HighlightActions, PrematchCategoryActions} from "store/groups/actions";
 
 
 export interface GroupStore {
@@ -10,6 +10,8 @@ export interface GroupStore {
     groupById: Map<number, EventGroup>
     sports: number[]
     highlights: number[]
+    prematchCategories: Map<number, BetOfferCategory[]>
+    loadingPrematchCategories: Set<number>
 }
 
 const initialState: GroupStore = {
@@ -17,8 +19,11 @@ const initialState: GroupStore = {
     highlightsLoading: false,
     groupById: Map(),
     sports: [],
-    highlights: []
+    highlights: [],
+    prematchCategories: Map(),
+    loadingPrematchCategories: Set()
 }
+
 
 export default function groupsReducer(state: GroupStore = initialState, action: GroupsLoadAction): GroupStore {
     switch (action.type) {
@@ -56,6 +61,24 @@ export default function groupsReducer(state: GroupStore = initialState, action: 
                 ...state,
                 highlightsLoading: false
             }
+            
+        case PrematchCategoryActions.START_LOADING:
+            return {
+                ...state,
+                loadingPrematchCategories: state.loadingPrematchCategories.add(action.eventGroupId)
+            }
+        case PrematchCategoryActions.LOAD_SUCCESS:
+            return {
+                ...state,
+                prematchCategories: state.prematchCategories.set(action.eventGroupId, action.data.group.categories),
+                loadingPrematchCategories: state.loadingPrematchCategories.remove(action.eventGroupId)
+
+            }
+        case PrematchCategoryActions.LOAD_FAILED:
+            return {
+                ...state,
+                loadingPrematchCategories: state.loadingPrematchCategories.remove(action.eventGroupId)
+            }
         default:
             return state
     }
@@ -67,6 +90,6 @@ function flattenGroups(parent: EventGroup | undefined, data: EventGroup[], map: 
         map = map.set(eventGroup.id, eventGroup)
         map = flattenGroups(eventGroup, eventGroup.groups || [], map)
     }
-    
+
     return map
 }

@@ -18,11 +18,14 @@ import {OrientationProps, withOrientationChange} from "components/OrientationCha
 import {BetOfferEntity} from "model/BetOfferEntity";
 import {BetOfferItem} from "components/BetOfferItem";
 import {loadBetOffers} from "store/entity/actions";
+import {BetOfferCategory} from "api/typings";
+import {loadPrematchCategories} from "store/groups/actions";
 
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: any }, {}>
     eventId: number
+    eventGroupid: number
     scrollHooks?: ScrollHooks
 }
 
@@ -33,13 +36,15 @@ interface ComponentState {
 }
 
 interface DispatchProps {
-    loadData: (fireStartLoad: boolean) => void
+    loadData: (fireStartLoad?: boolean) => void
+    loadCategories: (fireStartLoad?: boolean) => void
 }
 
 interface StateProps {
     loading: boolean,
-    event: EventEntity,
+    event: EventEntity
     betOffers: BetOfferEntity[]
+    categories: BetOfferCategory[]
 }
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
@@ -75,8 +80,10 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
     }
 
     componentDidMount(): void {
-        this.props.loadData(true)
-        if (this.props.betOffers.length) {
+        this.props.loadData()
+        this.props.loadCategories()
+
+        if (this.props.betOffers.length && this.props.categories.length) {
             this.prepareData(this.props.betOffers)
         }
     }
@@ -85,9 +92,14 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
         if (nextProps.eventId !== this.props.eventId) {
             nextProps.loadData(true)
         }
+        if (nextProps.eventGroupid !== this.props.eventGroupid) {
+            nextProps.loadCategories(true)
+        }
 
         if (!nextProps.loading &&
             (nextProps.eventId !== this.props.eventId ||
+                nextProps.eventGroupid !== this.props.eventGroupid ||
+                nextProps.categories.length !== this.props.categories.length ||
                 nextProps.betOffers.length !== this.props.betOffers.length ||
                 nextProps.betOffers.map(e => e.id).join() !== this.props.betOffers.map(e => e.id).join())
         ) {
@@ -226,16 +238,16 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     const event = state.entityStore.events.get(inputProps.eventId);
     const betOffers = event && event.betOffers.map(betOfferId => state.entityStore.betoffers.get(betOfferId)).filter(id => id) || []
     return {
-        loading: state.entityStore.loading.has(inputProps.eventId),
+        loading: state.entityStore.loading.has(inputProps.eventId) || state.groupStore.loadingPrematchCategories.has(event.groupId),
         event,
-        betOffers
+        betOffers,
+        categories: state.groupStore.prematchCategories.get(event.groupId) || []
     }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => ({
-    loadData: (fireStartLoad: boolean) => {
-        dispatch(loadBetOffers(inputProps.eventId, fireStartLoad))
-    }
+    loadData: (fireStartLoad: boolean = true) => dispatch(loadBetOffers(inputProps.eventId, fireStartLoad)),
+    loadCategories: (fireStartLoad: boolean = true) => dispatch(loadPrematchCategories(inputProps.eventGroupid, fireStartLoad)),
 })
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =

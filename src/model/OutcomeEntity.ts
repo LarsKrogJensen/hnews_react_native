@@ -11,4 +11,5 @@ export interface OutcomeEntity {
     readonly status: string;
     readonly participant: string;
     readonly participantId?: number;
+    readonly line?: number;
 }

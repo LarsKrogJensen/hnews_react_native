@@ -165,6 +165,7 @@ export interface Outcome {
     status: string;
     participant: string;
     participantId?: number;
+    line?: number
 }
 
 export interface OddsStats {
@@ -204,6 +205,30 @@ export interface LiveEvent {
 export interface RootGroup {
     group: EventGroup
 }
+
+export interface GroupWithCategories {
+    group: {
+        categories: BetOfferCategory[]
+    }
+}
+
+export interface BetOfferCategory {
+    id: number
+    name: string
+    isDefault: boolean
+    sortOrder: number
+    boCount: number;
+    displayBoTypeHeaders: boolean
+    sport: string
+    mappings: BetOfferCategoryMapping[]
+}
+
+export interface BetOfferCategoryMapping {
+    criterionId: number
+    boType: number;
+    sortOrder: number
+}
+
 
 export interface EventGroup {
     id: number;
