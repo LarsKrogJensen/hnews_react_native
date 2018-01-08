@@ -1,8 +1,8 @@
 import {LiveEvents} from "api/typings";
-import {Dispatch} from "redux";
 import {API} from "store/API";
 import {ThunkAction} from "redux-thunk";
 import {AppStore} from "store/store";
+import {DispatchAction} from "store/DispatchAction";
 
 export enum LiveActions {
     START_LOADING = "LIVE_START_LOADING",
@@ -10,17 +10,11 @@ export enum LiveActions {
     LOAD_FAILED = "LIVE_LOAD_FAILED"
 }
 
-export interface LiveStartLoadAction {
-    type: LiveActions.START_LOADING
-}
+export type LiveStartLoadAction = DispatchAction<LiveActions.START_LOADING>
+export type LiveLoadFailedAction = DispatchAction<LiveActions.LOAD_FAILED>
 
-export interface LiveLoadSuccessAction {
-    type: LiveActions.LOAD_SUCCESS,
+export interface LiveLoadSuccessAction extends DispatchAction<LiveActions.LOAD_SUCCESS> {
     data: LiveEvents
-}
-
-export interface LiveLoadFailedAction {
-    type: LiveActions.LOAD_FAILED
 }
 
 export type LiveLoadAction = LiveStartLoadAction | LiveLoadSuccessAction | LiveLoadFailedAction
