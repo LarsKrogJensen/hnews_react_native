@@ -88,8 +88,6 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     }
 
     public render() {
-        console.log("StartingSoon.render")
-
         return (
             <CollapsableHeaderScreen {...this.props}
                                      title="Starting Soon"
@@ -174,7 +172,6 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     }
 
     private prepareData(events: EventEntity[]) {
-        console.log("StartingSoon.prepareData")
         const sections: DateSection[] = []
 
         for (let event of events) {

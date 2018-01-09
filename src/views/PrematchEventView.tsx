@@ -31,13 +31,12 @@ interface ExternalProps {
 
 interface ComponentState {
     sections: BetOfferSection[]
-    expanded: Set<string>
+    expanded: Set<number>
     hasInitExpanded: boolean
 }
 
 interface DispatchProps {
     loadData: (fireStartLoad?: boolean) => void
-    loadCategories: (fireStartLoad?: boolean) => void
 }
 
 interface StateProps {
@@ -53,11 +52,10 @@ const AnimatedSectionList: SectionList<BetOfferEntity> = Animated.createAnimated
 
 interface BetOfferSection extends SectionListData<BetOfferEntity> {
     betOffers: BetOfferEntity[]
-    key: string
-    count: number
+    category: BetOfferCategory
 }
 
-class SportScreenComponent extends React.Component<ComponentProps, ComponentState> {
+class PrematchEventViewComponent extends React.Component<ComponentProps, ComponentState> {
     constructor(props: ComponentProps) {
         super(props);
 
@@ -81,29 +79,26 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
 
     componentDidMount(): void {
         this.props.loadData()
-        this.props.loadCategories()
 
         if (this.props.betOffers.length && this.props.categories.length) {
-            this.prepareData(this.props.betOffers)
+            this.prepareData(this.props.betOffers, this.props.categories)
         }
     }
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
-        if (nextProps.eventId !== this.props.eventId) {
+        if (nextProps.eventId !== this.props.eventId || nextProps.eventGroupid !== this.props.eventGroupid) {
             nextProps.loadData(true)
         }
-        if (nextProps.eventGroupid !== this.props.eventGroupid) {
-            nextProps.loadCategories(true)
-        }
 
-        if (!nextProps.loading &&
+        console.log(`NextProps - loading ${this.props.loading}/${nextProps.loading} boCount ${this.props.betOffers.length}/${nextProps.betOffers.length} catCount: ${this.props.categories.length}/${nextProps.categories.length}`)
+        if (!nextProps.loading && nextProps.categories.length && nextProps.betOffers.length &&
             (nextProps.eventId !== this.props.eventId ||
                 nextProps.eventGroupid !== this.props.eventGroupid ||
                 nextProps.categories.length !== this.props.categories.length ||
                 nextProps.betOffers.length !== this.props.betOffers.length ||
                 nextProps.betOffers.map(e => e.id).join() !== this.props.betOffers.map(e => e.id).join())
         ) {
-            this.prepareData(nextProps.betOffers)
+            this.prepareData(nextProps.betOffers, nextProps.categories)
         }
     }
 
@@ -139,23 +134,27 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
         )
     }
 
-    private prepareData(betOffers: BetOfferEntity[]) {
-        const sections: BetOfferSection[] = [
-            {
-                key: "default",
-                data: betOffers,
-                betOffers: betOffers,
-                count: 0
-            }
-        ]
+    private prepareData(betOffers: BetOfferEntity[], categories: BetOfferCategory[]) {
+
+        console.info("Prepare data categories: " + categories.length +
+            " bettoffers: " + betOffers.length)
+        const sections: BetOfferSection[] = categories
+            .sort((c1, c2) => c1.sortOrder - c2.sortOrder)
+            .map<BetOfferSection>(category => (
+                {
+                    data: [],
+                    betOffers: betOffers.filter(bo => category.mappings.find(mapping => mapping.criterionId === bo.criterion.id)),
+                    category
+                }
+            ))
+
 
         this.setState(prevState => ({
             sections,
-            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? [sections[0].key] : []),
+            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? [sections[0].category.id] : []),
             hasInitExpanded: prevState.hasInitExpanded || sections.length > 0
         }))
     }
-
 
     @autobind
     private onRefresh() {
@@ -179,18 +178,18 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
         let title = "BetOffers"
 
         return (
-            <Touchable onPress={() => this.toggleSection(section.key)}>
+            <Touchable onPress={() => this.toggleSection(section.category.id)}>
                 <View style={styles.header}>
-                    <Text style={styles.setionTitleText}>{title}</Text>
+                    <Text style={styles.setionTitleText}>{section.category.name}</Text>
                 </View>
             </Touchable>
         )
     }
 
     @autobind
-    private toggleSection(key: string) {
+    private toggleSection(key: number) {
         this.setState(prevState => {
-                let expanded: Set<string> = prevState.expanded
+                let expanded: Set<number> = prevState.expanded
                 expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
                 return {
                     expanded
@@ -246,12 +245,14 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => ({
-    loadData: (fireStartLoad: boolean = true) => dispatch(loadBetOffers(inputProps.eventId, fireStartLoad)),
-    loadCategories: (fireStartLoad: boolean = true) => dispatch(loadPrematchCategories(inputProps.eventGroupid, fireStartLoad)),
+    loadData: (fireStartLoad: boolean = true) => {
+        dispatch(loadBetOffers(inputProps.eventId, fireStartLoad))
+        dispatch(loadPrematchCategories(inputProps.eventGroupid, fireStartLoad))
+    },
 })
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(SportScreenComponent))
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(PrematchEventViewComponent))
 
 export const PrematchEventView: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
