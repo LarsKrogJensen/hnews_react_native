@@ -16,9 +16,9 @@ import {is, Set} from "immutable";
 import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {BetOfferEntity} from "model/BetOfferEntity";
-import {BetOfferItem} from "components/BetOfferItem";
+import {MainBetOfferItem} from "components/betOffers/MainBetOfferItem";
 import {loadBetOffers} from "store/entity/actions";
-import {BetOfferCategory} from "api/typings";
+import {BetOfferCategory, BetOfferType, Criterion} from "api/typings";
 import {loadPrematchCategories} from "store/groups/actions";
 
 
@@ -48,11 +48,17 @@ interface StateProps {
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
 
-const AnimatedSectionList: SectionList<BetOfferEntity> = Animated.createAnimatedComponent(SectionList);
+const AnimatedSectionList: SectionList<BetOfferGroup> = Animated.createAnimatedComponent(SectionList);
 
-interface BetOfferSection extends SectionListData<BetOfferEntity> {
-    betOffers: BetOfferEntity[]
+interface BetOfferSection extends SectionListData<BetOfferGroup> {
+    betOfferGroups: BetOfferGroup[]
     category: BetOfferCategory
+}
+
+interface BetOfferGroup {
+    criterion: Criterion
+    type: BetOfferType
+    betoffers: BetOfferEntity[]
 }
 
 class PrematchEventViewComponent extends React.Component<ComponentProps, ComponentState> {
@@ -115,9 +121,9 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
         const {sections, expanded} = this.state
 
-        const sectionsView = sections.map(section => ({
+        const sectionsView: BetOfferSection[] = sections.map(section => ({
             ...section,
-            data: section.betOffers
+            data: section.betOfferGroups
         }));
 
 
@@ -136,14 +142,14 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
     private prepareData(betOffers: BetOfferEntity[], categories: BetOfferCategory[]) {
 
-        console.info("Prepare data categories: " + categories.length +
-            " bettoffers: " + betOffers.length)
+        // console.info("Prepare data categories: " + categories.length +
+        //     " bettoffers: " + betOffers.length)
         const sections: BetOfferSection[] = categories
             .sort((c1, c2) => c1.sortOrder - c2.sortOrder)
             .map<BetOfferSection>(category => (
                 {
                     data: [],
-                    betOffers: betOffers.filter(bo => category.mappings.find(mapping => mapping.criterionId === bo.criterion.id)),
+                    betOfferGroups: this.filterAndGroupBetOffers(betOffers, category),
                     category
                 }
             ))
@@ -156,26 +162,76 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
         }))
     }
 
+    private filterAndGroupBetOffers(betOffers: BetOfferEntity[], category: BetOfferCategory): BetOfferGroup[] {
+        return betOffers
+            .filter(bo => category.mappings.find(mapping => mapping.criterionId === bo.criterion.id))
+            .reduceRight<BetOfferGroup[]>((groups, betoffer) => {
+                let group = groups.find(g => g.criterion.id === betoffer.criterion.id) // || {betoffers: [], criterion: betoffer.criterion}
+                if (!group) {
+                    group = {betoffers: [], criterion: betoffer.criterion, type: betoffer.betOfferType}
+                    groups.push(group)
+                }
+                group.betoffers.push(betoffer)
+                return groups
+            }, [])
+            .sort((bo1, bo2) => this.compareBetOffers(bo1, bo2, category))
+
+    }
+
+    private compareBetOffers(bo1: BetOfferGroup, bo2: BetOfferGroup, category: BetOfferCategory): number {
+        const mappingBo1 = category.mappings.find(mapping => mapping.criterionId === bo1.criterion.id)
+        const mappingBo2 = category.mappings.find(mapping => mapping.criterionId === bo2.criterion.id)
+
+        if (mappingBo1 && mappingBo2) {
+            return mappingBo1.sortOrder - mappingBo2.sortOrder
+        }
+        if (!mappingBo1 && mappingBo2) {
+            return -1
+        }
+        if (mappingBo1 && !mappingBo2) {
+            return 1
+        }
+
+        return 0;
+    }
+
     @autobind
     private onRefresh() {
         this.props.loadData(true)
     }
 
     @autobind
-    private renderItem(info: ListRenderItemInfo<BetOfferEntity>) {
+    private renderItem(info: ListRenderItemInfo<BetOfferGroup>) {
         const {orientation} = this.props
-        const betOffer: BetOfferEntity = info.item
+        const group: BetOfferGroup = info.item
 
-        return <BetOfferItem betofferId={betOffer.id}
-                             showType
-                             orientation={orientation}/>
+        const viewStyle: ViewStyle = {
+            padding: 8,
+            backgroundColor: "#F6F6F6",
+            borderBottomColor: "#D1D1D1",
+            borderBottomWidth: 1,
+            flexDirection: "column"
+        }
+
+        return (
+            <View style={viewStyle}>
+                <Text>
+                    {group.criterion.englishLabel} ({group.criterion.id}) Ty: {group.type.englishName}
+                </Text>
+
+                {group.betoffers.map(bo => (
+                    <View key={bo.id} style={{marginVertical: 4}}>
+                        <MainBetOfferItem orientation={orientation} betofferId={bo.id}/>
+                    </View>
+                ))}
+
+            </View>
+        )
     }
 
     @autobind
     private renderSectionHeader(info: { section: BetOfferSection }) {
         const section = info.section
-
-        let title = "BetOffers"
 
         return (
             <Touchable onPress={() => this.toggleSection(section.category.id)}>
@@ -207,8 +263,8 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
         return hours.toString()
     }
 
-    private keyExtractor(betOffer: BetOfferEntity): string {
-        return betOffer.id.toString()
+    private keyExtractor(betOfferGroup: BetOfferGroup): string {
+        return betOfferGroup.criterion.id.toString()
     }
 }
 

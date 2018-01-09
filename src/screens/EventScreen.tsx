@@ -32,7 +32,7 @@ class EventScreenComponent extends React.Component<Props> {
 
     public render() {
         return (
-            <Screen title="Event" {...this.props}>
+            <Screen title={this.props.event.name} {...this.props}>
                 {this.renderBody()}
             </Screen>
         )

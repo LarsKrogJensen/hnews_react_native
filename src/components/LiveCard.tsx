@@ -12,7 +12,7 @@ import {CircularProgress} from 'react-native-circular-progress';
 import {Card} from "components/Card";
 import EventPathItem from "components/EventPathItem";
 import {renderServe, renderTeamColors} from "components/RenderUtils";
-import {BetOfferItem} from "components/BetOfferItem";
+import {MainBetOfferItem} from "components/betOffers/MainBetOfferItem";
 
 
 interface ExternalProps {
@@ -60,7 +60,7 @@ class LiveCardComponent extends React.Component<Props> {
         return (
             <View style={bodyStyle}>
                 {this.renderTeams()}
-                <BetOfferItem orientation={Orientation.Portrait} betofferId={event.mainBetOfferId}/>
+                <MainBetOfferItem orientation={Orientation.Portrait} betofferId={event.mainBetOfferId}/>
             </View>
         )
     }

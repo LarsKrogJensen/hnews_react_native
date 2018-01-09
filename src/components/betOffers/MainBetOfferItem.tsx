@@ -4,7 +4,7 @@ import {BetOfferEntity} from "model/BetOfferEntity";
 import {Text, View} from "react-native";
 import autobind from "autobind-decorator";
 import {Orientation} from "lib/device";
-import OutcomeItem from "./OutcomeItem"
+import OutcomeItem from "../OutcomeItem"
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import Touchable from "components/Touchable";
@@ -12,7 +12,6 @@ import Touchable from "components/Touchable";
 interface ExternalProps {
     betofferId?: number
     orientation: Orientation
-    showType?: boolean
 }
 
 interface StateProps {
@@ -21,7 +20,7 @@ interface StateProps {
 
 type Props = StateProps & ExternalProps
 
-class BetOfferItemComponent extends React.Component<Props> {
+class MainBetOfferItemComponent extends React.Component<Props> {
 
     public render() {
         const bo = this.props.betoffer;
@@ -31,7 +30,6 @@ class BetOfferItemComponent extends React.Component<Props> {
 
             return (
                 <View>
-                    {this.props.showType && <Text>Type: {bo.betOfferType.englishName} Criterion: {bo.criterion.englishLabel}</Text>}
                     <View style={{
                         flex: 1,
                         flexDirection: outcomes.length > 3 ? 'column' : 'row',
@@ -82,6 +80,6 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     betoffer: inputProps.betofferId && state.entityStore.betoffers.get(inputProps.betofferId) || undefined
 })
 
-export const BetOfferItem: ComponentClass<ExternalProps> =
-    connect<StateProps, {}, ExternalProps>(mapStateToProps)(BetOfferItemComponent)
+export const MainBetOfferItem: ComponentClass<ExternalProps> =
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(MainBetOfferItemComponent)
 
