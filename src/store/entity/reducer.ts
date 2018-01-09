@@ -1,7 +1,7 @@
-import {LiveActions, LiveLoadAction} from "store/live/actions"
-import {SportActions, SportLoadAction} from "store/sport/actions";
-import {SoonActions, SoonLoadAction} from "store/soon/actions";
-import {LandingActions, LandingLoadAction} from "store/landing/actions";
+import {LiveActions, LiveAction} from "store/live/actions"
+import {SportActions, SportAction} from "store/sport/actions";
+import {SoonActions, SoonAction} from "store/soon/actions";
+import {LandingActions, LandingAction} from "store/landing/actions";
 import {BetOffer, EventView, EventWithBetOffers, LiveEvent, Outcome} from "api/typings";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
@@ -10,7 +10,7 @@ import {BetOfferEntity} from "model/BetOfferEntity";
 
 import {Map, Set} from "immutable"
 import * as _ from "lodash"
-import {BetOfferActions, BetOffersLoadAction} from "store/entity/actions";
+import {BetOfferActions, BetOffersAction} from "store/entity/actions";
 
 export interface EntityStore {
     events: Map<number, EventEntity>
@@ -26,7 +26,7 @@ const initialState: EntityStore = {
     betOffersLoading: Set()
 }
 
-type Actions = LiveLoadAction | LandingLoadAction | SoonLoadAction | SportLoadAction | BetOffersLoadAction
+type Actions = LiveAction | LandingAction | SoonAction | SportAction | BetOffersAction
 export default function entityReducer(state: EntityStore = initialState, action: Actions): EntityStore {
     switch (action.type) {
         case LiveActions.LOAD_SUCCESS:

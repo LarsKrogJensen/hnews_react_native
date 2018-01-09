@@ -2,6 +2,7 @@ import {EventGroup, GroupWithCategories, RootGroup} from "api/typings";
 import {API} from "store/API";
 import {ThunkAction} from "redux-thunk";
 import {AppStore} from "store/store";
+import {DispatchAction} from "store/DispatchAction";
 
 export enum GroupActions {
     START_LOADING = "GROUPS_START_LOADING",
@@ -21,69 +22,59 @@ export enum PrematchCategoryActions {
     LOAD_FAILED = "PREMATCH_CATEGORIES_LOAD_FAILED"
 }
 
-export interface GroupsStartLoadAction {
-    type: GroupActions.START_LOADING
-}
+export type GroupsStartAction = DispatchAction<GroupActions.START_LOADING>
+export type GroupsFailedAction = DispatchAction<GroupActions.LOAD_FAILED>
 
-export interface GroupsLoadSuccessAction {
-    type: GroupActions.LOAD_SUCCESS
+export interface GroupsSuccessAction extends DispatchAction<GroupActions.LOAD_SUCCESS> {
     data: RootGroup
 }
 
-export interface GroupsLoadFailedAction {
-    type: GroupActions.LOAD_FAILED
-}
+export type HighlightsStartAction = DispatchAction<HighlightActions.START_LOADING>
 
-export interface HighlightsStartLoadAction {
-    type: HighlightActions.START_LOADING
-}
+export type HighlightsFailedAction = DispatchAction<HighlightActions.LOAD_FAILED>
 
-export interface HighlightsLoadSuccessAction {
-    type: HighlightActions.LOAD_SUCCESS
+export interface HighlightsSuccessAction extends DispatchAction<HighlightActions.LOAD_SUCCESS> {
     data: { groups: EventGroup[] }
 }
 
-export interface HighlightsLoadFailedAction {
-    type: HighlightActions.LOAD_FAILED
-}
-
-export interface PrematchCategoriesStartLoadAction {
-    type: PrematchCategoryActions.START_LOADING
+export interface PrematchCategoriesStartAction extends DispatchAction<PrematchCategoryActions.START_LOADING> {
     eventGroupId: number
 }
 
-export interface PrematchCategoriesLoadSuccessAction {
-    type: PrematchCategoryActions.LOAD_SUCCESS
+export interface PrematchCategoriesFailedAction extends DispatchAction<PrematchCategoryActions.LOAD_FAILED> {
+    eventGroupId: number
+}
+
+export interface PrematchCategoriesSuccessAction extends DispatchAction<PrematchCategoryActions.LOAD_SUCCESS> {
     data: GroupWithCategories
     eventGroupId: number
 }
 
-export interface PrematchCategoriesLoadFailedAction {
-    type: PrematchCategoryActions.LOAD_FAILED
-    eventGroupId: number
-}
-
-export type GroupsLoadAction = GroupsStartLoadAction | GroupsLoadSuccessAction | GroupsLoadFailedAction
-export type HighlightsLoadAction = HighlightsStartLoadAction | HighlightsLoadSuccessAction | HighlightsLoadFailedAction
+export type GroupsLoadAction = GroupsStartAction | GroupsSuccessAction | GroupsFailedAction
+export type HighlightsLoadAction = HighlightsStartAction | HighlightsSuccessAction | HighlightsFailedAction
 export type PrematchCategoryLoadAction =
-    PrematchCategoriesStartLoadAction
-    | PrematchCategoriesLoadSuccessAction
-    | PrematchCategoriesLoadFailedAction
+    PrematchCategoriesStartAction
+    | PrematchCategoriesSuccessAction
+    | PrematchCategoriesFailedAction
 
 export function loadGroups(fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
     return async dispatch => {
-        fireStartLoad && dispatch<GroupsStartLoadAction>({type: GroupActions.START_LOADING})
+        fireStartLoad && dispatch<GroupsStartAction>({type: GroupActions.START_LOADING})
 
         try {
             console.time("Fetching groups data")
-            const response =
-                await fetch(`${API.host}/offering/api/v2/${API.offering}/group.json?lang=${API.lang}&market=${API.market}`);
-            const responseJson = await response.json();
+            const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/group.json?lang=${API.lang}&market=${API.market}`);
+            if (response.status === 200) {
+                const responseJson = await response.json();
+                dispatch({
+                    type: GroupActions.LOAD_SUCCESS,
+                    data: responseJson
+                });
+            } else {
+                console.warn(`Failed to fetch groups msg: ${response.statusText}`)
+                dispatch({type: GroupActions.LOAD_FAILED})
+            }
             console.timeEnd("Fetching groups data")
-            dispatch({
-                type: GroupActions.LOAD_SUCCESS,
-                data: responseJson
-            });
         } catch (error) {
             console.error(error);
             dispatch({type: GroupActions.LOAD_FAILED})
@@ -94,22 +85,27 @@ export function loadGroups(fireStartLoad: boolean = true): ThunkAction<void, App
 export function loadHighlights(fireStartLoad: boolean = false): ThunkAction<void, AppStore, any> {
     return async dispatch => {
         if (fireStartLoad) {
-            dispatch<HighlightsStartLoadAction>({type: HighlightActions.START_LOADING})
+            dispatch<HighlightsStartAction>({type: HighlightActions.START_LOADING})
         }
 
         try {
             console.time("Fetching highlights")
             const response =
                 await fetch(`${API.host}/offering/api/v2/${API.offering}/group/highlight.json?lang=${API.lang}&market=${API.market}`);
-            const responseJson = await response.json();
+            if (response.status === 200) {
+                const responseJson = await response.json();
+                dispatch<HighlightsSuccessAction>({
+                    type: HighlightActions.LOAD_SUCCESS,
+                    data: responseJson
+                });
+            } else {
+                console.warn(`Failed to fetch highlights msg: ${response.statusText}`)
+                dispatch<HighlightsFailedAction>({type: HighlightActions.LOAD_FAILED})
+            }
             console.timeEnd("Fetching highlights")
-            dispatch<HighlightsLoadSuccessAction>({
-                type: HighlightActions.LOAD_SUCCESS,
-                data: responseJson
-            });
         } catch (error) {
             console.error(error);
-            dispatch<HighlightsLoadFailedAction>({type: HighlightActions.LOAD_FAILED})
+            dispatch<HighlightsFailedAction>({type: HighlightActions.LOAD_FAILED})
         }
     };
 }
@@ -121,22 +117,29 @@ export function loadPrematchCategories(eventGroupId: number, fireStartLoad: bool
             return
         }
 
-        fireStartLoad && dispatch<PrematchCategoriesStartLoadAction>({type: PrematchCategoryActions.START_LOADING, eventGroupId})
+        fireStartLoad && dispatch<PrematchCategoriesStartAction>({
+            type: PrematchCategoryActions.START_LOADING,
+            eventGroupId
+        })
 
         try {
             console.time(`Fetching prematch categories for group ${eventGroupId}`)
-            const response =
-                await fetch(`${API.host}/offering/api/v2/${API.offering}/group/${eventGroupId}/category/pre_match_event.json?lang=${API.lang}&market=${API.market}`);
-            const responseJson = await response.json();
+            const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/group/${eventGroupId}/category/pre_match_event.json?lang=${API.lang}&market=${API.market}`);
+            if (response.status === 200) {
+                const responseJson = await response.json();
+                dispatch<PrematchCategoriesSuccessAction>({
+                    type: PrematchCategoryActions.LOAD_SUCCESS,
+                    data: responseJson,
+                    eventGroupId
+                });
+            } else {
+                console.warn(`Failed to fetch prematch categories msg: ${response.statusText}`)
+                dispatch<PrematchCategoriesFailedAction>({type: PrematchCategoryActions.LOAD_FAILED, eventGroupId})
+            }
             console.timeEnd(`Fetching prematch categories for group ${eventGroupId}`)
-            dispatch<PrematchCategoriesLoadSuccessAction>({
-                type: PrematchCategoryActions.LOAD_SUCCESS,
-                data: responseJson,
-                eventGroupId
-            });
         } catch (error) {
             console.error(error);
-            dispatch<PrematchCategoriesLoadFailedAction>({type: PrematchCategoryActions.LOAD_FAILED, eventGroupId})
+            dispatch<PrematchCategoriesFailedAction>({type: PrematchCategoryActions.LOAD_FAILED, eventGroupId})
         }
     };
 }

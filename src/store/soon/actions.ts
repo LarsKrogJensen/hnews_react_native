@@ -1,5 +1,8 @@
 import {SoonPage} from "api/typings";
-import {Dispatch} from "redux";
+import {DispatchAction} from "store/DispatchAction";
+import {ThunkAction} from "redux-thunk";
+import {AppStore} from "store/store";
+import {API} from "store/API";
 
 export enum SoonActions {
     START_LOADING = "SOON_START_LOADING",
@@ -7,41 +10,36 @@ export enum SoonActions {
     LOAD_FAILED = "SOON_LOAD_FAILED"
 }
 
-export interface SoonStartLoadAction {
-    type: SoonActions.START_LOADING
-}
+export type SoonStartAction = DispatchAction<SoonActions.START_LOADING>
+export type SoonFailedAction = DispatchAction<SoonActions.LOAD_FAILED>
 
-export interface SoonLoadSuccessAction {
-    type: SoonActions.LOAD_SUCCESS
+export interface SoonSuccessAction extends DispatchAction<SoonActions.LOAD_SUCCESS> {
     data: SoonPage
 }
 
-export interface SoonLoadFailedAction {
-    type: SoonActions.LOAD_FAILED
-}
+export type SoonAction = SoonStartAction | SoonSuccessAction | SoonFailedAction
 
-export type SoonLoadAction = SoonStartLoadAction | SoonLoadSuccessAction | SoonLoadFailedAction
-
-export function load(fireStartLoad: boolean = true): Dispatch<SoonLoadAction> {
+export function load(fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
     return async dispatch => {
-        if (fireStartLoad) {
-            dispatch({type: SoonActions.START_LOADING})
-        }
+        fireStartLoad && dispatch<SoonStartAction>({type: SoonActions.START_LOADING})
 
         try {
-            const start = new Date().getTime();
-            const response =
-                await fetch('https://e4-api.kambi.com/offering/api/v3/kambiplay/listView/all/all/all/all/starting-soon.json?lang=en_GB&market=GB&client_id=2&channel_id=1&ncid=1511542067294&categoryGroup=COMBINED&displayDefault=true');
-            const responseJson = await response.json();
-            const end = new Date().getTime();
-            console.log("Fetch starting soon took " + (end - start) + " ms.")
-            dispatch({
-                type: SoonActions.LOAD_SUCCESS,
-                data: responseJson
-            });
+            console.time("Fetching starting soon")
+            const response = await fetch(`${API.host}/offering/api/v3/${API.offering}/listView/all/all/all/all/starting-soon.json?lang=${API.lang}&market=${API.market}&categoryGroup=COMBINED&displayDefault=true`);
+            if (response.status === 200) {
+                const responseJson = await response.json();
+                dispatch<SoonSuccessAction>({
+                    type: SoonActions.LOAD_SUCCESS,
+                    data: responseJson
+                });
+            } else {
+                console.warn(`Failed to fetch starting soon msg: ${response.statusText}`)
+                dispatch<SoonFailedAction>({type: SoonActions.LOAD_FAILED})
+            }
+            console.timeEnd("Fetching starting soon")
         } catch (error) {
             console.error(error);
-            dispatch({type: SoonActions.LOAD_FAILED})
+            dispatch<SoonFailedAction>({type: SoonActions.LOAD_FAILED})
         }
     };
 }

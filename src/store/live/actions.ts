@@ -10,31 +10,36 @@ export enum LiveActions {
     LOAD_FAILED = "LIVE_LOAD_FAILED"
 }
 
-export type LiveStartLoadAction = DispatchAction<LiveActions.START_LOADING>
-export type LiveLoadFailedAction = DispatchAction<LiveActions.LOAD_FAILED>
+export type LiveStartAction = DispatchAction<LiveActions.START_LOADING>
+export type LiveFailedAction = DispatchAction<LiveActions.LOAD_FAILED>
 
-export interface LiveLoadSuccessAction extends DispatchAction<LiveActions.LOAD_SUCCESS> {
+export interface LiveSuccessAction extends DispatchAction<LiveActions.LOAD_SUCCESS> {
     data: LiveEvents
 }
 
-export type LiveLoadAction = LiveStartLoadAction | LiveLoadSuccessAction | LiveLoadFailedAction
+export type LiveAction = LiveStartAction | LiveSuccessAction | LiveFailedAction
 
 export function loadOpenForLive(fireStartLoading: boolean = true): ThunkAction<void, AppStore, any> {
     return async dispatch => {
-        fireStartLoading && dispatch<LiveStartLoadAction>({type: LiveActions.START_LOADING})
+        fireStartLoading && dispatch<LiveStartAction>({type: LiveActions.START_LOADING})
 
         try {
             console.time("Fetch live")
             const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/event/live/open.json?lang=${API.lang}&market=${API.market}`);
-            const responseJson = await response.json();
+            if (response.status === 200) {
+                const responseJson = await response.json();
+                dispatch<LiveSuccessAction>({
+                    type: LiveActions.LOAD_SUCCESS,
+                    data: responseJson
+                });
+            } else {
+                console.warn(`Failed to fetch live msg: ${response.statusText}`)
+                dispatch<LiveFailedAction>({type: LiveActions.LOAD_FAILED})
+            }
             console.timeEnd("Fetch live")
-            dispatch<LiveLoadSuccessAction>({
-                type: LiveActions.LOAD_SUCCESS,
-                data: responseJson
-            });
         } catch (error) {
             console.error(error);
-            dispatch<LiveLoadFailedAction>({type: LiveActions.LOAD_FAILED})
+            dispatch<LiveFailedAction>({type: LiveActions.LOAD_FAILED})
         }
     };
 }

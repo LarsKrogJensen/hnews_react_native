@@ -1,7 +1,7 @@
-import {LiveActions, LiveLoadAction} from "store/live/actions"
+import {LiveActions, LiveAction} from "store/live/actions"
 import {EventWithBetOffers, LiveData} from "api/typings";
 import {Map} from "immutable"
-import {LandingActions, LandingLoadAction} from "store/landing/actions";
+import {LandingActions, LandingAction} from "store/landing/actions";
 import * as _ from "lodash"
 
 export interface StatsStore {
@@ -12,7 +12,7 @@ const initialState: StatsStore = {
     liveData: Map<number, LiveData>()
 }
 
-export default function statsReducer(state: StatsStore = initialState, action: LiveLoadAction | LandingLoadAction): StatsStore {
+export default function statsReducer(state: StatsStore = initialState, action: LiveAction | LandingAction): StatsStore {
     switch (action.type) {
         case LiveActions.LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;

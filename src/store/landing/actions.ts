@@ -1,8 +1,8 @@
 import {LandingPage} from "api/typings";
-import {Dispatch} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {AppStore} from "store/store";
 import {API} from "store/API";
+import {DispatchAction} from "store/DispatchAction";
 
 export enum LandingActions {
     START_LOADING = "LANDING_START_LOADING",
@@ -10,38 +10,36 @@ export enum LandingActions {
     LOAD_FAILED = "LANDING_LOAD_FAILED"
 }
 
-export interface LandingStartLoadAction {
-    type: LandingActions.START_LOADING
-}
+export type LandingStartAction = DispatchAction<LandingActions.START_LOADING>
+export type LandingFailedAction = DispatchAction<LandingActions.LOAD_FAILED>
 
-export interface LandingLoadSuccessAction {
-    type: LandingActions.LOAD_SUCCESS
+export interface LandingSuccessAction extends DispatchAction<LandingActions.LOAD_SUCCESS> {
     data: LandingPage
 }
 
-export interface LandingLoadFailedAction {
-    type: LandingActions.LOAD_FAILED
-}
-
-export type LandingLoadAction = LandingStartLoadAction | LandingLoadSuccessAction | LandingLoadFailedAction
+export type LandingAction = LandingStartAction | LandingSuccessAction | LandingFailedAction
 
 export function loadLanding(fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
     return async dispatch => {
-        fireStartLoad && dispatch<LandingStartLoadAction>({type: LandingActions.START_LOADING})
+        fireStartLoad && dispatch<LandingStartAction>({type: LandingActions.START_LOADING})
 
         try {
             console.time("Fetching landing")
-            const response =
-                await fetch(`${API.host}/offering/api/v2/${API.offering}/betoffer/landing.json?lang=${API.lang}&market=${API.market}`);
-            const responseJson = await response.json();
+            const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/betoffer/landing.json?lang=${API.lang}&market=${API.market}`);
+            if (response.status === 200) {
+                const responseJson = await response.json();
+                dispatch<LandingSuccessAction>({
+                    type: LandingActions.LOAD_SUCCESS,
+                    data: responseJson
+                });
+            } else {
+                console.warn(`Failed to fetch landing msg: ${response.statusText}`)
+                dispatch<LandingFailedAction>({type: LandingActions.LOAD_FAILED})
+            }
             console.timeEnd("Fetching landing")
-            dispatch<LandingLoadSuccessAction>({
-                type: LandingActions.LOAD_SUCCESS,
-                data: responseJson
-            });
         } catch (error) {
             console.error(error);
-            dispatch<LandingLoadFailedAction>({type: LandingActions.LOAD_FAILED})
+            dispatch<LandingFailedAction>({type: LandingActions.LOAD_FAILED})
         }
     };
 }

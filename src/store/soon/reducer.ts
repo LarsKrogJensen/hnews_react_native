@@ -1,4 +1,4 @@
-import {SoonActions, SoonLoadAction} from "./actions"
+import {SoonActions, SoonAction} from "./actions"
 
 export interface SoonEventsStore {
     soonEvents: number[]
@@ -10,7 +10,7 @@ const initialState: SoonEventsStore = {
     soonEvents: []
 }
 
-export default function soonReducer(state: SoonEventsStore = initialState, action: SoonLoadAction): SoonEventsStore {
+export default function soonReducer(state: SoonEventsStore = initialState, action: SoonAction): SoonEventsStore {
     switch (action.type) {
         case SoonActions.START_LOADING:
             return {

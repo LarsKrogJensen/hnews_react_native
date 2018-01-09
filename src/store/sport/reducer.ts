@@ -1,4 +1,4 @@
-import {SportActions, SportLoadAction} from "./actions"
+import {SportActions, SportAction} from "./actions"
 import {Map, Set} from "immutable"
 
 export interface SportEventsStore {
@@ -11,7 +11,7 @@ const initialState: SportEventsStore = {
     loading: Set()
 }
 
-export default function sportReducer(state: SportEventsStore = initialState, action: SportLoadAction): SportEventsStore {
+export default function sportReducer(state: SportEventsStore = initialState, action: SportAction): SportEventsStore {
     switch (action.type) {
         case SportActions.START_LOADING:
             return {

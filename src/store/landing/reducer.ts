@@ -1,4 +1,4 @@
-import {LandingActions, LandingLoadAction} from "./actions"
+import {LandingActions, LandingAction} from "./actions"
 import {LandingPageSection} from "api/typings";
 import {Range} from "api/typings";
 
@@ -27,7 +27,7 @@ const initialState: LandingStore = {
     startingSoon: {events: [], range: {}}
 }
 
-export default function landingReducer(state: LandingStore = initialState, action: LandingLoadAction): LandingStore {
+export default function landingReducer(state: LandingStore = initialState, action: LandingAction): LandingStore {
     switch (action.type) {
         case LandingActions.START_LOADING:
             return {

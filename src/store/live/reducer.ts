@@ -1,4 +1,4 @@
-import {LiveLoadAction, LiveActions} from "./actions"
+import {LiveAction, LiveActions} from "./actions"
 import {EventGroup} from "api/typings";
 
 export interface LiveEventsStore {
@@ -13,7 +13,7 @@ const initialState: LiveEventsStore = {
     groups: []
 }
 
-export default function liveReducer(state: LiveEventsStore = initialState, action: LiveLoadAction): LiveEventsStore {
+export default function liveReducer(state: LiveEventsStore = initialState, action: LiveAction): LiveEventsStore {
     switch (action.type) {
         case LiveActions.START_LOADING:
             return {
