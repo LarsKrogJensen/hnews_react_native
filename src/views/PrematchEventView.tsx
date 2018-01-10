@@ -13,13 +13,15 @@ import {connect} from "react-redux";
 import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
 import {is, Set} from "immutable";
-import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
+import {ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {BetOfferEntity} from "model/BetOfferEntity";
-import {MainBetOfferItem} from "components/betOffers/MainBetOfferItem";
+import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
 import {loadBetOffers} from "store/entity/actions";
 import {BetOfferCategory, BetOfferType, Criterion} from "api/typings";
 import {loadPrematchCategories} from "store/groups/actions";
+import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
+import {BetOfferGroupItem} from "components/betOffers/BetOfferGroupItem";
 
 
 interface ExternalProps {
@@ -96,7 +98,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
             nextProps.loadData(true)
         }
 
-        console.log(`NextProps - loading ${this.props.loading}/${nextProps.loading} boCount ${this.props.betOffers.length}/${nextProps.betOffers.length} catCount: ${this.props.categories.length}/${nextProps.categories.length}`)
+        // console.log(`NextProps - loading ${this.props.loading}/${nextProps.loading} boCount ${this.props.betOffers.length}/${nextProps.betOffers.length} catCount: ${this.props.categories.length}/${nextProps.categories.length}`)
         if (!nextProps.loading && nextProps.categories.length && nextProps.betOffers.length &&
             (nextProps.eventId !== this.props.eventId ||
                 nextProps.eventGroupid !== this.props.eventGroupid ||
@@ -114,7 +116,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
             return (
                 <View>
-                    <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
+                    <ActivityIndicator style={{marginTop: 8}}/>
                 </View>
             )
         }
@@ -142,8 +144,6 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
     private prepareData(betOffers: BetOfferEntity[], categories: BetOfferCategory[]) {
 
-        // console.info("Prepare data categories: " + categories.length +
-        //     " bettoffers: " + betOffers.length)
         const sections: BetOfferSection[] = categories
             .sort((c1, c2) => c1.sortOrder - c2.sortOrder)
             .map<BetOfferSection>(category => (
@@ -153,6 +153,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
                     category
                 }
             ))
+            .filter(section => section.betOfferGroups.length)
 
 
         this.setState(prevState => ({
@@ -216,18 +217,31 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
         return (
             <View style={viewStyle}>
                 <Text>
-                    {group.criterion.englishLabel} ({group.criterion.id}) Ty: {group.type.englishName}
+                    {group.criterion.englishLabel} ({group.criterion.id}) Ty: {group.type.englishName} /
+                    ({group.type.id})
                 </Text>
-
-                {group.betoffers.map(bo => (
-                    <View key={bo.id} style={{marginVertical: 4}}>
-                        <MainBetOfferItem orientation={orientation} betofferId={bo.id}/>
-                    </View>
-                ))}
-
+                {this.renderBetOfferGroup(group)}
             </View>
         )
     }
+
+    private renderBetOfferGroup(group: BetOfferGroup): React.ReactNode {
+        
+        if (group.type.id === BetOfferTypes.OverUnder) {
+            return <BetOfferGroupItem eventId={this.props.eventId}
+                                      type={group.type}
+                                      betofferIds={group.betoffers.map(bo => bo.id)}/>
+        }
+
+
+        return group.betoffers.map(bo => (
+            <View key={bo.id} style={{marginVertical: 2}}>
+                <DefaultBetOfferItem orientation={this.props.orientation}
+                                     betofferId={bo.id}/>
+            </View>
+        ))
+    }
+
 
     @autobind
     private renderSectionHeader(info: { section: BetOfferSection }) {
@@ -236,7 +250,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
         return (
             <Touchable onPress={() => this.toggleSection(section.category.id)}>
                 <View style={styles.header}>
-                    <Text style={styles.setionTitleText}>{section.category.name}</Text>
+                    <Text style={styles.sectionTitleText}>{section.category.name}</Text>
                 </View>
             </Touchable>
         )
@@ -252,15 +266,6 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
                 }
             }
         )
-    }
-
-    @autobind
-    private padHours(hours: number): string {
-        if (hours === 24)
-            hours = 0;
-        if (hours < 10) return "0" + hours
-
-        return hours.toString()
     }
 
     private keyExtractor(betOfferGroup: BetOfferGroup): string {
@@ -279,7 +284,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center"
     } as ViewStyle,
-    setionTitleText: {
+    sectionTitleText: {
         fontSize: 16,
         fontWeight: "bold",
         marginLeft: 8,

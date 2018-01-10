@@ -71,7 +71,7 @@ export function loadGroups(fireStartLoad: boolean = true): ThunkAction<void, App
                     data: responseJson
                 });
             } else {
-                console.warn(`Failed to fetch groups msg: ${response.statusText}`)
+                console.warn(`Failed to fetch groups status code: ${response.status}`)
                 dispatch({type: GroupActions.LOAD_FAILED})
             }
             console.timeEnd("Fetching groups data")
@@ -99,7 +99,7 @@ export function loadHighlights(fireStartLoad: boolean = false): ThunkAction<void
                     data: responseJson
                 });
             } else {
-                console.warn(`Failed to fetch highlights msg: ${response.statusText}`)
+                console.warn(`Failed to fetch highlights status code: ${response.status}`)
                 dispatch<HighlightsFailedAction>({type: HighlightActions.LOAD_FAILED})
             }
             console.timeEnd("Fetching highlights")
@@ -133,7 +133,7 @@ export function loadPrematchCategories(eventGroupId: number, fireStartLoad: bool
                     eventGroupId
                 });
             } else {
-                console.warn(`Failed to fetch prematch categories msg: ${response.statusText}`)
+                console.warn(`Failed to fetch prematch categories status code: ${response.status}`)
                 dispatch<PrematchCategoriesFailedAction>({type: PrematchCategoryActions.LOAD_FAILED, eventGroupId})
             }
             console.timeEnd(`Fetching prematch categories for group ${eventGroupId}`)

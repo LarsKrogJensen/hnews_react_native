@@ -33,7 +33,7 @@ export function load(fireStartLoad: boolean = true): ThunkAction<void, AppStore,
                     data: responseJson
                 });
             } else {
-                console.warn(`Failed to fetch starting soon msg: ${response.statusText}`)
+                console.warn(`Failed to fetch starting soon status code: ${response.status}`)
                 dispatch<SoonFailedAction>({type: SoonActions.LOAD_FAILED})
             }
             console.timeEnd("Fetching starting soon")

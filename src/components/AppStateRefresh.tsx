@@ -22,8 +22,8 @@ const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalP
             componentDidMount() {
                 AppState.addEventListener('change', this._handleAppStateChange);
                 this.timer = setInterval(() => {
-                    // console.log("Refreshing")
-                    // onActive(this.props, true)
+                    console.log("Refreshing")
+                    onActive(this.props, true)
                 }, 30000);
             }
 

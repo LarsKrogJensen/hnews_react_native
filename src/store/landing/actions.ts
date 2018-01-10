@@ -33,7 +33,7 @@ export function loadLanding(fireStartLoad: boolean = true): ThunkAction<void, Ap
                     data: responseJson
                 });
             } else {
-                console.warn(`Failed to fetch landing msg: ${response.statusText}`)
+                console.warn(`Failed to fetch landing status code: ${response.status}`)
                 dispatch<LandingFailedAction>({type: LandingActions.LOAD_FAILED})
             }
             console.timeEnd("Fetching landing")

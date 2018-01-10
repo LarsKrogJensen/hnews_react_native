@@ -9,14 +9,16 @@ import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import PlatformIcon from "components/PlatformIcon";
 import {BetOfferEntity} from "model/BetOfferEntity";
+import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
+import {OutcomeTypes} from "components/betOffers/OutcomeTypes";
 
 
 interface ExternalProps {
     outcomeId: number
     eventId: number
     betOfferId: number
-    orientation: Orientation,
-    style: ViewStyle
+    orientation?: Orientation,
+    style?: ViewStyle
 }
 
 interface StateProps {
@@ -31,7 +33,7 @@ interface State {
     oddsChange: number
 }
 
-class OutcomeItem extends React.PureComponent<Props, State> {
+class OutcomeItem extends React.Component<Props, State> {
     private timer?: number;
 
     constructor(props, context) {
@@ -42,10 +44,15 @@ class OutcomeItem extends React.PureComponent<Props, State> {
     }
 
 
-    //
-    // shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
-    //
-    // }
+    shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
+        if (nextProps.outcomeId !== this.props.outcomeId) return true
+        if (nextProps.orientation !== this.props.orientation) return true
+        if (nextProps.outcome.odds !== this.props.outcome.odds) return true
+        if (nextProps.betOffer.suspended !== this.props.betOffer.suspended) return true
+        if (nextState.oddsChange !== this.state.oddsChange) return true
+
+        return false
+    }
 
     componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
         if (this.timer) {
@@ -72,9 +79,11 @@ class OutcomeItem extends React.PureComponent<Props, State> {
     }
 
     public render() {
-        const {outcome, event, orientation, betOffer: {suspended}} = this.props;
+        const {outcome, event, orientation, betOffer} = this.props;
         const {oddsChange} = this.state
-        const outcomeLabel = this.formatOutcomeLabel(outcome, event);
+        console.log("OutcomeItem.render: " + outcome.id)
+
+        const outcomeLabel = this.formatOutcomeLabel(outcome, betOffer, event);
 
         const height = orientation === Orientation.Portrait ? 38 : 48
         const viewStyle = orientation === Orientation.Portrait ? portraitViewStyle : landscapeViewStyle
@@ -84,31 +93,44 @@ class OutcomeItem extends React.PureComponent<Props, State> {
             ...this.props.style
         }
 
-        if (suspended) {
+        if (betOffer.suspended) {
             return (
                 <View style={[touchStyle, viewStyle, {backgroundColor: "#BBBBBB"}]}>
-                    <Text numberOfLines={1} ellipsizeMode="tail" style={[labelStyle, {color: "#959595"}]}>{outcomeLabel}</Text>
+                    <Text numberOfLines={1} ellipsizeMode="tail"
+                          style={[labelStyle, {color: "#959595"}]}>{outcomeLabel}</Text>
                 </View>
             )
         }
-        
+
         return (
             <Touchable key={outcome.id} style={touchStyle} onPress={() => console.log("Pressed")}>
                 <View style={viewStyle}>
                     <Text numberOfLines={1} ellipsizeMode="tail" style={labelStyle}>{outcomeLabel}</Text>
                     {this.renderOddsChange(oddsChange)}
-                    <Text style={oddsStyle}>{outcome.odds / 1000}</Text>
+                    <Text style={oddsStyle}>{(outcome.odds / 1000).toFixed(2)}</Text>
                 </View>
             </Touchable>
         )
     }
 
-    private formatOutcomeLabel(outcome: OutcomeEntity, event: EventEntity): string {
-        if (outcome.type === "OT_CROSS")
+    private formatOutcomeLabel(outcome: OutcomeEntity, betoffer: BetOfferEntity, event: EventEntity): string {
+        if (betoffer.betOfferType.id === BetOfferTypes.OverUnder && outcome.line) {
+            return outcome.label + " " + outcome.line / 1000
+        }
+        if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance) {
+            if (outcome.type === OutcomeTypes.HomeOrDraw)
+                return event.homeName + " or Draw"
+            if (outcome.type === OutcomeTypes.HomeOrAway)
+                return event.homeName + " or " + event.awayName
+            if (outcome.type === OutcomeTypes.DrawOrAway)
+                return event.awayName + " or Draw"
+        }
+
+        if (outcome.type === OutcomeTypes.Draw)
             return "Draw"
-        if (outcome.type === "OT_ONE")
+        if (outcome.type === OutcomeTypes.Home)
             return event.homeName;
-        if (outcome.type === "OT_TWO")
+        if (outcome.type === OutcomeTypes.Away)
             return event.awayName;
 
         return outcome.label

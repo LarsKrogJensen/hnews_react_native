@@ -41,7 +41,7 @@ export function loadBetOffers(eventId: number, fireStartLoad: boolean = true): T
                     eventId
                 });
             } else {
-                console.warn(`Failed to load betOffers for event ${eventId} msg: ${response.statusText}`)
+                console.warn(`Failed to load betOffers for event ${eventId} status code: ${response.status}`)
                 dispatch<BetOffersFailedAction>({type: BetOfferActions.LOAD_FAILED, eventId})
             }
             console.timeEnd(`Loading betOffers for event ${eventId}`)

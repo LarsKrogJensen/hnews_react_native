@@ -4,6 +4,8 @@ import store from "store/store";
 import NavApp from "app/NavApp";
 import {COLOR, ThemeProvider} from 'react-native-material-ui';
 
+import "lib/console-time-polyfill"
+
 // you can set your style right here, it'll be propagated to application
 const uiTheme = {
     palette: {

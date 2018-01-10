@@ -1,0 +1,17 @@
+export enum BetOfferTypes {
+    Unknown = 9999,
+    Match = 2,
+    CorrectScore = 2,
+    OverUnder = 6,
+    HalfTimeFullTime = 8,
+    AsianHandicap = 7,
+    OddEvent = 10,
+    ThreeWayHandicap = 11,
+    DoubleChance = 12,
+    HeadToHead = 13,
+    ScoreCast = 16,
+    GoalScorer = 17,
+    YesNo = 18,
+    WinCast = 20,
+    AsianOverUnder = 21,
+}

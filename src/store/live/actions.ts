@@ -33,7 +33,7 @@ export function loadOpenForLive(fireStartLoading: boolean = true): ThunkAction<v
                     data: responseJson
                 });
             } else {
-                console.warn(`Failed to fetch live msg: ${response.statusText}`)
+                console.warn(`Failed to fetch live status code: ${response.status}`)
                 dispatch<LiveFailedAction>({type: LiveActions.LOAD_FAILED})
             }
             console.timeEnd("Fetch live")

@@ -9,7 +9,7 @@ import {AppStore} from "store/store";
 import {Orientation} from "lib/device";
 import EventPathItem from "components/EventPathItem";
 import CountDown from "components/CountDown";
-import {MainBetOfferItem} from "components/betOffers/MainBetOfferItem";
+import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
 
 interface ExternalProps {
     eventId: number
@@ -50,8 +50,8 @@ class StartingSoonCard extends React.Component<Props> {
                 <Text style={{fontSize: 20, marginTop: 8, textAlign: "center"}}>{event.name}</Text>
                 <EventPathItem path={event.path}
                                style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
-                <MainBetOfferItem orientation={Orientation.Portrait}
-                                  betofferId={event.mainBetOfferId}/>
+                <DefaultBetOfferItem orientation={Orientation.Portrait}
+                                     betofferId={event.mainBetOfferId}/>
             </View>
         )
     }

@@ -282,7 +282,7 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
         return (
             <Touchable onPress={() => this.toggleSection(section.key)}>
                 <View style={styles.header}>
-                    <Text style={section.live ? styles.liveText : styles.setionTitleText}>{title}</Text>
+                    <Text style={section.live ? styles.liveText : styles.sectionTitleText}>{title}</Text>
                     <Text style={styles.countText}>{section.count}</Text>
                 </View>
             </Touchable>
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         flex: 1,
     } as TextStyle,
-    setionTitleText: {
+    sectionTitleText: {
         fontSize: 16,
         fontWeight: "bold",
         marginLeft: 8,

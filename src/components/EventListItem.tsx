@@ -9,7 +9,7 @@ import autobind from "autobind-decorator";
 import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
-import {MainBetOfferItem} from "components/betOffers/MainBetOfferItem";
+import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
 
 
 interface ExternalProps {
@@ -45,7 +45,7 @@ class ListEventListItem extends React.Component<Props> {
                 <View style={viewStyle}>
                     <LiveEventInfoItem eventId={event.id}
                                        viewStyle={{flex: 1, height: 68}}/>
-                    <MainBetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>
+                    <DefaultBetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>
                 </View>
             </Touchable>
         );
