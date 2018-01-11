@@ -204,7 +204,6 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
     @autobind
     private renderItem(info: ListRenderItemInfo<BetOfferGroup>) {
-        const {orientation} = this.props
         const group: BetOfferGroup = info.item
 
         const viewStyle: ViewStyle = {
@@ -217,8 +216,11 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
         return (
             <View style={viewStyle}>
+                <Text style={{fontSize: 18, marginVertical: 4}}>
+                    {group.criterion.englishLabel}
+                </Text>
                 <Text>
-                    {group.criterion.englishLabel} ({group.criterion.id}) Ty: {group.type.englishName} ({group.type.id})
+                    (Criterion: {group.criterion.id}) Ty: {group.type.englishName} ({group.type.id})
                 </Text>
                 {this.renderBetOfferGroup(group)}
             </View>
@@ -226,10 +228,11 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
     }
 
     private renderBetOfferGroup(group: BetOfferGroup): React.ReactNode {
-        
+
         if (group.type.id === BetOfferTypes.OverUnder ||
             group.type.id === BetOfferTypes.CorrectScore ||
             group.type.id === BetOfferTypes.ThreeWayHandicap ||
+            group.type.id === BetOfferTypes.AsianHandicap ||
             group.type.id === BetOfferTypes.HalfTimeFullTime) {
             return <BetOfferGroupItem eventId={this.props.eventId}
                                       type={group.type}

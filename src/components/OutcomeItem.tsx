@@ -125,6 +125,9 @@ class OutcomeItem extends React.Component<Props, State> {
             if (outcome.type === OutcomeTypes.DrawOrAway)
                 return event.awayName + " or Draw"
         }
+        if (betoffer.betOfferType.id === BetOfferTypes.AsianHandicap) {
+            return outcome.label + (outcome.line! > 0 ? "  +" : "  ") + ((outcome.line!) / 1000)
+        }
 
         if (outcome.type === OutcomeTypes.Draw)
             return "Draw"

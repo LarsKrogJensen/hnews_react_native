@@ -9,6 +9,7 @@ import {OutcomeEntity} from "model/OutcomeEntity";
 import {BetOfferType} from "api/typings";
 import {OutcomeTypes} from "components/betOffers/OutcomeTypes";
 import autobind from "autobind-decorator";
+import {EventEntity} from "model/EventEntity";
 
 interface ExternalProps {
     outcomes: number[]
@@ -18,6 +19,7 @@ interface ExternalProps {
 
 interface StateProps {
     outcomes: OutcomeEntity[]
+    event: EventEntity
 }
 
 type Props = StateProps & ExternalProps
@@ -31,7 +33,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
     }
 
     public render() {
-        const {outcomes, type, eventId} = this.props
+        const {outcomes, type, eventId, event} = this.props
 
         switch (type.id) {
             case BetOfferTypes.OverUnder:
@@ -42,6 +44,8 @@ class BetOfferGroupComponent extends React.Component<Props> {
                 return this.renderHalfTimeFullTime(outcomes, eventId)
             case BetOfferTypes.ThreeWayHandicap:
                 return this.renderThreeWayHandicap(outcomes, eventId)
+            case BetOfferTypes.AsianHandicap:
+                return this.renderAsianHandicap(outcomes, event)
             default:
                 return <Text>BetOffer type '{type.englishName}'seems not implemented yet</Text>
         }
@@ -184,7 +188,6 @@ class BetOfferGroupComponent extends React.Component<Props> {
     }
 
     private renderThreeWayHandicap(outcomes: OutcomeEntity[], eventId: number) {
-
         type HandicapGroup = {
             handicap: number,
             outcomes: OutcomeEntity[]
@@ -206,7 +209,10 @@ class BetOfferGroupComponent extends React.Component<Props> {
             <View style={styles.columnLayout}>
                 {groups.map(group => (
                     <View key={"handicap-" + group.handicap} style={styles.columnLayout}>
-                        <Text>Starts {this.formatHandicapTitle(group.handicap)}</Text>
+                        <Text style={{
+                            fontSize: 16,
+                            marginVertical: 4
+                        }}>Starts {this.formatHandicapTitle(group.handicap)}</Text>
                         <View style={styles.rowLayout}>
                             {group.outcomes.sort(this.sortThreeWay).map(outcome => (
                                 <OutcomeItem
@@ -219,6 +225,37 @@ class BetOfferGroupComponent extends React.Component<Props> {
                         </View>
                     </View>
                 ))}
+            </View>
+        )
+    }
+
+    private renderAsianHandicap(outcomes: OutcomeEntity[], event: EventEntity) {
+        // render 2 columns first with over and second under
+        const home = outcomes.filter(o => o.label === event.homeName && o.line).sort((o1, o2) => o1.line!! - o2.line!!)
+        const away = outcomes.filter(o => o.label === event.awayName && o.line).sort((o1, o2) => o2.line!! - o1.line!!)
+
+        return (
+            <View style={styles.rowLayout}>
+                <View style={styles.columnLayout}>
+                    {home.map(outcome => (
+                        <OutcomeItem
+                            key={outcome.id}
+                            style={{marginVertical: 2}}
+                            outcomeId={outcome.id}
+                            eventId={event.id}
+                            betOfferId={outcome.betOfferId}/>
+                    ))}
+                </View>
+                <View style={styles.columnLayout}>
+                    {away.map(outcome => (
+                        <OutcomeItem
+                            key={outcome.id}
+                            style={{marginVertical: 2}}
+                            outcomeId={outcome.id}
+                            eventId={event.id}
+                            betOfferId={outcome.betOfferId}/>
+                    ))}
+                </View>
             </View>
         )
     }
@@ -270,7 +307,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
-    outcomes: inputProps.outcomes.map(outId => state.entityStore.outcomes.get(outId)).filter(o => o)
+    outcomes: inputProps.outcomes.map(outId => state.entityStore.outcomes.get(outId)).filter(o => o),
+    event: state.entityStore.events.get(inputProps.eventId)
 })
 
 export const BetOfferGroupItem: ComponentClass<ExternalProps> =
