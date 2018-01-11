@@ -126,7 +126,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
         const sectionsView: BetOfferSection[] = sections.map(section => ({
             ...section,
-            data: section.betOfferGroups
+            data: expanded.has(section.category.id) ? section.betOfferGroups : []
         }));
 
 
