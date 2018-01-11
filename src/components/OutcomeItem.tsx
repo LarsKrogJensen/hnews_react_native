@@ -34,14 +34,14 @@ interface State {
 }
 
 class OutcomeItem extends React.Component<Props, State> {
-    private timer?: number;
-
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            oddsChange: 0
-        }
+    public static defaultProps: Partial<Props> = {
+        orientation: Orientation.Portrait
     }
+    state: State = {
+        oddsChange: 0
+    }
+
+    private timer?: number;
 
 
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {

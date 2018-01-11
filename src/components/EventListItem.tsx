@@ -45,7 +45,7 @@ class ListEventListItem extends React.Component<Props> {
                 <View style={viewStyle}>
                     <LiveEventInfoItem eventId={event.id}
                                        viewStyle={{flex: 1, height: 68}}/>
-                    <DefaultBetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>
+                    {event.mainBetOfferId && <DefaultBetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>}
                 </View>
             </Touchable>
         );

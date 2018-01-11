@@ -1,8 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {StyleSheet, View, ViewStyle} from "react-native";
-import autobind from "autobind-decorator";
-import {Orientation} from "lib/device";
 import OutcomeItem from "../OutcomeItem"
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
@@ -12,7 +10,7 @@ import {BetOfferType} from "api/typings";
 import {OutcomeTypes} from "components/betOffers/OutcomeTypes";
 
 interface ExternalProps {
-    betofferIds: number[]
+    outcomes: number[]
     eventId: number,
     type: BetOfferType
 }
@@ -26,8 +24,7 @@ type Props = StateProps & ExternalProps
 class BetOfferGroupComponent extends React.Component<Props> {
 
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
-        if (nextProps.betofferIds.join() !== this.props.betofferIds.join()) return true;
-        if (nextProps.outcomes.map(o => o.id).join() !== this.props.outcomes.map(o => o.id).join()) return true;
+        if (nextProps.outcomes.join() !== this.props.outcomes.join()) return true;
 
         return false
     }
@@ -35,16 +32,17 @@ class BetOfferGroupComponent extends React.Component<Props> {
     public render() {
         const {outcomes, type, eventId} = this.props
 
-
         if (type.id === BetOfferTypes.OverUnder) {
             return this.renderOverUnder(outcomes, eventId)
         }
 
+        if (type.id === BetOfferTypes.CorrectScore) {
+            return this.renderCorrectScore(outcomes, eventId)
+        }
 
         return null
     }
 
-    @autobind
     private renderOverUnder(outcomes: OutcomeEntity[], eventId: number) {
         // render 2 columns first with over and second under
         const over = outcomes.filter(o => o.type === OutcomeTypes.Over && o.line).sort((o1, o2) => o1.line!! - o2.line!!)
@@ -57,7 +55,6 @@ class BetOfferGroupComponent extends React.Component<Props> {
                         <OutcomeItem
                             key={outcome.id}
                             style={{marginVertical: 2}}
-                            orientation={Orientation.Portrait}
                             outcomeId={outcome.id}
                             eventId={eventId}
                             betOfferId={outcome.betOfferId}/>
@@ -68,7 +65,6 @@ class BetOfferGroupComponent extends React.Component<Props> {
                         <OutcomeItem
                             key={outcome.id}
                             style={{marginVertical: 2}}
-                            orientation={Orientation.Portrait}
                             outcomeId={outcome.id}
                             eventId={eventId}
                             betOfferId={outcome.betOfferId}/>
@@ -76,6 +72,65 @@ class BetOfferGroupComponent extends React.Component<Props> {
                 </View>
             </View>
         )
+    }
+
+    private renderCorrectScore(outcomes: OutcomeEntity[], eventId: number) {
+        // render 3 columns first with home win, second draw and third away win
+        type OutcomeWithScore = OutcomeEntity & { homeScore: number, awayScore: number }
+        const outcomesWithScore: OutcomeWithScore[] = outcomes.map(outcome => ({...outcome, ...this.parseScore(outcome.label)}))
+
+        const home = outcomesWithScore.filter(o => o.homeScore > o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
+        const draw = outcomesWithScore.filter(o => o.homeScore === o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
+        const away = outcomesWithScore.filter(o => o.homeScore < o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
+
+        const itemStyle: ViewStyle = {marginVertical: 2, flex: 0}
+        return (
+            <View style={styles.rowLayout}>
+                <View style={styles.columnLayout}>
+                    {home.map(outcome => (
+                        <OutcomeItem
+                            key={outcome.id}
+                            style={itemStyle}
+                            outcomeId={outcome.id}
+                            eventId={eventId}
+                            betOfferId={outcome.betOfferId}/>
+                    ))}
+                </View>
+                <View style={styles.columnLayout}>
+                    {draw.map(outcome => (
+                        <OutcomeItem
+                            key={outcome.id}
+                            style={itemStyle}
+                            outcomeId={outcome.id}
+                            eventId={eventId}
+                            betOfferId={outcome.betOfferId}/>
+                    ))}
+                </View>
+                <View style={styles.columnLayout}>
+                    {away.map(outcome => (
+                        <OutcomeItem
+                            key={outcome.id}
+                            style={itemStyle}
+                            outcomeId={outcome.id}
+                            eventId={eventId}
+                            betOfferId={outcome.betOfferId}/>
+                    ))}
+                </View>
+            </View>
+        )
+    }
+
+    private parseScore(scoreLabel: string): { homeScore: number, awayScore: number } {
+        let scoreParts: string[] = scoreLabel.split("-");
+
+        if (scoreParts.length !== 2) {
+            return {homeScore: 0, awayScore: 0}
+        }
+
+        return {
+            homeScore: parseInt(scoreParts[0].trim()),
+            awayScore: parseInt(scoreParts[1].trim())
+        }
     }
 }
 
@@ -87,22 +142,15 @@ const styles = StyleSheet.create({
     columnLayout: {
         flex: 1,
         flexDirection: 'column',
-        alignItems: "stretch"
+        alignItems: "stretch",
+        justifyContent: "flex-start"
 
     } as ViewStyle,
 
 })
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
-    outcomes: inputProps.betofferIds.map(boId => state.entityStore.betoffers.get(boId))
-        .filter(bo => bo)
-        .map(bo => bo.outcomes)
-        .map(outcomes => outcomes.map(outId => state.entityStore.outcomes.get(outId)))
-        .filter(o => o)
-        .reduceRight<OutcomeEntity[]>((reduced, outs) => {
-            reduced.push(...outs)
-            return reduced
-        }, [])
+    outcomes: inputProps.outcomes.map(outId => state.entityStore.outcomes.get(outId)).filter(o => o)
 })
 
 export const BetOfferGroupItem: ComponentClass<ExternalProps> =

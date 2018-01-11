@@ -6,7 +6,6 @@ import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import {Orientation} from "lib/device";
 import EventPathItem from "components/EventPathItem";
 import {formatDateTime} from "lib/dates";
 import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
@@ -49,10 +48,8 @@ class TrendingCard extends React.Component<Props> {
         return (
             <View style={bodyStyle}>
                 <Text style={{fontSize: 20, marginTop: 8, textAlign: "center"}}>{event.name}</Text>
-                <EventPathItem path={event.path}
-                               style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
-                <DefaultBetOfferItem orientation={Orientation.Portrait}
-                                     betofferId={event.mainBetOfferId}/>
+                <EventPathItem path={event.path} style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
+                {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId}/>}
             </View>
         )
     }

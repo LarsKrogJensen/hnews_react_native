@@ -50,8 +50,7 @@ class StartingSoonCard extends React.Component<Props> {
                 <Text style={{fontSize: 20, marginTop: 8, textAlign: "center"}}>{event.name}</Text>
                 <EventPathItem path={event.path}
                                style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
-                <DefaultBetOfferItem orientation={Orientation.Portrait}
-                                     betofferId={event.mainBetOfferId}/>
+                {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId}/>}
             </View>
         )
     }

@@ -11,8 +11,8 @@ import Touchable from "components/Touchable";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 
 interface ExternalProps {
-    betofferId?: number
-    orientation: Orientation
+    betofferId: number
+    orientation?: Orientation
 }
 
 interface StateProps {
@@ -22,7 +22,9 @@ interface StateProps {
 type Props = StateProps & ExternalProps
 
 class DefaultBetOfferItemComponent extends React.Component<Props> {
-
+    public static defaultProps: Partial<Props> = {
+        orientation: Orientation.Portrait
+    }
 
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (!nextProps.betoffer) return true
@@ -69,7 +71,6 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
                 <OutcomeItem
                     style={outcomeStyle}
                     key={outcomeId}
-                    orientation={Orientation.Portrait}
                     outcomeId={outcomeId}
                     eventId={bo.eventId}
                     betOfferId={bo.id}/>

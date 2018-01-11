@@ -60,7 +60,7 @@ class LiveCardComponent extends React.Component<Props> {
         return (
             <View style={bodyStyle}>
                 {this.renderTeams()}
-                <DefaultBetOfferItem orientation={Orientation.Portrait} betofferId={event.mainBetOfferId}/>
+                {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId}/>}
             </View>
         )
     }

@@ -22,6 +22,8 @@ import {BetOfferCategory, BetOfferType, Criterion} from "api/typings";
 import {loadPrematchCategories} from "store/groups/actions";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {BetOfferGroupItem} from "components/betOffers/BetOfferGroupItem";
+import * as _ from "lodash"
+import {Orientation} from "lib/device";
 
 
 interface ExternalProps {
@@ -227,16 +229,16 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
     private renderBetOfferGroup(group: BetOfferGroup): React.ReactNode {
         
-        if (group.type.id === BetOfferTypes.OverUnder) {
+        if (group.type.id === BetOfferTypes.OverUnder || group.type.id === BetOfferTypes.CorrectScore) {
             return <BetOfferGroupItem eventId={this.props.eventId}
                                       type={group.type}
-                                      betofferIds={group.betoffers.map(bo => bo.id)}/>
+                                      outcomes={_.flatMap(group.betoffers.map(bo => bo.outcomes))}/>
         }
 
 
         return group.betoffers.map(bo => (
             <View key={bo.id} style={{marginVertical: 2}}>
-                <DefaultBetOfferItem orientation={this.props.orientation}
+                <DefaultBetOfferItem orientation={Orientation.Portrait}
                                      betofferId={bo.id}/>
             </View>
         ))
