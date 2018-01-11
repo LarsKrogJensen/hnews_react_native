@@ -23,7 +23,6 @@ import {loadPrematchCategories} from "store/groups/actions";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {BetOfferGroupItem} from "components/betOffers/BetOfferGroupItem";
 import * as _ from "lodash"
-import {Orientation} from "lib/device";
 
 
 interface ExternalProps {
@@ -219,8 +218,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
         return (
             <View style={viewStyle}>
                 <Text>
-                    {group.criterion.englishLabel} ({group.criterion.id}) Ty: {group.type.englishName} /
-                    ({group.type.id})
+                    {group.criterion.englishLabel} ({group.criterion.id}) Ty: {group.type.englishName} ({group.type.id})
                 </Text>
                 {this.renderBetOfferGroup(group)}
             </View>
@@ -229,7 +227,10 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
     private renderBetOfferGroup(group: BetOfferGroup): React.ReactNode {
         
-        if (group.type.id === BetOfferTypes.OverUnder || group.type.id === BetOfferTypes.CorrectScore) {
+        if (group.type.id === BetOfferTypes.OverUnder ||
+            group.type.id === BetOfferTypes.CorrectScore ||
+            group.type.id === BetOfferTypes.ThreeWayHandicap ||
+            group.type.id === BetOfferTypes.HalfTimeFullTime) {
             return <BetOfferGroupItem eventId={this.props.eventId}
                                       type={group.type}
                                       outcomes={_.flatMap(group.betoffers.map(bo => bo.outcomes))}/>
@@ -238,8 +239,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
         return group.betoffers.map(bo => (
             <View key={bo.id} style={{marginVertical: 2}}>
-                <DefaultBetOfferItem orientation={Orientation.Portrait}
-                                     betofferId={bo.id}/>
+                <DefaultBetOfferItem betofferId={bo.id}/>
             </View>
         ))
     }
