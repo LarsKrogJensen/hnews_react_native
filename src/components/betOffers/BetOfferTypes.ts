@@ -1,5 +1,6 @@
 export enum BetOfferTypes {
     Unknown = 9999,
+    Handicap = 1,
     Match = 2,
     CorrectScore = 3,
     OverUnder = 6,

@@ -1,3 +1,11 @@
+- asian over/under
+- counter on sections betoffer sections
+- scorer
+- head to head botype 13 (player points se shl)
+- handicap (botype 1) kolla hockey allsvenskan
+- player point
+- event statistics
+- live event
 - review icon
 - collapse section delay, request animate frame? improve perf
 - realtime socket.js support (major)

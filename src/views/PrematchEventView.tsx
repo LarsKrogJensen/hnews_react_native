@@ -56,6 +56,7 @@ const AnimatedSectionList: SectionList<BetOfferGroup> = Animated.createAnimatedC
 interface BetOfferSection extends SectionListData<BetOfferGroup> {
     betOfferGroups: BetOfferGroup[]
     category: BetOfferCategory
+    count: number
 }
 
 interface BetOfferGroup {
@@ -151,9 +152,11 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
                 {
                     data: [],
                     betOfferGroups: this.filterAndGroupBetOffers(betOffers, category),
-                    category
+                    category,
+                    count: 0
                 }
             ))
+            .map(section => ({...section, count: _.flatMap(section.betOfferGroups).length}))
             .filter(section => section.betOfferGroups.length)
 
 
@@ -256,6 +259,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
             <Touchable onPress={() => this.toggleSection(section.category.id)}>
                 <View style={styles.header}>
                     <Text style={styles.sectionTitleText}>{section.category.name}</Text>
+                    <Text style={styles.sectionCount}>{section.count}</Text>
                 </View>
             </Touchable>
         )
@@ -294,6 +298,11 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginLeft: 8,
         flex: 1
+    } as TextStyle,
+    sectionCount: {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginRight: 8
     } as TextStyle
 })
 
