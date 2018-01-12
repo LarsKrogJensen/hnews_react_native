@@ -69,12 +69,12 @@ const NavApp = DrawerNavigator(
         }
     },
     {
-        drawerOpenRoute: 'DrawerOpen',
-        drawerCloseRoute: 'DrawerClose',
-        drawerToggleRoute: 'DrawerToggle',
-        headerMode: 'none',
-        drawerWidth: 300,
-        drawerPosition: 'left',
+        // drawerOpenRoute: 'DrawerOpen',
+        // drawerCloseRoute: 'DrawerClose',
+        // drawerToggleRoute: 'DrawerToggle',
+        // headerMode: 'none',
+        // drawerWidth: 300,
+        // drawerPosition: 'left',
         contentComponent: props => <Drawer {...props} />,
         initialRouteName: "Home",
         // backBehavior: 'none'
