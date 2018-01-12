@@ -1,8 +1,8 @@
-- head to head botype 13 (player points se shl)
+- crashlytics
 - scorer
-- handicap (botype 1) kolla hockey allsvenskan
+- handicap (botype 1) kolla hockey allsvenskan eller basket
 - event header
-- player point
+- player point (NBA)
 - event statistics (large)
 - live event (large)
 - review icon

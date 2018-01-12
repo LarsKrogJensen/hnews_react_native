@@ -1,15 +1,15 @@
 import * as React from "react"
-import {ComponentClass} from "react"
-import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
+import {Text, TextStyle, View, ViewStyle, StyleSheet} from "react-native";
 import OutcomeItem from "../OutcomeItem"
-import {AppStore} from "store/store";
-import {connect} from "react-redux";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {BetOfferType} from "api/typings";
 import {OutcomeTypes} from "components/betOffers/OutcomeTypes";
-import autobind from "autobind-decorator";
 import {EventEntity} from "model/EventEntity";
+import autobind from "autobind-decorator";
+import {AppStore} from "store/store";
+import {ComponentClass} from "react";
+import {connect} from "react-redux";
 
 interface ExternalProps {
     outcomes: number[]
@@ -104,9 +104,10 @@ class BetOfferGroupComponent extends React.Component<Props> {
             }
 
             if (outcome.type === OutcomeTypes.Yes) {
-                h2h.paricipant = outcome.participant
+                h2h.paricipant = outcome.participant || h2h.paricipant
                 h2h.yes = outcome
             } else {
+                h2h.paricipant = outcome.participant || h2h.paricipant
                 h2h.no = outcome
             }
 
@@ -125,21 +126,31 @@ class BetOfferGroupComponent extends React.Component<Props> {
             fontWeight: "bold"
         }
 
+        const yesOut = rows.find(r => r.yes !== undefined)
+        const yesLabel = yesOut ? yesOut.yes!.label : "Yes"
+        const noOut = rows.find(r => r.yes !== undefined)
+        const noLabel = noOut ? noOut.no!.label : "No"
+
         return (
             <View style={styles.columnLayout}>
                 <View style={[styles.rowLayout, {height: 35, alignItems: "center"}]}>
                     <View style={{flex: 1}}/>
-                    <Text style={[itemStyle, labelStyle]}>Yes</Text>
-                    <Text style={[itemStyle, labelStyle]}>No</Text>
+                    <Text style={[itemStyle, labelStyle]}>{yesLabel}</Text>
+                    <Text style={[itemStyle, labelStyle]}>{noLabel}</Text>
                 </View>
                 {rows.map(h2h => (
                     <View key={h2h.betOfferId} style={[styles.rowLayout, {marginVertical: 2, alignItems: "center"}]}>
                         <Text style={{flex: 1}}>{h2h.paricipant}</Text>
-                        <OutcomeItem
-                            style={itemStyle}
-                            outcomeId={h2h.yes!.id}
-                            eventId={eventId}
-                            betOfferId={h2h.yes!.betOfferId}/>
+                        {
+                            h2h.yes ? (
+                                    <OutcomeItem
+                                        style={itemStyle}
+                                        outcomeId={h2h.yes!.id}
+                                        eventId={eventId}
+                                        betOfferId={h2h.yes!.betOfferId}/>
+                                )
+                                : <View style={itemStyle}/>
+                        }
                         {
                             h2h.no
                                 ? (

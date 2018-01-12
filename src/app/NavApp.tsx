@@ -70,6 +70,7 @@ const NavApp = DrawerNavigator(
     },
     {
         contentComponent: props => <Drawer {...props} />,
+        drawerWidth: 300,
         initialRouteName: "Home",
     }
 );
