@@ -237,6 +237,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
             group.type.id === BetOfferTypes.ThreeWayHandicap ||
             group.type.id === BetOfferTypes.AsianHandicap ||
             group.type.id === BetOfferTypes.AsianOverUnder ||
+            group.type.id === BetOfferTypes.HeadToHead ||
             group.type.id === BetOfferTypes.HalfTimeFullTime) {
             return (
                 <BetOfferGroupItem eventId={this.props.eventId}

@@ -102,20 +102,29 @@ class OutcomeItem extends React.Component<Props, State> {
             )
         }
 
+        if (outcome.odds === 1000) {
+            return <View style={[touchStyle, viewStyle, this.props.style, {backgroundColor: "transparent"}]}/>
+        }
+
         return (
             <Touchable key={outcome.id} style={touchStyle} onPress={() => console.log("Pressed")}>
-                <View style={viewStyle}>
-                    <Text numberOfLines={1} ellipsizeMode="tail" style={labelStyle}>{outcomeLabel}</Text>
+                <View style={[viewStyle, !outcomeLabel ? {justifyContent: "center"} : {}]}>
+                    {outcomeLabel &&
+                    <Text numberOfLines={1} ellipsizeMode="tail" style={labelStyle}>{outcomeLabel}</Text>}
                     {this.renderOddsChange(oddsChange)}
-                    <Text style={oddsStyle}>{(outcome.odds / 1000).toFixed(2)}</Text>
+                    <Text
+                        style={[oddsStyle, !outcomeLabel ? {marginLeft: 0} : {}]}>{(outcome.odds / 1000).toFixed(2)}</Text>
                 </View>
             </Touchable>
         )
     }
 
-    private formatOutcomeLabel(outcome: OutcomeEntity, betoffer: BetOfferEntity, event: EventEntity): string {
-        if ((betoffer.betOfferType.id === BetOfferTypes.OverUnder  || betoffer.betOfferType.id === BetOfferTypes.AsianOverUnder)&& outcome.line) {
+    private formatOutcomeLabel(outcome: OutcomeEntity, betoffer: BetOfferEntity, event: EventEntity): string | undefined {
+        if ((betoffer.betOfferType.id === BetOfferTypes.OverUnder || betoffer.betOfferType.id === BetOfferTypes.AsianOverUnder) && outcome.line) {
             return outcome.label + " " + outcome.line / 1000
+        }
+        if (betoffer.betOfferType.id === BetOfferTypes.HeadToHead) {
+            return undefined
         }
         if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance) {
             if (outcome.type === OutcomeTypes.HomeOrDraw)

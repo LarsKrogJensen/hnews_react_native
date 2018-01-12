@@ -1,7 +1,7 @@
-- asian over/under
-- scorer
 - head to head botype 13 (player points se shl)
+- scorer
 - handicap (botype 1) kolla hockey allsvenskan
+- event header
 - player point
 - event statistics (large)
 - live event (large)

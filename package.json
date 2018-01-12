@@ -23,7 +23,7 @@
     "react-native-material-ui": "^1.19.0",
     "react-native-svg": "^6.0.1-rc.1",
     "react-native-tab-view": "^0.0.74",
-    "react-native-vector-icons": "^4.4.3",
+    "react-native-vector-icons": "^4.5.0",
     "react-navigation": "1.0.0-beta.25",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
