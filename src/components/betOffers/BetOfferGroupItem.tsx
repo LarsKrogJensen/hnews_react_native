@@ -46,6 +46,8 @@ class BetOfferGroupComponent extends React.Component<Props> {
                 return this.renderThreeWayHandicap(outcomes, eventId)
             case BetOfferTypes.AsianHandicap:
                 return this.renderAsianHandicap(outcomes, event)
+            case BetOfferTypes.AsianOverUnder:
+                return this.renderOverUnder(outcomes, eventId)
             default:
                 return <Text>BetOffer type '{type.englishName}'seems not implemented yet</Text>
         }
@@ -65,7 +67,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
                             style={{marginVertical: 2}}
                             outcomeId={outcome.id}
                             eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
+                            betOfferId={outcome.betOfferId}/>                           
                     ))}
                 </View>
                 <View style={styles.columnLayout}>

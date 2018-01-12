@@ -114,7 +114,7 @@ class OutcomeItem extends React.Component<Props, State> {
     }
 
     private formatOutcomeLabel(outcome: OutcomeEntity, betoffer: BetOfferEntity, event: EventEntity): string {
-        if (betoffer.betOfferType.id === BetOfferTypes.OverUnder && outcome.line) {
+        if ((betoffer.betOfferType.id === BetOfferTypes.OverUnder  || betoffer.betOfferType.id === BetOfferTypes.AsianOverUnder)&& outcome.line) {
             return outcome.label + " " + outcome.line / 1000
         }
         if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance) {

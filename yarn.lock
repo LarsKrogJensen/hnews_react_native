@@ -33,9 +33,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.51.9":
-  version "0.51.9"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.51.9.tgz#a2435957444aa3205387a162b72374578f303b43"
+"@types/react-native@0.51.10":
+  version "0.51.10"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.51.10.tgz#ab060c0b87110a32a2e797ebaef5b485a7856217"
   dependencies:
     "@types/react" "*"
 

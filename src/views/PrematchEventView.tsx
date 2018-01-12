@@ -156,7 +156,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
                     count: 0
                 }
             ))
-            .map(section => ({...section, count: _.flatMap(section.betOfferGroups).length}))
+            .map(section => ({...section, count: _.flatMap(section.betOfferGroups.map(g => g.betoffers)).length}))
             .filter(section => section.betOfferGroups.length)
 
 
@@ -236,10 +236,13 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
             group.type.id === BetOfferTypes.CorrectScore ||
             group.type.id === BetOfferTypes.ThreeWayHandicap ||
             group.type.id === BetOfferTypes.AsianHandicap ||
+            group.type.id === BetOfferTypes.AsianOverUnder ||
             group.type.id === BetOfferTypes.HalfTimeFullTime) {
-            return <BetOfferGroupItem eventId={this.props.eventId}
-                                      type={group.type}
-                                      outcomes={_.flatMap(group.betoffers.map(bo => bo.outcomes))}/>
+            return (
+                <BetOfferGroupItem eventId={this.props.eventId}
+                                   type={group.type}
+                                   outcomes={_.flatMap(group.betoffers.map(bo => bo.outcomes))}/>
+            )
         }
 
 
