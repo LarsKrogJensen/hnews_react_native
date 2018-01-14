@@ -81,7 +81,7 @@ class OutcomeItem extends React.Component<Props, State> {
     public render() {
         const {outcome, event, orientation, betOffer} = this.props;
         const {oddsChange} = this.state
-        console.log("OutcomeItem.render: " + outcome.id)
+        // console.log("OutcomeItem.render: " + outcome.id)
 
         const outcomeLabel = this.formatOutcomeLabel(outcome, betOffer, event);
 
@@ -125,7 +125,7 @@ class OutcomeItem extends React.Component<Props, State> {
                 betoffer.betOfferType.id === BetOfferTypes.AsianOverUnder) && outcome.line) {
             return outcome.label + " " + outcome.line / 1000
         }
-        if (betoffer.betOfferType.id === BetOfferTypes.HeadToHead) {
+        if (betoffer.betOfferType.id === BetOfferTypes.HeadToHead || betoffer.betOfferType.id === BetOfferTypes.GoalScorer) {
             return undefined
         }
         if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance) {

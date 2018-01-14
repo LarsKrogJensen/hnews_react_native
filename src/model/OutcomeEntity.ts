@@ -1,3 +1,5 @@
+import {Criterion, OutcomeCriterion} from "api/typings";
+
 export interface OutcomeEntity {
     readonly id: number;
     readonly label: string;
@@ -12,4 +14,6 @@ export interface OutcomeEntity {
     readonly participant: string;
     readonly participantId?: number;
     readonly line?: number;
+    readonly homeTeamMember: boolean
+    readonly criterion?: OutcomeCriterion
 }

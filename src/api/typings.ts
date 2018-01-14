@@ -138,7 +138,7 @@ export interface Criterion {
     id: number;
     label: string;
     englishLabel: string;
-    order: number[];
+    order?: number[];
 }
 
 export interface BetOfferType {
@@ -150,6 +150,11 @@ export interface BetOfferType {
 export interface Pba {
     disabled: boolean;
     status: string;
+}
+
+export interface OutcomeCriterion {
+    type: number
+    name: string
 }
 
 export interface Outcome {
@@ -166,6 +171,8 @@ export interface Outcome {
     participant: string;
     participantId?: number;
     line?: number
+    homeTeamMember: boolean
+    criterion?: OutcomeCriterion
 }
 
 export interface OddsStats {

@@ -1,15 +1,16 @@
 import * as React from "react"
-import {Text, TextStyle, View, ViewStyle, StyleSheet} from "react-native";
+import {ComponentClass} from "react"
+import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import OutcomeItem from "../OutcomeItem"
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {OutcomeEntity} from "model/OutcomeEntity";
-import {BetOfferType} from "api/typings";
+import {BetOfferType, Criterion} from "api/typings";
 import {OutcomeTypes} from "components/betOffers/OutcomeTypes";
 import {EventEntity} from "model/EventEntity";
 import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
-import {ComponentClass} from "react";
 import {connect} from "react-redux";
+import {GoalScorerItem} from "components/betOffers/GoalScorerItem";
 
 interface ExternalProps {
     outcomes: number[]
@@ -45,13 +46,15 @@ class BetOfferGroupComponent extends React.Component<Props> {
                 return this.renderHalfTimeFullTime(outcomes, eventId)
             case BetOfferTypes.ThreeWayHandicap:
                 return this.renderThreeWayHandicap(outcomes, eventId)
+            case BetOfferTypes.GoalScorer:
+                return <GoalScorerItem outcomes={outcomes} event={event}/>
             case BetOfferTypes.AsianHandicap:
             case BetOfferTypes.Handicap:
                 return this.renderHandicap(outcomes, event)
             case BetOfferTypes.HeadToHead:
                 return this.renderHeadToHead(outcomes, eventId)
             default:
-                return <Text>BetOffer type '{type.englishName}'seems not implemented yet</Text>
+                return <Text>BetOffer type '{type.englishName}' seems not implemented yet</Text>
         }
     }
 
@@ -254,7 +257,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
                             betOfferId={outcome.betOfferId}/>
                     ))}
                 </View>
-                <View style={styles.columnLayout}>
+                {draw.length && <View style={styles.columnLayout}>
                     {draw.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
@@ -264,6 +267,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
                             betOfferId={outcome.betOfferId}/>
                     ))}
                 </View>
+                }
                 <View style={styles.columnLayout}>
                     {away.map(outcome => (
                         <OutcomeItem

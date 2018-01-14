@@ -1,6 +1,4 @@
 - crashlytics
-- scorer
-- handicap (botype 1) kolla hockey allsvenskan eller basket
 - event header
 - player point (NBA)
 - event statistics (large)
