@@ -234,6 +234,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
 
         if (group.type.id === BetOfferTypes.OverUnder ||
             group.type.id === BetOfferTypes.CorrectScore ||
+            group.type.id === BetOfferTypes.Handicap ||
             group.type.id === BetOfferTypes.ThreeWayHandicap ||
             group.type.id === BetOfferTypes.AsianHandicap ||
             group.type.id === BetOfferTypes.AsianOverUnder ||

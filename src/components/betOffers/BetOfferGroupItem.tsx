@@ -46,7 +46,8 @@ class BetOfferGroupComponent extends React.Component<Props> {
             case BetOfferTypes.ThreeWayHandicap:
                 return this.renderThreeWayHandicap(outcomes, eventId)
             case BetOfferTypes.AsianHandicap:
-                return this.renderAsianHandicap(outcomes, event)
+            case BetOfferTypes.Handicap:
+                return this.renderHandicap(outcomes, event)
             case BetOfferTypes.HeadToHead:
                 return this.renderHeadToHead(outcomes, eventId)
             default:
@@ -319,7 +320,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
         )
     }
 
-    private renderAsianHandicap(outcomes: OutcomeEntity[], event: EventEntity) {
+    private renderHandicap(outcomes: OutcomeEntity[], event: EventEntity) {
         // render 2 columns first with over and second under
         const home = outcomes.filter(o => o.label === event.homeName && o.line).sort((o1, o2) => o1.line!! - o2.line!!)
         const away = outcomes.filter(o => o.label === event.awayName && o.line).sort((o1, o2) => o2.line!! - o1.line!!)
