@@ -1,4 +1,4 @@
-import {EventGroup, GroupWithCategories, RootGroup} from "api/typings";
+import {EventGroup, BetOfferCategories, RootGroup} from "api/typings";
 import {API} from "store/API";
 import {ThunkAction} from "redux-thunk";
 import {AppStore} from "store/store";
@@ -16,10 +16,10 @@ export enum HighlightActions {
     LOAD_FAILED = "HIGHLIGHTS_LOAD_FAILED"
 }
 
-export enum PrematchCategoryActions {
-    START_LOADING = "PREMATCH_CATEGORIES_START_LOADING",
-    LOAD_SUCCESS = "PREMATCH_CATEGORIES_LOAD_SUCCESS",
-    LOAD_FAILED = "PREMATCH_CATEGORIES_LOAD_FAILED"
+export enum BetOfferCategoryActions {
+    START_LOADING = "BET_OFFERS_CATEGORIES_START_LOADING",
+    LOAD_SUCCESS = "BET_OFFERS_CATEGORIES_LOAD_SUCCESS",
+    LOAD_FAILED = "BET_OFFERS_CATEGORIES_LOAD_FAILED"
 }
 
 export type GroupsStartAction = DispatchAction<GroupActions.START_LOADING>
@@ -37,17 +37,20 @@ export interface HighlightsSuccessAction extends DispatchAction<HighlightActions
     data: { groups: EventGroup[] }
 }
 
-export interface PrematchCategoriesStartAction extends DispatchAction<PrematchCategoryActions.START_LOADING> {
+export interface PrematchCategoriesStartAction extends DispatchAction<BetOfferCategoryActions.START_LOADING> {
     eventGroupId: number
+    categoryName: string
 }
 
-export interface PrematchCategoriesFailedAction extends DispatchAction<PrematchCategoryActions.LOAD_FAILED> {
+export interface PrematchCategoriesFailedAction extends DispatchAction<BetOfferCategoryActions.LOAD_FAILED> {
     eventGroupId: number
+    categoryName: string
 }
 
-export interface PrematchCategoriesSuccessAction extends DispatchAction<PrematchCategoryActions.LOAD_SUCCESS> {
-    data: GroupWithCategories
+export interface PrematchCategoriesSuccessAction extends DispatchAction<BetOfferCategoryActions.LOAD_SUCCESS> {
+    data: BetOfferCategories
     eventGroupId: number
+    categoryName: string
 }
 
 export type GroupsLoadAction = GroupsStartAction | GroupsSuccessAction | GroupsFailedAction
@@ -110,36 +113,47 @@ export function loadHighlights(fireStartLoad: boolean = false): ThunkAction<void
     };
 }
 
-export function loadPrematchCategories(eventGroupId: number, fireStartLoad: boolean = false): ThunkAction<void, AppStore, any> {
+export function loadBetOfferCategories(eventGroupId: number, categoryName: string, fireStartLoad: boolean = false): ThunkAction<void, AppStore, any> {
     return async (dispatch, getState) => {
 
-        if (getState().groupStore.prematchCategories.has((eventGroupId))) {
+        const key = `${categoryName}-${eventGroupId}`
+        if (getState().groupStore.betOfferCategories.has(key)) {
             return
         }
 
         fireStartLoad && dispatch<PrematchCategoriesStartAction>({
-            type: PrematchCategoryActions.START_LOADING,
-            eventGroupId
+            type: BetOfferCategoryActions.START_LOADING,
+            eventGroupId,
+            categoryName
         })
 
+        // category/selected-live/group/1000093205.json?lang=sv_SE&market=SE&client_id=2&channel_id=1&ncid=1516037476066
         try {
-            console.time(`Fetching prematch categories for group ${eventGroupId}`)
-            const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/group/${eventGroupId}/category/pre_match_event.json?lang=${API.lang}&market=${API.market}`);
+            const timeName = `Fetching categories for group ${eventGroupId} and category'${categoryName}'`
+            console.time(timeName)
+            const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/category/${categoryName}/group/${eventGroupId}.json?lang=${API.lang}&market=${API.market}`);
             if (response.status === 200) {
                 const responseJson = await response.json();
                 dispatch<PrematchCategoriesSuccessAction>({
-                    type: PrematchCategoryActions.LOAD_SUCCESS,
+                    type: BetOfferCategoryActions.LOAD_SUCCESS,
                     data: responseJson,
-                    eventGroupId
+                    eventGroupId,
+                    categoryName
                 });
             } else {
-                console.warn(`Failed to fetch prematch categories status code: ${response.status}`)
-                dispatch<PrematchCategoriesFailedAction>({type: PrematchCategoryActions.LOAD_FAILED, eventGroupId})
+                console.warn(timeName)
+                dispatch<PrematchCategoriesFailedAction>({
+                    type: BetOfferCategoryActions.LOAD_FAILED, eventGroupId,
+                    categoryName
+                })
             }
-            console.timeEnd(`Fetching prematch categories for group ${eventGroupId}`)
+            console.timeEnd(timeName)
         } catch (error) {
             console.error(error);
-            dispatch<PrematchCategoriesFailedAction>({type: PrematchCategoryActions.LOAD_FAILED, eventGroupId})
+            dispatch<PrematchCategoriesFailedAction>({
+                type: BetOfferCategoryActions.LOAD_FAILED, eventGroupId,
+                categoryName
+            })
         }
     };
 }

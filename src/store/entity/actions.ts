@@ -31,7 +31,8 @@ export function loadBetOffers(eventId: number, live: boolean, fireStartLoad: boo
         fireStartLoad && dispatch<BetOffersStartAction>({type: BetOfferActions.START_LOADING, eventId})
 
         try {
-            console.time(`Loading betOffers for event ${eventId} live ${live}`)
+            let timerName = `Loading betOffers for event ${eventId} live ${live}`;
+            console.time(timerName)
             const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/betoffer/${live ? "live/" : ""}event/${eventId}.json?lang=${API.lang}&market=${API.market}`);
             if (response.status === 200) {
                 const responseJson = await response.json();
@@ -41,10 +42,10 @@ export function loadBetOffers(eventId: number, live: boolean, fireStartLoad: boo
                     eventId
                 });
             } else {
-                console.warn(`Failed to load betOffers for event ${eventId} status code: ${response.status}`)
+                console.warn(`${timerName} status code: ${response.status}`)
                 dispatch<BetOffersFailedAction>({type: BetOfferActions.LOAD_FAILED, eventId})
             }
-            console.timeEnd(`Loading betOffers for event ${eventId}`)
+            console.timeEnd(timerName)
         } catch (error) {
             console.error(error);
             dispatch<BetOffersFailedAction>({type: BetOfferActions.LOAD_FAILED, eventId})

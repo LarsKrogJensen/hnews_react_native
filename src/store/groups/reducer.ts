@@ -2,10 +2,9 @@ import {Map, Set} from "immutable"
 import {GroupsLoadAction} from "./actions"
 import {BetOfferCategory, EventGroup} from "api/typings";
 import {
-    GroupActions, HighlightActions, HighlightsLoadAction, PrematchCategoryActions,
+    BetOfferCategoryActions, GroupActions, HighlightActions, HighlightsLoadAction,
     PrematchCategoryLoadAction
 } from "store/groups/actions";
-
 
 export interface GroupStore {
     groupsLoading: boolean
@@ -13,8 +12,8 @@ export interface GroupStore {
     groupById: Map<number, EventGroup>
     sports: number[]
     highlights: number[]
-    prematchCategories: Map<number, BetOfferCategory[]>
-    loadingPrematchCategories: Set<number>
+    betOfferCategories: Map<string, BetOfferCategory[]>
+    loadingBetOfferCategories: Set<string>
 }
 
 const initialState: GroupStore = {
@@ -23,8 +22,8 @@ const initialState: GroupStore = {
     groupById: Map(),
     sports: [],
     highlights: [],
-    prematchCategories: Map(),
-    loadingPrematchCategories: Set()
+    betOfferCategories: Map(),
+    loadingBetOfferCategories: Set()
 }
 
 
@@ -64,24 +63,31 @@ export default function groupsReducer(state: GroupStore = initialState, action: 
                 ...state,
                 highlightsLoading: false
             }
-            
-        case PrematchCategoryActions.START_LOADING:
+
+        case BetOfferCategoryActions.START_LOADING: {
+            const key = `${action.categoryName}-${action.eventGroupId}`
             return {
                 ...state,
-                loadingPrematchCategories: state.loadingPrematchCategories.add(action.eventGroupId)
+                loadingBetOfferCategories: state.loadingBetOfferCategories.add(key)
             }
-        case PrematchCategoryActions.LOAD_SUCCESS:
+        }
+        case BetOfferCategoryActions.LOAD_SUCCESS: {
+            const key = `${action.categoryName}-${action.eventGroupId}`
             return {
                 ...state,
-                prematchCategories: state.prematchCategories.set(action.eventGroupId, action.data.group.categories),
-                loadingPrematchCategories: state.loadingPrematchCategories.remove(action.eventGroupId)
+                betOfferCategories: state.betOfferCategories.set(key, action.data.categories),
+                loadingBetOfferCategories: state.loadingBetOfferCategories.remove(key)
 
             }
-        case PrematchCategoryActions.LOAD_FAILED:
+        }
+        case BetOfferCategoryActions.LOAD_FAILED: {
+            const key = `${action.categoryName}-${action.eventGroupId}`
+
             return {
                 ...state,
-                loadingPrematchCategories: state.loadingPrematchCategories.remove(action.eventGroupId)
+                loadingBetOfferCategories: state.loadingBetOfferCategories.remove(key)
             }
+        }
         default:
             return state
     }

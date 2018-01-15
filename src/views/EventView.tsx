@@ -19,7 +19,7 @@ import {BetOfferEntity} from "model/BetOfferEntity";
 import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
 import {loadBetOffers} from "store/entity/actions";
 import {BetOfferCategory, BetOfferType, Criterion} from "api/typings";
-import {loadPrematchCategories} from "store/groups/actions";
+import {loadBetOfferCategories} from "store/groups/actions";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {BetOfferGroupItem} from "components/betOffers/BetOfferGroupItem";
 import * as _ from "lodash"
@@ -48,6 +48,8 @@ interface StateProps {
     event: EventEntity
     betOffers: BetOfferEntity[]
     categories: BetOfferCategory[]
+    instantCategories: BetOfferCategory[]
+    selectedCategories: BetOfferCategory[]
 }
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
@@ -93,7 +95,7 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
         this.props.loadData()
 
         if (this.props.betOffers.length && this.props.categories.length) {
-            this.prepareData(this.props.betOffers, this.props.categories)
+            this.prepareData(this.props.betOffers, this.props.categories, this.props.selectedCategories, this.props.instantCategories)
         }
     }
 
@@ -107,10 +109,12 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             (nextProps.eventId !== this.props.eventId ||
                 nextProps.eventGroupid !== this.props.eventGroupid ||
                 nextProps.categories.length !== this.props.categories.length ||
+                nextProps.selectedCategories.length !== this.props.selectedCategories.length ||
+                nextProps.instantCategories.length !== this.props.instantCategories.length ||
                 nextProps.betOffers.length !== this.props.betOffers.length ||
                 nextProps.betOffers.map(e => e.id).join() !== this.props.betOffers.map(e => e.id).join())
         ) {
-            this.prepareData(nextProps.betOffers, nextProps.categories)
+            this.prepareData(nextProps.betOffers, nextProps.categories, nextProps.selectedCategories, nextProps.instantCategories)
         }
     }
 
@@ -146,9 +150,10 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
         )
     }
 
-    private prepareData(betOffers: BetOfferEntity[], categories: BetOfferCategory[]) {
+    private prepareData(betOffers: BetOfferEntity[], categories: BetOfferCategory[], selected: BetOfferCategory[], instant: BetOfferCategory[]) {
 
         const sections: BetOfferSection[] = categories
+            .filter(category => category.mappings)
             .sort((c1, c2) => c1.sortOrder - c2.sortOrder)
             .map<BetOfferSection>(category => (
                 {
@@ -161,6 +166,14 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             .map(section => ({...section, count: _.flatMap(section.betOfferGroups.map(g => g.betoffers)).length}))
             .filter(section => section.betOfferGroups.length)
 
+        if (!!instant.length) {
+            sections.unshift({
+                data: [],
+                betOfferGroups: [],
+                category: instant[0],
+                count: 0
+            })
+        }
 
         this.setState(prevState => ({
             sections,
@@ -317,19 +330,49 @@ const styles = StyleSheet.create({
 // Redux connect
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => {
     const event = state.entityStore.events.get(inputProps.eventId);
+
+    let categories: BetOfferCategory[] = []
+    let selectedCategories: BetOfferCategory[] = []
+    let instantCategories: BetOfferCategory[] = []
+    let loadingCategories = false
+
+    let groupStore = state.groupStore;
+    if (inputProps.live) {
+        const key1 = `live_event-${event.groupId}`
+        const key2 = `selected-live-${event.groupId}`
+        const key3 = `instant-betting-${event.groupId}`
+        loadingCategories = groupStore.loadingBetOfferCategories.has(key1) || groupStore.loadingBetOfferCategories.has(key2) || groupStore.loadingBetOfferCategories.has(key3)
+        categories = groupStore.betOfferCategories.get(key1) || []
+        selectedCategories = groupStore.betOfferCategories.get(key2) || []
+        instantCategories = groupStore.betOfferCategories.get(key3) || []
+    } else {
+        const key = `pre_match_event-${event.groupId}`
+        loadingCategories = groupStore.loadingBetOfferCategories.has(key)
+        categories = groupStore.betOfferCategories.get(key) || []
+    }
+
     const betOffers = event && event.betOffers.map(betOfferId => state.entityStore.betoffers.get(betOfferId)).filter(id => id) || []
     return {
-        loading: state.entityStore.betOffersLoading.has(inputProps.eventId) || state.groupStore.loadingPrematchCategories.has(event.groupId),
+        loading: state.entityStore.betOffersLoading.has(inputProps.eventId) || loadingCategories,
         event,
         betOffers,
-        categories: state.groupStore.prematchCategories.get(event.groupId) || []
+        categories,
+        instantCategories,
+        selectedCategories
     }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => ({
     loadData: (fireStartLoad: boolean = true) => {
         dispatch(loadBetOffers(inputProps.eventId, inputProps.live, fireStartLoad))
-        dispatch(loadPrematchCategories(inputProps.eventGroupid, fireStartLoad))
+
+        if (inputProps.live) {
+            dispatch(loadBetOfferCategories(inputProps.eventGroupid, "live_event", fireStartLoad))
+            dispatch(loadBetOfferCategories(inputProps.eventGroupid, "selected-live", fireStartLoad))
+            dispatch(loadBetOfferCategories(inputProps.eventGroupid, "instant-betting", fireStartLoad))
+        } else {
+            dispatch(loadBetOfferCategories(inputProps.eventGroupid, "pre_match_event", fireStartLoad))
+        }
     },
 })
 

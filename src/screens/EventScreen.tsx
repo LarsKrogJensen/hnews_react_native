@@ -26,6 +26,7 @@ class EventScreenComponent extends React.Component<Props> {
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (this.props.eventId !== nextProps.eventId) return true
         if (this.props.event.state && nextProps.event.state) return true
+        if (this.props.event.openForLiveBetting && nextProps.event.openForLiveBetting) return true
 
         return false
     }

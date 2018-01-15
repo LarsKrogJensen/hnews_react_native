@@ -213,10 +213,8 @@ export interface RootGroup {
     group: EventGroup
 }
 
-export interface GroupWithCategories {
-    group: {
-        categories: BetOfferCategory[]
-    }
+export interface BetOfferCategories {
+    categories: BetOfferCategory[]
 }
 
 export interface BetOfferCategory {
