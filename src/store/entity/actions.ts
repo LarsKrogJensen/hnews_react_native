@@ -43,7 +43,14 @@ export function loadBetOffers(eventId: number, live: boolean, fireStartLoad: boo
                 });
             } else {
                 console.warn(`${timerName} status code: ${response.status}`)
-                dispatch<BetOffersFailedAction>({type: BetOfferActions.LOAD_FAILED, eventId})
+                dispatch<BetOffersSuccessAction>({
+                    type: BetOfferActions.LOAD_SUCCESS,
+                    eventId,
+                    data: {
+                        events: [],
+                        betoffers: []
+                    }
+                })
             }
             console.timeEnd(timerName)
         } catch (error) {
