@@ -6,7 +6,7 @@ import {NavigationParams, NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import {PrematchEventView} from "views/PrematchEventView";
+import {EventView} from "views/EventView";
 
 
 interface ExternalProps {
@@ -41,13 +41,10 @@ class EventScreenComponent extends React.Component<Props> {
     private renderBody() {
         const {event, navigation} = this.props
 
-        if (!event.openForLiveBetting) {
-            return <PrematchEventView eventId={event.id}
-                                      eventGroupid={event.groupId}
-                                      navigation={navigation}/>
-        } else {
-            return <Text>Event screen {event.name} state {event.state}</Text>
-        }
+        return <EventView eventId={event.id}
+                          live={event.state === "STARTED"}
+                          eventGroupid={event.groupId}
+                          navigation={navigation}/>
     }
 }
 

@@ -29,6 +29,7 @@ interface ExternalProps {
     navigation: NavigationScreenProp<{ params: any }, {}>
     eventId: number
     eventGroupid: number
+    live: boolean
     scrollHooks?: ScrollHooks
 }
 
@@ -65,7 +66,7 @@ interface BetOfferGroup {
     betoffers: BetOfferEntity[]
 }
 
-class PrematchEventViewComponent extends React.Component<ComponentProps, ComponentState> {
+class EventViewComponent extends React.Component<ComponentProps, ComponentState> {
     constructor(props: ComponentProps) {
         super(props);
 
@@ -81,6 +82,7 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
         if (nextProps.eventId !== this.props.eventId) return true
         if (nextProps.betOffers.length !== this.props.betOffers.length) return true
         if (nextProps.betOffers.map(e => e.id).join() !== this.props.betOffers.map(e => e.id).join()) return true
+        if (nextProps.event.state !== this.props.event.state) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
         if (nextProps.orientation !== this.props.orientation) return true;
 
@@ -209,16 +211,8 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
     private renderItem(info: ListRenderItemInfo<BetOfferGroup>) {
         const group: BetOfferGroup = info.item
 
-        const viewStyle: ViewStyle = {
-            padding: 8,
-            backgroundColor: "#F6F6F6",
-            borderBottomColor: "#D1D1D1",
-            borderBottomWidth: 1,
-            flexDirection: "column"
-        }
-
         return (
-            <View style={viewStyle}>
+            <View style={styles.listItemStyle}>
                 <Text style={{fontSize: 18, marginVertical: 4}}>
                     {group.criterion.label}
                 </Text>
@@ -309,7 +303,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginRight: 8
-    } as TextStyle
+    } as TextStyle,
+    listItemStyle: {
+        padding: 8,
+        backgroundColor: "#F6F6F6",
+        borderBottomColor: "#D1D1D1",
+        borderBottomWidth: 1,
+        flexDirection: "column"
+    } as ViewStyle
 })
 
 
@@ -327,14 +328,14 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => ({
     loadData: (fireStartLoad: boolean = true) => {
-        dispatch(loadBetOffers(inputProps.eventId, fireStartLoad))
+        dispatch(loadBetOffers(inputProps.eventId, inputProps.live, fireStartLoad))
         dispatch(loadPrematchCategories(inputProps.eventGroupid, fireStartLoad))
     },
 })
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(PrematchEventViewComponent))
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(EventViewComponent))
 
-export const PrematchEventView: ComponentClass<ExternalProps> =
+export const EventView: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 

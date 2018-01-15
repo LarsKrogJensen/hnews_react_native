@@ -26,13 +26,13 @@ export interface BetOffersFailedAction extends DispatchAction<BetOfferActions.LO
 export type BetOffersAction = BetOffersStartAction | BetOffersSuccessAction | BetOffersFailedAction
 
 
-export function loadBetOffers(eventId: number, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
+export function loadBetOffers(eventId: number, live: boolean, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
     return async dispatch => {
         fireStartLoad && dispatch<BetOffersStartAction>({type: BetOfferActions.START_LOADING, eventId})
 
         try {
-            console.time(`Loading betOffers for event ${eventId}`)
-            const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/betoffer/event/${eventId}.json?lang=${API.lang}&market=${API.market}`);
+            console.time(`Loading betOffers for event ${eventId} live ${live}`)
+            const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/betoffer/${live ? "live/" : ""}event/${eventId}.json?lang=${API.lang}&market=${API.market}`);
             if (response.status === 200) {
                 const responseJson = await response.json();
                 dispatch<BetOffersSuccessAction>({
