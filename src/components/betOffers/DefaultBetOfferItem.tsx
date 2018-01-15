@@ -9,6 +9,7 @@ import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import Touchable from "components/Touchable";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
+import {EventEntity} from "model/EventEntity";
 
 interface ExternalProps {
     betofferId: number
@@ -17,6 +18,7 @@ interface ExternalProps {
 
 interface StateProps {
     betoffer?: BetOfferEntity
+    event?: EventEntity
 }
 
 type Props = StateProps & ExternalProps
@@ -39,15 +41,16 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
     }
 
     public render() {
-        const bo = this.props.betoffer;
+        const {betoffer, event} = this.props
         // console.log("DefaultBetOfferItem.render id: " + (bo && bo.id))
 
-        if (bo) {
-            const outcomes: number[] = [...bo.outcomes] || []
+        if (betoffer && event) {
+            const outcomes: number[] = [...betoffer.outcomes] || []
             let layout = styles.rowLayout
             const outcomeStyle: ViewStyle = {}
 
-            if (bo.betOfferType.id === BetOfferTypes.DoubleChance ||
+            if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance ||
+                betoffer.betOfferType.id === BetOfferTypes.Winner ||
                 outcomes.length > 3) {
                 layout = styles.columnLayout
                 outcomeStyle.marginBottom = 4
@@ -55,7 +58,7 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
 
             return (
                 <View style={layout}>
-                    {this.renderOutcomes(outcomes, bo, outcomeStyle)}
+                    {this.renderOutcomes(outcomes, betoffer, event, outcomeStyle)}
                 </View>
             )
         }
@@ -64,16 +67,19 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
     }
 
     @autobind
-    private renderOutcomes(outcomes: ReadonlyArray<number>, bo: BetOfferEntity, outcomeStyle: ViewStyle) {
+    private renderOutcomes(outcomes: ReadonlyArray<number>,
+                           betOffer: BetOfferEntity,
+                           event: EventEntity,
+                           outcomeStyle: ViewStyle) {
 
-        if (outcomes.length > 3) {
+        if (outcomes.length > 3 && event.type === "ET_COMPETITION") {
             const items = outcomes.slice(0, 4).map(outcomeId => (
                 <OutcomeItem
                     style={outcomeStyle}
                     key={outcomeId}
                     outcomeId={outcomeId}
-                    eventId={bo.eventId}
-                    betOfferId={bo.id}/>
+                    eventId={betOffer.eventId}
+                    betOfferId={betOffer.id}/>
             ))
 
             items.push(<Touchable key={123345}><Text style={{textAlign: "center", padding: 8}}>View
@@ -81,14 +87,14 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
             return items;
         }
 
-        return bo.outcomes.map(outcomeId => (
+        return betOffer.outcomes.map(outcomeId => (
             <OutcomeItem
                 key={outcomeId}
                 style={outcomeStyle}
                 orientation={this.props.orientation}
                 outcomeId={outcomeId}
-                eventId={bo.eventId}
-                betOfferId={bo.id}/>
+                eventId={betOffer.eventId}
+                betOfferId={betOffer.id}/>
         ))
     }
 }
@@ -108,9 +114,14 @@ const styles = StyleSheet.create({
 
 })
 
-const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
-    betoffer: inputProps.betofferId && state.entityStore.betoffers.get(inputProps.betofferId) || undefined
-})
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => {
+    let betoffer = inputProps.betofferId && state.entityStore.betoffers.get(inputProps.betofferId) || undefined;
+
+    return {
+        betoffer: betoffer,
+        event: betoffer && state.entityStore.events.get(betoffer.eventId)
+    }
+}
 
 export const DefaultBetOfferItem: ComponentClass<ExternalProps> =
     connect<StateProps, {}, ExternalProps>(mapStateToProps)(DefaultBetOfferItemComponent)

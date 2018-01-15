@@ -3,6 +3,7 @@ export enum BetOfferTypes {
     Handicap = 1,
     Match = 2,
     CorrectScore = 3,
+    Winner = 4,
     OverUnder = 6,
     AsianHandicap = 7,
     HalfTimeFullTime = 8,
