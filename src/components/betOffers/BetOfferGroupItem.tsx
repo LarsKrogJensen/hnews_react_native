@@ -36,6 +36,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
     public render() {
         const {outcomes, type, eventId, event} = this.props
 
+        console.log("BetOfferGroup: rendering bo type: " + type.englishName)
         switch (type.id) {
             case BetOfferTypes.OverUnder:
             case BetOfferTypes.AsianOverUnder:
@@ -257,7 +258,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
                             betOfferId={outcome.betOfferId}/>
                     ))}
                 </View>
-                {draw.length && <View style={styles.columnLayout}>
+                {!!draw.length && <View style={styles.columnLayout}>
                     {draw.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}

@@ -222,9 +222,9 @@ class PrematchEventViewComponent extends React.Component<ComponentProps, Compone
                 <Text style={{fontSize: 18, marginVertical: 4}}>
                     {group.criterion.label}
                 </Text>
-                {/*<Text>*/}
-                    {/*(Criterion: {group.criterion.id}) Ty: {group.type.englishName} ({group.type.id})*/}
-                {/*</Text>*/}
+                <Text>
+                    (Criterion: {group.criterion.id}) Ty: {group.type.englishName} ({group.type.id})
+                </Text>
                 {this.renderBetOfferGroup(group)}
             </View>
         )
