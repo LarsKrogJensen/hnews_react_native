@@ -167,12 +167,26 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             .filter(section => section.betOfferGroups.length)
 
         if (!!instant.length) {
-            sections.unshift({
-                data: [],
-                betOfferGroups: [],
-                category: instant[0],
-                count: 0
-            })
+            let betOfferGroups = this.findAndBuildCustomSelections(betOffers, instant);
+            if (!!betOfferGroups.length) {
+                sections.unshift({
+                    data: [],
+                    betOfferGroups: betOfferGroups,
+                    category: {...instant[0], name: "Instant Betting"},
+                    count: betOfferGroups.length
+                })
+            }
+        }
+        if (!!selected.length) {
+            const betOfferGroups = this.findAndBuildCustomSelections(betOffers, selected);
+            if (!!betOfferGroups.length) {
+                sections.unshift({
+                    data: [],
+                    betOfferGroups: betOfferGroups,
+                    category: {...selected[0], name: "Selected Markets"},
+                    count: betOfferGroups.length
+                })
+            }
         }
 
         this.setState(prevState => ({
@@ -196,6 +210,33 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             }, [])
             .sort((bo1, bo2) => this.compareBetOffers(bo1, bo2, category))
 
+    }
+
+    private findAndBuildCustomSelections(betOffers: BetOfferEntity[], categories: BetOfferCategory[]): BetOfferGroup[] {
+        const betOfferGroups: BetOfferGroup[] = []
+
+        for (let category of categories.sort((c1, c2) => c1.sortOrder - c2.sortOrder)) {
+            let group = this.findBetOfferByCategory(category, betOffers);
+            if (group) {
+                betOfferGroups.push(group)
+            }
+        }
+
+        return betOfferGroups
+    }
+
+    private findBetOfferByCategory(category: BetOfferCategory, betOffers: BetOfferEntity[]): BetOfferGroup | undefined {
+        for (let betOffer of betOffers) {
+            if (category.mappings && category.mappings.find(mapping => mapping.criterionId === betOffer.criterion.id)) {
+                return {
+                    betoffers: [betOffer],
+                    criterion: betOffer.criterion,
+                    type: betOffer.betOfferType
+                }
+            }
+        }
+
+        return undefined
     }
 
     private compareBetOffers(bo1: BetOfferGroup, bo2: BetOfferGroup, category: BetOfferCategory): number {
@@ -229,13 +270,15 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
                 <Text style={{fontSize: 18, marginVertical: 4}}>
                     {group.criterion.label}
                 </Text>
-                <Text>
-                    (Criterion: {group.criterion.id}) Ty: {group.type.englishName} ({group.type.id})
-                </Text>
+
                 {this.renderBetOfferGroup(group)}
             </View>
         )
     }
+
+// <Text>
+//                    (Criterion: {group.criterion.id}) Ty: {group.type.englishName} ({group.type.id})
+//                </Text>
 
     private renderBetOfferGroup(group: BetOfferGroup): React.ReactNode {
 
@@ -262,7 +305,6 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             </View>
         ))
     }
-
 
     @autobind
     private renderSectionHeader(info: { section: BetOfferSection }) {
