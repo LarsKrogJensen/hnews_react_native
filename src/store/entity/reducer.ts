@@ -163,7 +163,7 @@ function flatMapOutcomes(betoffers: (BetOffer | undefined)[]): Outcome[] {
     return betoffers
         .map(bo => bo && bo.outcomes || [])
         .filter(outcomes => outcomes)
-        .reduce((prev, curr) => prev.concat(curr))
+        .reduce((prev, curr) => prev.concat(curr), [])
 }
 
 
