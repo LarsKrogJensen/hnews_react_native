@@ -66,6 +66,7 @@ interface BetOfferGroup {
     criterion: Criterion
     type: BetOfferType
     betoffers: BetOfferEntity[]
+    key: string
 }
 
 class EventViewComponent extends React.Component<ComponentProps, ComponentState> {
@@ -167,7 +168,7 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             .filter(section => section.betOfferGroups.length)
 
         if (!!instant.length) {
-            let betOfferGroups = this.findAndBuildCustomSelections(betOffers, instant);
+            let betOfferGroups = this.findAndBuildCustomSelections(betOffers, instant, false);
             if (!!betOfferGroups.length) {
                 sections.unshift({
                     data: [],
@@ -189,6 +190,7 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             }
         }
 
+
         this.setState(prevState => ({
             sections,
             expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? [sections[0].category.id] : []),
@@ -202,7 +204,12 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             .reduceRight<BetOfferGroup[]>((groups, betoffer) => {
                 let group = groups.find(g => g.criterion.id === betoffer.criterion.id) // || {betoffers: [], criterion: betoffer.criterion}
                 if (!group) {
-                    group = {betoffers: [], criterion: betoffer.criterion, type: betoffer.betOfferType}
+                    group = {
+                        betoffers: [],
+                        criterion: betoffer.criterion,
+                        type: betoffer.betOfferType,
+                        key: betoffer.criterion.id.toString()
+                    }
                     groups.push(group)
                 }
                 group.betoffers.push(betoffer)
@@ -212,32 +219,53 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
 
     }
 
-    private findAndBuildCustomSelections(betOffers: BetOfferEntity[], categories: BetOfferCategory[]): BetOfferGroup[] {
+    private findAndBuildCustomSelections(betOffers: BetOfferEntity[], categories: BetOfferCategory[], onlyOnePerCategory: boolean = true): BetOfferGroup[] {
         const betOfferGroups: BetOfferGroup[] = []
 
         for (let category of categories.sort((c1, c2) => c1.sortOrder - c2.sortOrder)) {
-            let group = this.findBetOfferByCategory(category, betOffers);
-            if (group) {
-                betOfferGroups.push(group)
-            }
-        }
-
-        return betOfferGroups
-    }
-
-    private findBetOfferByCategory(category: BetOfferCategory, betOffers: BetOfferEntity[]): BetOfferGroup | undefined {
-        for (let betOffer of betOffers) {
-            if (category.mappings && category.mappings.find(mapping => mapping.criterionId === betOffer.criterion.id)) {
-                return {
-                    betoffers: [betOffer],
-                    criterion: betOffer.criterion,
-                    type: betOffer.betOfferType
+            let groups = this.findBetOfferByCategory(category, betOffers);
+            if (groups.length > 0) {
+                if (onlyOnePerCategory) {
+                    if (groups.length > 1) {
+                        const minValue = (group: BetOfferGroup): number => group.betoffers.map(bo => bo.id).reduceRight((value, current) => Math.min(value, current), Number.MAX_VALUE)
+                        // remove suspended, then sort by betoffer id...?
+                        const filtered = groups
+                            .map(group => ({
+                                ...group,
+                                betoffers: group.betoffers.filter(bo => !bo.suspended)
+                            }))
+                            .filter(group => !!group.betoffers.length)
+                            .sort((g1, g2) => minValue(g1) - minValue(g2))
+                        betOfferGroups.push(filtered.length > 0 ? filtered[0] : groups[0])
+                    } else {
+                        betOfferGroups.push(groups[0])
+                    }
+                } else {
+                    betOfferGroups.push(...groups)
                 }
             }
         }
 
-        return undefined
+
+        return betOfferGroups
     }
+
+    private findBetOfferByCategory(category: BetOfferCategory, betOffers: BetOfferEntity[]): BetOfferGroup[] {
+        const groups: BetOfferGroup[] = []
+        for (let betOffer of betOffers) {
+            if (category.mappings && category.mappings.find(mapping => mapping.criterionId === betOffer.criterion.id)) {
+                groups.push({
+                    betoffers: [betOffer],
+                    criterion: betOffer.criterion,
+                    type: betOffer.betOfferType,
+                    key: category.id.toString() + "-" + betOffer.id
+                })
+            }
+        }
+
+        return groups
+    }
+
 
     private compareBetOffers(bo1: BetOfferGroup, bo2: BetOfferGroup, category: BetOfferCategory): number {
         const mappingBo1 = category.mappings.find(mapping => mapping.criterionId === bo1.criterion.id)
@@ -275,10 +303,10 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             </View>
         )
     }
-
 // <Text>
-//                    (Criterion: {group.criterion.id}) Ty: {group.type.englishName} ({group.type.id})
+//                    (Criterion: {group.criterion.id}) Ty: {group.key} ({group.type.id})
 //                </Text>
+//
 
     private renderBetOfferGroup(group: BetOfferGroup): React.ReactNode {
 
@@ -333,7 +361,7 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
     }
 
     private keyExtractor(betOfferGroup: BetOfferGroup): string {
-        return betOfferGroup.criterion.id.toString()
+        return betOfferGroup.key
     }
 }
 
