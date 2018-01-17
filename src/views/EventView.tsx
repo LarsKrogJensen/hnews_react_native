@@ -406,19 +406,21 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     let instantCategories: BetOfferCategory[] = []
     let loadingCategories = false
 
-    let groupStore = state.groupStore;
-    if (inputProps.live) {
-        const key1 = `live_event-${event.groupId}`
-        const key2 = `selected-live-${event.groupId}`
-        const key3 = `instant-betting-${event.groupId}`
-        loadingCategories = groupStore.loadingBetOfferCategories.has(key1) || groupStore.loadingBetOfferCategories.has(key2) || groupStore.loadingBetOfferCategories.has(key3)
-        categories = groupStore.betOfferCategories.get(key1) || []
-        selectedCategories = groupStore.betOfferCategories.get(key2) || []
-        instantCategories = groupStore.betOfferCategories.get(key3) || []
-    } else {
-        const key = `pre_match_event-${event.groupId}`
-        loadingCategories = groupStore.loadingBetOfferCategories.has(key)
-        categories = groupStore.betOfferCategories.get(key) || []
+    if (event) {
+        let groupStore = state.groupStore;
+        if (inputProps.live) {
+            const key1 = `live_event-${event.groupId}`
+            const key2 = `selected-live-${event.groupId}`
+            const key3 = `instant-betting-${event.groupId}`
+            loadingCategories = groupStore.loadingBetOfferCategories.has(key1) || groupStore.loadingBetOfferCategories.has(key2) || groupStore.loadingBetOfferCategories.has(key3)
+            categories = groupStore.betOfferCategories.get(key1) || []
+            selectedCategories = groupStore.betOfferCategories.get(key2) || []
+            instantCategories = groupStore.betOfferCategories.get(key3) || []
+        } else {
+            const key = `pre_match_event-${event.groupId}`
+            loadingCategories = groupStore.loadingBetOfferCategories.has(key)
+            categories = groupStore.betOfferCategories.get(key) || []
+        }
     }
 
     const betOffers = event && event.betOffers.map(betOfferId => state.entityStore.betoffers.get(betOfferId)).filter(id => id) || []
@@ -446,9 +448,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     },
 })
 
-const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(EventViewComponent))
+// const WithAppStateRefresh: ComponentClass<ComponentProps> =
+//     connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(EventViewComponent))
 
 export const EventView: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(withOrientationChange(EventViewComponent))
 

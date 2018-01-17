@@ -2,7 +2,7 @@ import React from "react"
 import {Provider} from "react-redux"
 import store from "store/store";
 import NavApp from "app/NavApp";
-import {COLOR, ThemeProvider} from 'react-native-material-ui';
+import {ThemeProvider} from 'react-native-material-ui';
 
 import "lib/console-time-polyfill"
 
@@ -20,7 +20,11 @@ const uiTheme = {
     }
 };
 
+console.ignoredYellowBox = [
+    'Setting a timer'
+];
 // __DEV__ = false
+
 
 export default function AppContainer() {
     return (

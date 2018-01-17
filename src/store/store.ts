@@ -1,4 +1,4 @@
-import {applyMiddleware, combineReducers, createStore, Reducer} from "redux"
+import {applyMiddleware, combineReducers, createStore, Reducer, Store} from "redux"
 import favoriteReducer, {FavoriteStore} from "./favorite/reducer"
 import liveReducer, {LiveEventsStore} from "./live/reducer"
 import entityReducer, {EntityStore} from "./entity/reducer";
@@ -9,6 +9,8 @@ import {default as landingReducer, LandingStore} from "store/landing/reducer";
 import {default as groupsReducer, GroupStore} from "store/groups/reducer";
 import {SoonEventsStore, default as soonReducer} from "store/soon/reducer";
 import {SportEventsStore, default as sportReducer} from "store/sport/reducer";
+import {AppState} from "react-native";
+import {pushInitialize} from "store/push/push-hub";
 
 export interface AppStore {
     favoriteStore: FavoriteStore,
@@ -33,10 +35,12 @@ const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
 })
 
 // const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-const store = createStore(
+const store: Store<AppStore> = createStore(
     rootReducer,
     // applyMiddleware(thunk) // , reduxDevTools)
     composeWithDevTools(applyMiddleware(thunk))
 )
+
+pushInitialize(store)
 
 export default store
