@@ -253,10 +253,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     }
 )
 
-const WithAppStateRefresh: ComponentClass<Props> =
-    connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
+// const WithAppStateRefresh: ComponentClass<Props> =
+//     connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
 
 const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(Drawer)
 
 export default WithData

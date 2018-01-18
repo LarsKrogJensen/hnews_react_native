@@ -296,6 +296,7 @@ export interface PushMessage {
     boou?: OddsUpdated
     bor?: BetOfferRemoved
     boa?: BetOfferAdded
+    bosu?: BetOfferStatusUpdate
 }
 
 export interface OutcomeUpdate {
@@ -314,6 +315,14 @@ export interface OddsUpdated {
 export interface BetOfferRemoved {
     betOfferId: number
 }
+
 export interface BetOfferAdded {
     betOffer: BetOffer
+}
+
+export interface BetOfferStatusUpdate {
+    betOfferId: number
+    eventId: number
+    suspended: boolean
+    visible: boolean
 }

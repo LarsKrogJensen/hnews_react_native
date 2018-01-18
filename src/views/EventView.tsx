@@ -24,6 +24,7 @@ import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {BetOfferGroupItem} from "components/betOffers/BetOfferGroupItem";
 import * as _ from "lodash"
 import {withPush} from "components/withPush";
+import {API} from "store/API";
 
 
 interface ExternalProps {
@@ -449,7 +450,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     },
 })
 
-const PushWrapper = withPush(EventViewComponent, (props) => [`ev.${props.eventId}`, `sv.ev.${props.eventId}`])
+const PushWrapper = withPush(EventViewComponent, (props) => [`ev.${props.eventId}`, `${API.lang}.ev.${props.eventId}`])
 
 export const EventView: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(withOrientationChange(PushWrapper))

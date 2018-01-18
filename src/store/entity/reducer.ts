@@ -6,6 +6,7 @@ import {
     BetOffer,
     BetOfferAdded,
     BetOfferRemoved,
+    BetOfferStatusUpdate,
     EventView,
     EventWithBetOffers,
     LiveEvent,
@@ -99,6 +100,11 @@ export default function entityReducer(state: EntityStore = initialState, action:
             return {
                 ...state,
                 ...mergeBetOfferAdded(state, action.data)
+            }
+        case PushActions.BETOFFER_STATUS_UPDATE:
+            return {
+                ...state,
+                betoffers: mergeBetOfferStatusUpdate(state, action.data)
             }
         default:
             return state
@@ -233,7 +239,7 @@ function mergeBetOfferRemoved(state: EntityStore, update: BetOfferRemoved): { be
     }
 }
 
-function mergeBetOfferAdded(state: EntityStore, update: BetOfferAdded): { betoffers: Map<number, BetOfferEntity>, events: Map<number, EventEntity>, outcomes: Map<number, OutcomeEntity>} {
+function mergeBetOfferAdded(state: EntityStore, update: BetOfferAdded): { betoffers: Map<number, BetOfferEntity>, events: Map<number, EventEntity>, outcomes: Map<number, OutcomeEntity> } {
     const betOfferEntity = createBetOfferEntity(update.betOffer)
     let betoffers = state.betoffers.set(betOfferEntity.id, betOfferEntity)
     let events = state.events
@@ -255,6 +261,17 @@ function mergeBetOfferAdded(state: EntityStore, update: BetOfferAdded): { betoff
     }
 }
 
+function mergeBetOfferStatusUpdate(state: EntityStore, update: BetOfferStatusUpdate): Map<number, BetOfferEntity> {
+    let betoffers = state.betoffers
+
+    const betOfferEntity = betoffers.get(update.betOfferId)
+
+    if (betOfferEntity) {
+        betoffers = betoffers.set(update.betOfferId, {...betOfferEntity, suspended: update.suspended})
+    }
+
+    return betoffers
+}
 
 
 
