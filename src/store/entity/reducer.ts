@@ -2,7 +2,16 @@ import {LiveAction, LiveActions} from "store/live/actions"
 import {SportAction, SportActions} from "store/sport/actions";
 import {SoonAction, SoonActions} from "store/soon/actions";
 import {LandingAction, LandingActions} from "store/landing/actions";
-import {BetOffer, EventView, EventWithBetOffers, LiveEvent, OddsUpdated, Outcome} from "api/typings";
+import {
+    BetOffer,
+    BetOfferAdded,
+    BetOfferRemoved,
+    EventView,
+    EventWithBetOffers,
+    LiveEvent,
+    OddsUpdated,
+    Outcome
+} from "api/typings";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {BetOfferEntity} from "model/BetOfferEntity";
@@ -81,11 +90,20 @@ export default function entityReducer(state: EntityStore = initialState, action:
                 ...state,
                 outcomes: mergeOddsUpdate(state.outcomes, action.data)
             }
+        case PushActions.BETOFFER_REMOVED:
+            return {
+                ...state,
+                ...mergeBetOfferRemoved(state, action.data)
+            }
+        case PushActions.BETOFFER_ADDED:
+            return {
+                ...state,
+                ...mergeBetOfferAdded(state, action.data)
+            }
         default:
             return state
     }
 }
-
 
 function mergeEventView(state: Map<number, EventEntity>, eventView: EventView): Map<number, EventEntity> {
     for (let event of eventView.events) {
@@ -145,14 +163,17 @@ function mergeBetOffers(state: Map<number, BetOfferEntity>, betoffers: (BetOffer
             continue
         }
 
-        // noinspection JSUnusedLocalSymbols
-        const {outcomes, oddsStats, pba, ...rest} = bo
-        let outcomesIds = outcomes && outcomes.map(oc => oc.id) || [];
-
-        // TODO: should merge in changes
-        state = state.set(bo.id, {...rest, outcomes: outcomesIds})
+        state = state.set(bo.id, createBetOfferEntity(bo))
     }
     return state
+}
+
+function createBetOfferEntity(betOffer: BetOffer): BetOfferEntity {
+    // noinspection JSUnusedLocalSymbols
+    const {outcomes, oddsStats, pba, ...rest} = betOffer
+    let outcomesIds = outcomes && outcomes.map(oc => oc.id) || [];
+
+    return {...rest, outcomes: outcomesIds}
 }
 
 function mergeOutcomes(state: Map<number, OutcomeEntity>, outcomes: Outcome[]): Map<number, OutcomeEntity> {
@@ -186,5 +207,54 @@ function mergeOddsUpdate(state: Map<number, OutcomeEntity>, update: OddsUpdated)
 
     return state
 }
+
+function mergeBetOfferRemoved(state: EntityStore, update: BetOfferRemoved): { betoffers: Map<number, BetOfferEntity>, events: Map<number, EventEntity> } {
+    const betOfferEntity = state.betoffers.get(update.betOfferId)
+    let betoffers = state.betoffers
+    let events = state.events
+
+    if (betOfferEntity) {
+        betoffers = betoffers.remove(update.betOfferId)
+
+        // remove betoffer from event as-well, ignore main for now...
+        let event = events.get(betOfferEntity.eventId)
+        if (event) {
+            event = {
+                ...event,
+                betOffers: event.betOffers.filter(id => id !== update.betOfferId)
+            }
+            events = events.set(betOfferEntity.eventId, event)
+        }
+    }
+
+    return {
+        betoffers,
+        events
+    }
+}
+
+function mergeBetOfferAdded(state: EntityStore, update: BetOfferAdded): { betoffers: Map<number, BetOfferEntity>, events: Map<number, EventEntity>, outcomes: Map<number, OutcomeEntity>} {
+    const betOfferEntity = createBetOfferEntity(update.betOffer)
+    let betoffers = state.betoffers.set(betOfferEntity.id, betOfferEntity)
+    let events = state.events
+    let outcomes = mergeOutcomes(state.outcomes, update.betOffer.outcomes)
+
+    let event = state.events.get(betOfferEntity.eventId)
+    if (event) {
+        event = {
+            ...event,
+            betOffers: [...event.betOffers, betOfferEntity.id]
+        }
+        events = events.set(event.id, event)
+    }
+
+    return {
+        betoffers,
+        events,
+        outcomes
+    }
+}
+
+
 
 

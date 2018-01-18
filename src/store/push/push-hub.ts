@@ -4,7 +4,7 @@ import io from "socket.io-client"
 import {AppState, AppStateStatus} from "react-native";
 import {API} from "store/API";
 import {PushMessage} from "api/typings";
-import {OddsUpdateAction, PushActions} from "store/push/actions";
+import {BetOfferRemovedAction, OddsUpdateAction, PushActions} from "store/push/actions";
 
 const socket: SocketIOClient.Socket = io(`wss://e1-push.aws.kambicdn.com`, {
     transports: ['websocket'],
@@ -109,12 +109,21 @@ function handleData(data: string, store: Store<AppStore>) {
 
     for (let msg of msgs) {
         switch (msg.mt) {
-            case 11: // Odds update
+            case 11:
                 console.log("Odds update: " + msg.boou)
                 store.dispatch({type: PushActions.ODDS_UPDATE, data: msg.boou} as OddsUpdateAction)
-                break;
+                break
+            case 6:
+                console.log("BO added: " + msg.boa)
+                store.dispatch({type: PushActions.BETOFFER_REMOVED, data: msg.bor} as BetOfferRemovedAction)
+                break
+            case 7:
+                console.log("BO removed: " + msg.bor)
+                store.dispatch({type: PushActions.BETOFFER_REMOVED, data: msg.bor} as BetOfferRemovedAction)
+                break
             default:
-                console.log("Message: " + msg && msg.mt)
+                // console.log("Message: " + msg && msg.mt)
+                break
         }
     }
 }
