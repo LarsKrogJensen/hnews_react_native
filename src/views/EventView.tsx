@@ -450,7 +450,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     },
 })
 
-const PushWrapper = withPush(EventViewComponent, (props) => [`ev.${props.eventId}`, `${API.lang}.ev.${props.eventId}`])
+const PushWrapper = withPush(EventViewComponent, (props) => [`ev.${props.eventId}`, `${API.pushLang}.ev.${props.eventId}`])
 
 export const EventView: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(withOrientationChange(PushWrapper))
