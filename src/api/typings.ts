@@ -289,3 +289,22 @@ export interface EventView {
     betoffers: BetOffer[]
     events: Event[]
 }
+
+export interface PushMessage {
+    t: string,
+    mt: number,
+    boou?: OddsUpdated
+}
+
+export interface OutcomeUpdate {
+    id: number
+    odds: number
+    betOfferId: number
+    oddsFractional: string
+    oddsAmerican: string
+}
+
+export interface OddsUpdated {
+    eventId: number
+    outcomes: OutcomeUpdate[]
+}

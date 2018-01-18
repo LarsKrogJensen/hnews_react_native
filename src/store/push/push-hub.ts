@@ -3,6 +3,8 @@ import {AppStore} from "store/store";
 import io from "socket.io-client"
 import {AppState, AppStateStatus} from "react-native";
 import {API} from "store/API";
+import {PushMessage} from "api/typings";
+import {OddsUpdateAction, PushActions} from "store/push/actions";
 
 const socket: SocketIOClient.Socket = io(`wss://e1-push.aws.kambicdn.com`, {
     transports: ['websocket'],
@@ -42,7 +44,7 @@ export function pushInitialize(store: Store<AppStore>) {
         console.log("Socket reconnect attempt " + attemptNumber);
     });
 
-    socket.on("message", handleData)
+    socket.on("message", (data: string) => handleData(data, store))
 
     socket.connect()
 
@@ -102,10 +104,17 @@ function handleAppStateChange(nextAppState: AppStateStatus) {
     }
 }
 
-function handleData(data: string) {
-    const msgs: any[] = JSON.parse(data)
+function handleData(data: string, store: Store<AppStore>) {
+    const msgs: PushMessage[] = JSON.parse(data)
 
     for (let msg of msgs) {
-        console.log("Message: " + msg && msg.mt)
+        switch (msg.mt) {
+            case 11: // Odds update
+                console.log("Odds update: " + msg.boou)
+                store.dispatch({type: PushActions.ODDS_UPDATE, data: msg.boou} as OddsUpdateAction)
+                break;
+            default:
+                console.log("Message: " + msg && msg.mt)
+        }
     }
 }

@@ -1,8 +1,8 @@
-import {LiveActions, LiveAction} from "store/live/actions"
-import {SportActions, SportAction} from "store/sport/actions";
-import {SoonActions, SoonAction} from "store/soon/actions";
-import {LandingActions, LandingAction} from "store/landing/actions";
-import {BetOffer, EventView, EventWithBetOffers, LiveEvent, Outcome} from "api/typings";
+import {LiveAction, LiveActions} from "store/live/actions"
+import {SportAction, SportActions} from "store/sport/actions";
+import {SoonAction, SoonActions} from "store/soon/actions";
+import {LandingAction, LandingActions} from "store/landing/actions";
+import {BetOffer, EventView, EventWithBetOffers, LiveEvent, OddsUpdated, Outcome} from "api/typings";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {BetOfferEntity} from "model/BetOfferEntity";
@@ -11,6 +11,7 @@ import {BetOfferEntity} from "model/BetOfferEntity";
 import {Map, Set} from "immutable"
 import * as _ from "lodash"
 import {BetOfferActions, BetOffersAction} from "store/entity/actions";
+import {PushAction, PushActions} from "store/push/actions";
 
 export interface EntityStore {
     events: Map<number, EventEntity>
@@ -26,7 +27,7 @@ const initialState: EntityStore = {
     betOffersLoading: Set()
 }
 
-type Actions = LiveAction | LandingAction | SoonAction | SportAction | BetOffersAction
+type Actions = LiveAction | LandingAction | SoonAction | SportAction | BetOffersAction | PushAction
 export default function entityReducer(state: EntityStore = initialState, action: Actions): EntityStore {
     switch (action.type) {
         case LiveActions.LOAD_SUCCESS:
@@ -74,6 +75,11 @@ export default function entityReducer(state: EntityStore = initialState, action:
             return {
                 ...state,
                 betOffersLoading: state.betOffersLoading.remove(action.eventId)
+            }
+        case PushActions.ODDS_UPDATE:
+            return {
+                ...state,
+                outcomes: mergeOddsUpdate(state.outcomes, action.data)
             }
         default:
             return state
@@ -164,6 +170,21 @@ function flatMapOutcomes(betoffers: (BetOffer | undefined)[]): Outcome[] {
         .map(bo => bo && bo.outcomes || [])
         .filter(outcomes => outcomes)
         .reduce((prev, curr) => prev.concat(curr), [])
+}
+
+function mergeOddsUpdate(state: Map<number, OutcomeEntity>, update: OddsUpdated): Map<number, OutcomeEntity> {
+
+    for (let outcome of update.outcomes) {
+        const entity = state.get(outcome.id)
+        if (entity) {
+            state = state.set(outcome.id, {
+                ...entity,
+                ...outcome
+            })
+        }
+    }
+
+    return state
 }
 
 
