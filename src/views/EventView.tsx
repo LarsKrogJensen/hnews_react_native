@@ -1,5 +1,5 @@
 import * as React from "react"
-import {ComponentClass} from "react"
+import {ComponentClass, StatelessComponent} from "react"
 import {
     ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, StyleSheet, Text,
     TextStyle, View, ViewStyle
@@ -23,6 +23,7 @@ import {loadBetOfferCategories} from "store/groups/actions";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {BetOfferGroupItem} from "components/betOffers/BetOfferGroupItem";
 import * as _ from "lodash"
+import {withPush} from "components/withPush";
 
 
 interface ExternalProps {
@@ -448,9 +449,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     },
 })
 
-// const WithAppStateRefresh: ComponentClass<ComponentProps> =
-//     connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(EventViewComponent))
+const PushWrapper = withPush(EventViewComponent, (props) => [`ev.${props.eventId}`, `sv.ev.${props.eventId}`])
 
 export const EventView: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(withOrientationChange(EventViewComponent))
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(withOrientationChange(PushWrapper))
 

@@ -13,13 +13,8 @@ interface State {
 export const withOrientationChange =
     <TOriginalProps extends {}>(Component: (React.ComponentClass<TOriginalProps> | React.StatelessComponent<TOriginalProps>)) => {
         return class extends React.Component<TOriginalProps, State> {
-            private timer: number
-
-            constructor(props: TOriginalProps, context: any) {
-                super(props, context);
-                this.state = {
-                    orientation: orientation()
-                }
+            state = {
+                orientation: orientation()
             }
 
             componentDidMount() {
@@ -40,7 +35,6 @@ export const withOrientationChange =
             }
 
             render(): JSX.Element {
-
                 return <Component {...this.props} {...this.state}/>
             }
         };

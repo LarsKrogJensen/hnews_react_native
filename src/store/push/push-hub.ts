@@ -2,6 +2,7 @@ import {Store} from "redux";
 import {AppStore} from "store/store";
 import io from "socket.io-client"
 import {AppState, AppStateStatus} from "react-native";
+import {API} from "store/API";
 
 const socket: SocketIOClient.Socket = io(`wss://e1-push.aws.kambicdn.com`, {
     transports: ['websocket'],
@@ -11,19 +12,26 @@ const socket: SocketIOClient.Socket = io(`wss://e1-push.aws.kambicdn.com`, {
 })
 
 let appState = AppState.currentState
+let connected = false
+const subscribed: Set<string> = new Set<string>()
+const pendingSubscribes: Set<string> = new Set<string>()
+const pendingUnsubscribes: Set<string> = new Set<string>()
 
 export function pushInitialize(store: Store<AppStore>) {
     socket.on("connect", (s) => {
         console.log("Socket connected");
-        socket.emit("subscribe", {topic: "kambiplay.ev.json"})
+        connected = true
+        dispatchPending()
     })
 
     socket.on("disconnect", (reason) => {
         console.log("Socket disconnected: " + reason);
+        connected = false
     })
 
     socket.on('reconnect', (attemptNumber) => {
         console.log("Socket reconnected");
+        connected = false
     });
 
     socket.on('error', (error) => {
@@ -41,14 +49,56 @@ export function pushInitialize(store: Store<AppStore>) {
     AppState.addEventListener('change', handleAppStateChange);
 }
 
+export function pushSubscribe(topic: string) {
+    if (subscribed.has(topic)) {
+        return
+    }
+
+    if (connected) {
+        console.log("Subscribe on topic: " + topic)
+        socket.emit("subscribe", {topic: `${API.offering}.${topic}.json`})
+        subscribed.add(topic)
+    } else {
+        pendingSubscribes.add(topic)
+        pendingUnsubscribes.delete(topic)
+    }
+}
+
+export function pushUnsubscribe(topic: string) {
+    if (!subscribed.has(topic)) {
+        return
+    }
+
+    if (connected) {
+        console.log("Unsubscribe on topic: " + topic)
+        socket.emit("unsubscribe", {topic: `${API.offering}.${topic}.json`})
+        subscribed.delete(topic)
+    } else {
+        pendingUnsubscribes.add(topic)
+        pendingSubscribes.delete(topic)
+    }
+}
+
+function dispatchPending() {
+    subscribed.forEach(pushSubscribe)
+
+    pendingSubscribes.forEach(pushSubscribe)
+    pendingUnsubscribes.forEach(pushUnsubscribe)
+    pendingSubscribes.clear()
+    pendingUnsubscribes.clear()
+}
+
 function handleAppStateChange(nextAppState: AppStateStatus) {
     console.log("Push next AppState: " + nextAppState + " current state: " + appState)
-    if (appState.match(/inactive|background/) && nextAppState === 'active') {
-        console.log('App has come to the foreground!')
-        socket.connect()
-    } else if (appState === 'active' && nextAppState !== 'active') {
-        console.log('App has come to the background!')
-        socket.disconnect()
+    if (nextAppState !== appState) {
+        if (nextAppState === 'active') {
+            console.log('Connecting to push..')
+            socket.connect()
+        } else {
+            console.log('Disconnecting to push..')
+            socket.disconnect()
+        }
+        appState = nextAppState
     }
 }
 
