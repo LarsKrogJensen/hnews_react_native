@@ -1,12 +1,13 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Text, ViewStyle} from "react-native"
-import Screen from "screens/Screen";
+import {View, ViewStyle} from "react-native"
 import {NavigationParams, NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
 import {EventView} from "views/EventView";
+import {EventInfoItem} from "components/EventInfoItem";
+import {Theme} from "lib/device";
 
 
 interface ExternalProps {
@@ -32,10 +33,17 @@ class EventScreenComponent extends React.Component<Props> {
     }
 
     public render() {
+        const {event} = this.props
+
         return (
-            <Screen title={this.props.event.name} {...this.props}>
-                {this.renderBody()}
-            </Screen>
+            <View style={{flexDirection: "column", flex: 1, alignItems: "stretch"}}>
+                <View style={{height: 92, backgroundColor: "#333333"}}>
+                    <EventInfoItem eventId={event.id} theme={Theme.Dark} viewStyle={{paddingTop: 24, flex: 1}}/>
+                </View>
+                <View style={{flex: 1}}>
+                    {this.renderBody()}
+                </View>
+            </View>
         )
     }
 

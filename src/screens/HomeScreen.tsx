@@ -91,6 +91,7 @@ class HomeScreen extends React.Component<ComponentProps> {
         return (
             <AnimatedScrollView
                 {...scrollHooks}
+                style={{paddingBottom: 50}}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
 
                     {this.props.orientation === Orientation.Portrait

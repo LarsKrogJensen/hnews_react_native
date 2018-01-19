@@ -1,8 +1,8 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import LiveEventInfoItem from "components/EventInfoItem";
+import {EventInfoItem} from "components/EventInfoItem";
 import Touchable from "components/Touchable";
-import {Orientation} from "lib/device";
+import {Orientation, Theme} from "lib/device";
 import {NavigationScreenProp} from "react-navigation";
 import {View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
@@ -16,6 +16,7 @@ interface ExternalProps {
     eventId: number
     orientation: Orientation
     navigation: NavigationScreenProp<{}, {}>,
+    showFavorites?: boolean
 }
 
 interface StateProps {
@@ -24,7 +25,7 @@ interface StateProps {
 
 type Props = StateProps & ExternalProps
 
-class ListEventListItem extends React.Component<Props> {
+class EventListItem extends React.Component<Props> {
 
     public shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (nextProps.eventId !== this.props.eventId) return true
@@ -43,9 +44,9 @@ class ListEventListItem extends React.Component<Props> {
         return (
             <Touchable onPress={this.handleItemClick}>
                 <View style={viewStyle}>
-                    <LiveEventInfoItem eventId={event.id}
-                                       viewStyle={{flex: 1, height: 68}}/>
-                    {event.mainBetOfferId && <DefaultBetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>}
+                    <EventInfoItem eventId={event.id} viewStyle={{flex: 1, height: 68}} theme={Theme.Light} showFavorites/>
+                    {event.mainBetOfferId &&
+                    <DefaultBetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>}
                 </View>
             </Touchable>
         );
@@ -78,6 +79,6 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 })
 
 const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, {}, ExternalProps>(mapStateToProps)(ListEventListItem)
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(EventListItem)
 
 export default WithData

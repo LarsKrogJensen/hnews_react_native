@@ -8,11 +8,14 @@ import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {LiveData} from "api/typings";
 import EventTimeItem from "components/EventTimeItem";
+import {Theme} from "lib/device";
 
 
 interface ExternalProps {
     eventId: number,
-    viewStyle: ViewStyle
+    viewStyle: ViewStyle,
+    theme: Theme
+    showFavorites?: boolean
 }
 
 interface StateProps {
@@ -22,14 +25,22 @@ interface StateProps {
 
 type Props = StateProps & ExternalProps
 
-class EventInfoItem extends React.PureComponent<Props> {
+class EventInfoItemComponent extends React.PureComponent<Props> {
     public render() {
-        const {event, liveData, viewStyle} = this.props;
+        const {event, liveData, viewStyle, theme, showFavorites} = this.props;
+
+        if (!event) {
+            return <View style={[{flexDirection: "row"}, viewStyle]}/>
+        }
 
         return (
-            <View style={{...viewStyle, flexDirection: "row", flex: 1, height: 68}}>
+            <View style={[{flexDirection: "row"}, viewStyle]}>
                 {this.renderScoreOrTime(event, liveData)}
-                <EventDetailsItem style={{flex: 1}} event={event} liveData={liveData}/>
+                <EventDetailsItem style={{flex: 1}}
+                                  event={event}
+                                  liveData={liveData}
+                                  theme={theme}
+                                  showFavorites={showFavorites}/>
             </View>
         )
     }
@@ -43,6 +54,7 @@ class EventInfoItem extends React.PureComponent<Props> {
             return (
                 <EventScoreItem style={style}
                                 sport={event.sport}
+                                theme={this.props.theme}
                                 liveData={liveData}/>
             )
         }
@@ -57,6 +69,4 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 })
 
 
-const WithData: ComponentClass<ExternalProps> = connect<StateProps, {}, ExternalProps>(mapStateToProps)(EventInfoItem)
-
-export default WithData
+export const EventInfoItem: ComponentClass<ExternalProps> = connect<StateProps, {}, ExternalProps>(mapStateToProps)(EventInfoItemComponent)

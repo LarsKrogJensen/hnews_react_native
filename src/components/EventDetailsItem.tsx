@@ -5,23 +5,27 @@ import {EventEntity} from "model/EventEntity";
 import EventPathItem from "components/EventPathItem";
 import {LiveData} from "api/typings";
 import {renderServe} from "components/RenderUtils";
+import {Theme} from "lib/device";
 
 interface Props {
     style: ViewStyle
     event: EventEntity
     liveData: LiveData
+    theme: Theme
+    showFavorites?: boolean
 }
 
 export default class EventDetailsItem extends React.Component<Props> {
 
     public render() {
-        const {event, style, liveData} = this.props;
+        const {event, style, liveData, theme} = this.props;
         const viewStyle: ViewStyle = {
             ...style,
             flexDirection: "column"
         }
         const homeServe = renderServe(liveData, true);
         let awayServe = renderServe(liveData, false);
+         
         return (
             <View style={viewStyle}>
                 <View style={{flexDirection: "row"}}>
@@ -40,13 +44,13 @@ export default class EventDetailsItem extends React.Component<Props> {
                         </View>
                         <View style={{flexDirection: "row", paddingLeft: 16, marginTop: 2}}>
                             {this.renderLiveText(event)}
-                            <EventPathItem path={event.path}/>
+                            <EventPathItem path={event.path} theme={theme}/>
                         </View>
                     </View>
-                    <View style={{justifyContent: "center", flexDirection: "row", alignItems: "center"}}>
+                    {this.props.showFavorites && <View style={{justifyContent: "center", flexDirection: "row", alignItems: "center"}}>
                         <FavoriteItem eventId={event.id} style={{justifyContent: "center"}}/>
                         {/*<Text style={styles.betOfferCount}>+{event.liveBoCount || event.nonLiveBoCount}</Text>*/}
-                    </View>
+                    </View>}
                 </View>
             </View>
         )

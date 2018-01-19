@@ -5,10 +5,12 @@ import * as moment from "moment";
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import autobind from "autobind-decorator";
 import CountDown from "components/CountDown";
+import {Theme} from "lib/device";
 
 interface Props {
     style: ViewStyle,
     event: EventEntity,
+    theme?: Theme
 }
 
 export default class EventTimeItem extends React.PureComponent<Props> {

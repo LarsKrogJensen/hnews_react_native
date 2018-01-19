@@ -10,8 +10,8 @@ import {
     EventView,
     EventWithBetOffers,
     LiveEvent,
-    OddsUpdated,
-    Outcome
+    Outcome,
+    OutcomeUpdate
 } from "api/typings";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
@@ -89,7 +89,7 @@ export default function entityReducer(state: EntityStore = initialState, action:
         case PushActions.ODDS_UPDATE:
             return {
                 ...state,
-                outcomes: mergeOddsUpdate(state.outcomes, action.data)
+                outcomes: mergeOutcomeUpadates(state.outcomes, action.data.outcomes)
             }
         case PushActions.BETOFFER_REMOVED:
             return {
@@ -182,16 +182,6 @@ function createBetOfferEntity(betOffer: BetOffer): BetOfferEntity {
     return {...rest, outcomes: outcomesIds}
 }
 
-function mergeOutcomes(state: Map<number, OutcomeEntity>, outcomes: Outcome[]): Map<number, OutcomeEntity> {
-    for (let outcome of outcomes) {
-        if (outcome) {
-            state = state.set(outcome.id, outcome) // for now Outcome is structural equal to OutcomeEntity
-        }
-    }
-
-    return state;
-}
-
 function flatMapOutcomes(betoffers: (BetOffer | undefined)[]): Outcome[] {
     return betoffers
         .map(bo => bo && bo.outcomes || [])
@@ -199,9 +189,26 @@ function flatMapOutcomes(betoffers: (BetOffer | undefined)[]): Outcome[] {
         .reduce((prev, curr) => prev.concat(curr), [])
 }
 
-function mergeOddsUpdate(state: Map<number, OutcomeEntity>, update: OddsUpdated): Map<number, OutcomeEntity> {
+function mergeOutcomes(state: Map<number, OutcomeEntity>, outcomes: Outcome[]): Map<number, OutcomeEntity> {
 
-    for (let outcome of update.outcomes) {
+    for (let outcome of outcomes) {
+        const entity = state.get(outcome.id)
+        if (entity) {
+            state = state.set(outcome.id, {
+                ...entity,
+                ...outcome
+            })
+        } else {
+            state = state.set(outcome.id, outcome) // for now Outcome is structural equal to OutcomeEntity
+        }
+    }
+
+    return state
+}
+
+function mergeOutcomeUpadates(state: Map<number, OutcomeEntity>, outcomes: OutcomeUpdate[]): Map<number, OutcomeEntity> {
+
+    for (let outcome of outcomes) {
         const entity = state.get(outcome.id)
         if (entity) {
             state = state.set(outcome.id, {

@@ -2,11 +2,13 @@ import * as React from "react"
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
 import {Path} from "api/typings";
+import {Theme} from "lib/device";
 
 interface Props {
     path: ReadonlyArray<Path>
     style?: ViewStyle
     textStyle?: TextStyle
+    theme?: Theme
 }
 
 export default class EventPathItem extends React.Component<Props> {

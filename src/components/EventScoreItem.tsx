@@ -3,11 +3,13 @@ import {LiveData, MatchClock, Score, SetStats, Statistics} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
 import MatchClockItem from "components/MatchClockItem";
+import {Theme} from "lib/device";
 
 interface Props {
     style: ViewStyle,
     liveData?: LiveData,
     sport: string
+    theme?: Theme
 }
 
 interface GameSummary {

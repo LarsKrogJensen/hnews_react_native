@@ -9,7 +9,7 @@ import {
     PushActions
 } from "store/push/actions";
 
-const socket: SocketIOClient.Socket = io(`wss://e1-push.aws.kambicdn.com`, {
+const socket: SocketIOClient.Socket = io(API.push, {
     transports: ['websocket'],
     upgrade: false,
     autoConnect: false,
@@ -85,7 +85,9 @@ export function pushUnsubscribe(topic: string) {
 }
 
 function dispatchPending() {
-    subscribed.forEach(pushSubscribe)
+    const current = [...subscribed]
+    subscribed.clear()
+    current.forEach(pushSubscribe)
 
     pendingSubscribes.forEach(pushSubscribe)
     pendingUnsubscribes.forEach(pushUnsubscribe)
@@ -113,20 +115,28 @@ function handleData(data: string, store: Store<AppStore>) {
     for (let msg of msgs) {
         switch (msg.mt) {
             case 11:
-                console.log("Odds update: " + msg.boou)
-                store.dispatch({type: PushActions.ODDS_UPDATE, data: msg.boou} as OddsUpdateAction)
+                if (msg.boou) {
+                    console.log("Odds update: " + msg.boou.eventId)
+                    store.dispatch({type: PushActions.ODDS_UPDATE, data: msg.boou} as OddsUpdateAction)
+                }
                 break
             case 6:
-                console.log("BO added: " + msg.boa)
-                store.dispatch({type: PushActions.BETOFFER_ADDED, data: msg.boa} as BetOfferAddedAction)
+                if (msg.boa) {
+                    console.log("BO added: " + msg.boa.betOffer.id)
+                    store.dispatch({type: PushActions.BETOFFER_ADDED, data: msg.boa} as BetOfferAddedAction)
+                }
                 break
             case 7:
-                console.log("BO removed: " + msg.bor)
-                store.dispatch({type: PushActions.BETOFFER_REMOVED, data: msg.bor} as BetOfferRemovedAction)
+                if (msg.bor) {
+                    console.log("BO removed: " + msg.bor.betOfferId)
+                    store.dispatch({type: PushActions.BETOFFER_REMOVED, data: msg.bor} as BetOfferRemovedAction)
+                }
                 break
             case 8:
-                console.log("BO status update: " + msg.bosu)
-                store.dispatch({type: PushActions.BETOFFER_STATUS_UPDATE, data: msg.bosu} as BetOfferStatusUpdateAction)
+                if (msg.bosu) {
+                    console.log("BO status update: " + msg.bosu.betOfferId + ", suspended: ")
+                    store.dispatch({type: PushActions.BETOFFER_STATUS_UPDATE, data: msg.bosu} as BetOfferStatusUpdateAction)
+                }
                 break
             default:
                 // console.log("Message: " + msg && msg.mt)
