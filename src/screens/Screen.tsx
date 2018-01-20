@@ -8,7 +8,7 @@ import absoluteFill = StyleSheet.absoluteFill;
 import {Orientation, orientation} from "lib/device";
 
 interface Props {
-    title: string
+    title: string | JSX.Element
     rootScreen?: boolean
     navigation: NavigationScreenProp<{}, {}>
 }
