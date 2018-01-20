@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "./node_modules/react-native/local-cli/core/__fixtures__/files/package.json"
   },
   "rnpm": {
     "assets": [
@@ -17,12 +18,12 @@
     "immutable": "^3.8.2",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
-    "react": "16.0.0",
-    "react-native": "0.51.0",
+    "react": "16.2.0",
+    "react-native": "0.52.0",
     "react-native-animatable": "^1.2.4",
     "react-native-circular-progress": "^0.1.2",
     "react-native-material-ui": "^1.19.0",
-    "react-native-svg": "^6.0.1-rc.2",
+    "react-native-svg": "6.0.1-rc.2",
     "react-native-tab-view": "^0.0.74",
     "react-native-vector-icons": "^4.5.0",
     "react-navigation": "1.0.0-beta.27",
@@ -31,16 +32,16 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "socket.io-client": "^2.0.4",
-    "tslib": "^1.8.1"
+    "tslib": "^1.9.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.92",
-    "@types/react": "16.0.31",
-    "@types/react-native": "0.51.10",
+    "@types/lodash": "^4.14.93",
+    "@types/react": "16.0.34",
+    "@types/react-native": "0.52.1",
     "@types/react-native-material-ui": "^1.12.2",
     "@types/react-native-tab-view": "^0.0.1",
     "@types/react-native-vector-icons": "^4.4.2",
-    "@types/react-navigation": "^1.0.27",
+    "@types/react-navigation": "^1.0.28",
     "@types/react-redux": "^5.0.14",
     "@types/socket.io-client": "^1.4.32",
     "babel-jest": "21.2.0",
