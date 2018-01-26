@@ -5,7 +5,7 @@ import LiveScreen from "screens/LiveEventsScreen"
 import SoonScreen from "screens/StartingSoonScreen"
 import {NativeModules} from "react-native";
 import {EventScreen} from "screens/EventScreen";
-import Drawer from "app/Drawer";
+import {Drawer} from "app/Drawer";
 import {SportScreen} from "screens/SportScreen";
 import {CollapsableScreen2} from "screens/CollapsableScreen2";
 import {TabScreenDemo} from "screens/TabScreenDemo";
@@ -69,7 +69,7 @@ const NavApp = DrawerNavigator(
         }
     },
     {
-        contentComponent: props => <Drawer {...props} />,
+        contentComponent: Drawer,
         drawerWidth: 300,
         initialRouteName: "Home",
     }

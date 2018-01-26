@@ -11,6 +11,7 @@ import {Theme} from "lib/device";
 import banner from "images/banner";
 import absoluteFill = StyleSheet.absoluteFill;
 import Screen from "screens/Screen";
+import {LiveCardScore} from "components/LiveCardScore";
 
 
 interface ExternalProps {
@@ -36,13 +37,21 @@ class EventScreenComponent extends React.Component<Props> {
     }
 
     public render() {
-        const {event} = this.props
-        
+
         return (
-            <Screen navigation={this.props.navigation} title={<EventInfoItem eventId={event.id} theme={Theme.Dark} viewStyle={{flex: 1}}/>}>
+            <Screen navigation={this.props.navigation} title={this.renderTitle()}>
                 {this.renderBody()}
             </Screen>
         )
+    }
+
+    private renderTitle() {
+        const {event, navigation} = this.props
+        if (event.state === "STARTED") {
+            return <LiveCardScore eventId={event.id} navigation={navigation}/>
+        }
+
+        return <EventInfoItem eventId={event.id} theme={Theme.Dark} viewStyle={{flex: 1}}/>
     }
 
     private renderBody() {

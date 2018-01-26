@@ -191,7 +191,7 @@ function flatMapOutcomes(betoffers: (BetOffer | undefined)[]): Outcome[] {
 
 function mergeOutcomes(state: Map<number, OutcomeEntity>, outcomes: Outcome[]): Map<number, OutcomeEntity> {
 
-    for (let outcome of outcomes) {
+    for (let outcome of outcomes.filter(o => o)) {
         const entity = state.get(outcome.id)
         if (entity) {
             state = state.set(outcome.id, {

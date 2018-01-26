@@ -42,7 +42,7 @@ interface Item {
     action?: NavigationNavigateAction
 }
 
-class Drawer extends React.Component<Props> {
+class DrawerComp extends React.Component<Props> {
     componentDidMount(): void {
         this.props.loadData(true)
     }
@@ -253,10 +253,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     }
 )
 
-// const WithAppStateRefresh: ComponentClass<Props> =
-//     connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(Drawer)
+const WithAppStateRefresh: ComponentClass<Props> =
+    connectAppState((props: Props, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(DrawerComp)
 
-const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(Drawer)
+export const Drawer: ComponentClass<ExternalProps> =
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 
-export default WithData

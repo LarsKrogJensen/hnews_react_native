@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.93",
-    "@types/react": "16.0.34",
+    "@types/react": "16.0.31",
     "@types/react-native": "0.52.1",
     "@types/react-native-material-ui": "^1.12.2",
     "@types/react-native-tab-view": "^0.0.1",

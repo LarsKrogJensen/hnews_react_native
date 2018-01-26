@@ -13,6 +13,7 @@ import {Card} from "components/Card";
 import EventPathItem from "components/EventPathItem";
 import {renderServe, renderTeamColors} from "components/RenderUtils";
 import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
+import {LiveCardScore, LiveCardScoreComponent} from "components/LiveCardScore";
 
 
 interface ExternalProps {
@@ -55,87 +56,15 @@ class LiveCardComponent extends React.Component<Props> {
     }
 
     private renderBody() {
-        const {event} = this.props;
+        const {eventId, navigation, event} = this.props;
 
         return (
             <View style={bodyStyle}>
-                {this.renderTeams()}
+                <LiveCardScore eventId={eventId} navigation={navigation}/>
                 {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId}/>}
             </View>
         )
     }
-
-    private renderTeams() {
-        const {event, liveData} = this.props;
-
-        const teamRowStyle: ViewStyle = {
-            flexDirection: "row",
-            alignItems: "center"
-        }
-
-        const textStyle: TextStyle = {fontSize: 20, flex: 1, marginLeft: 8}
-
-        return (
-            <View style={{flexDirection: "row", marginRight: 8}}>
-                <View style={{flexDirection: "column", flex: 1}}>
-                    <View style={teamRowStyle}>
-                        {renderTeamColors(event.teamColors && event.teamColors.home)}
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={textStyle}>{event.homeName}</Text>
-                        {renderServe(liveData, true)}
-                    </View>
-                    <View style={{...teamRowStyle, marginBottom: 8}}>
-                        {renderTeamColors(event.teamColors && event.teamColors.away)}
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={textStyle}>{event.awayName}</Text>
-                        {renderServe(liveData, false)}
-                    </View>
-                </View>
-                {this.renderScoreColumns(liveData)}
-            </View>
-        )
-    }
-
-    private renderScoreColumns(liveData: LiveData) {
-        const {statistics: stats, score} = liveData
-
-        if (stats && stats.sets && score) {
-            const elements: JSX.Element[] = []
-
-            const homeSets = stats.sets.home;
-            const awaySets = stats.sets.away;
-
-            for (let i = 0; i < homeSets.length; i++) {
-                const home = homeSets[i];
-                const away = awaySets[i];
-
-                elements.push(
-                    <View key={"sets" + i + liveData.eventId}
-                          style={{flexDirection: "column", alignItems: "center", marginLeft: 8}}>
-                        <Text style={{fontSize: 20}}>{home === -1 ? 0 : home}</Text>
-                        <Text style={{fontSize: 20}}>{away === -1 ? 0 : away}</Text>
-                    </View>
-                )
-            }
-            elements.push(
-                <View key={"score" + liveData.eventId}
-                      style={{flexDirection: "column", alignItems: "center", marginLeft: 8}}>
-                    <Text style={{fontSize: 20, color: "#00ADC9"}}>{score.home}</Text>
-                    <Text style={{fontSize: 20, color: "#00ADC9"}}>{score.away}</Text>
-                </View>
-            )
-
-            return elements;
-        } else if (score) {
-            return (
-                <View style={{flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>{score.home}</Text>
-                    <Text style={{fontSize: 20}}>{score.away}</Text>
-                </View>
-            )
-        }
-
-        return null;
-    }
-
 }
 
 const liveTextStyle: TextStyle = {

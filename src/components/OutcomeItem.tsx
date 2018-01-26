@@ -48,6 +48,7 @@ class OutcomeItem extends React.Component<Props, State> {
         if (nextProps.outcomeId !== this.props.outcomeId) return true
         if (nextProps.orientation !== this.props.orientation) return true
         if (nextProps.outcome.odds !== this.props.outcome.odds) return true
+        if (nextProps.betOffer !== this.props.betOffer) return true
         if (nextProps.betOffer.suspended !== this.props.betOffer.suspended) return true
         if (nextState.oddsChange !== this.state.oddsChange) return true
 
@@ -83,6 +84,8 @@ class OutcomeItem extends React.Component<Props, State> {
         const {oddsChange} = this.state
         // console.log("OutcomeItem.render: " + outcome.id)
 
+        if (!outcome || !betOffer) return null;
+        
         const outcomeLabel = this.formatOutcomeLabel(outcome, betOffer, event);
 
         const height = orientation === Orientation.Portrait ? 38 : 48
