@@ -1,5 +1,6 @@
 import {LiveAction, LiveActions} from "./actions"
 import {EventGroup} from "api/typings";
+import {PushAction, PushActions} from "store/push/actions";
 
 export interface LiveEventsStore {
     liveEvents: number[]
@@ -13,7 +14,7 @@ const initialState: LiveEventsStore = {
     groups: []
 }
 
-export default function liveReducer(state: LiveEventsStore = initialState, action: LiveAction): LiveEventsStore {
+export default function liveReducer(state: LiveEventsStore = initialState, action: LiveAction | PushAction): LiveEventsStore {
     switch (action.type) {
         case LiveActions.START_LOADING:
             return {
@@ -34,6 +35,12 @@ export default function liveReducer(state: LiveEventsStore = initialState, actio
                 liveEvents: [],
                 groups: []
             }
+        case PushActions.EVENT_REMOVED:
+            return {
+                ...state,
+                liveEvents: state.liveEvents.filter(eventId => eventId !== action.data.eventId)
+            }
+
         default:
             return state
     }

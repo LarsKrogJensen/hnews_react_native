@@ -1,5 +1,5 @@
 import * as React from "react"
-import {LiveData, MatchClock, Score, SetStats, Statistics} from "api/typings";
+import {LiveData, MatchClock, Score, SetStats, EventStats} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
 import MatchClockItem from "components/MatchClockItem";
@@ -39,18 +39,18 @@ export default class EventScoreItem extends React.PureComponent<Props> {
     }
 
     @autobind
-    private renderFootball(score: Score, matchClock: MatchClock) {
+    private renderFootball(score: Score, matchClock?: MatchClock) {
         return (
             <View style={{...this.props.style, alignItems: "center"}}>
                 <Text style={setStyle}>{score.home}</Text>
                 <Text style={setStyle}>{score.away}</Text>
-                <MatchClockItem matchClock={matchClock} style={timeStyle}/>
+                {matchClock && <MatchClockItem matchClock={matchClock} style={timeStyle}/>}
             </View>
         );
     }
 
     @autobind
-    private renderSetBased(stats: Statistics, score: Score, hasGames: boolean) {
+    private renderSetBased(stats: EventStats, score: Score, hasGames: boolean) {
         const summary = this.calculateGameSummary(stats, hasGames)
         return (
             <View style={{...this.props.style, flexDirection: "row", justifyContent: "center"}}>
@@ -73,7 +73,7 @@ export default class EventScoreItem extends React.PureComponent<Props> {
         );
     }
 
-    private calculateGameSummary(stats: Statistics, hasGames: boolean): GameSummary {
+    private calculateGameSummary(stats: EventStats, hasGames: boolean): GameSummary {
         const summary: GameSummary = {homeSets: 0, awaySets: 0, homeGames: 0, awayGames: 0}
         if (stats && stats.sets) {
             const sets: SetStats = stats.sets;

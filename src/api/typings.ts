@@ -114,7 +114,7 @@ export interface SetStats {
     homeServe: boolean;
 }
 
-export interface Statistics {
+export interface EventStats {
     football: FootballStats;
     sets: SetStats;
 }
@@ -126,11 +126,11 @@ export interface LiveStatistic {
 
 export interface LiveData {
     eventId: number;
-    matchClock: MatchClock;
+    matchClock?: MatchClock;
     score: Score;
     open: boolean;
     visualizationSupported: boolean;
-    statistics: Statistics;
+    statistics: EventStats;
     liveStatistics: LiveStatistic[];
 }
 
@@ -294,9 +294,16 @@ export interface PushMessage {
     t: string
     mt: number
     boou?: OddsUpdated
+    boor?: OddsUpdated
     bor?: BetOfferRemoved
     boa?: BetOfferAdded
     bosu?: BetOfferStatusUpdate
+    stats?: EventStatsUpdate
+    score?: EventScoreUpdate
+    abos?: AllBetOffersSuspended
+    mcu?: MatchClockUpdated
+    mcr?: MatchClockRemoved
+    er?: EventRemoved
 }
 
 export interface OutcomeUpdate {
@@ -312,6 +319,7 @@ export interface OddsUpdated {
     outcomes: OutcomeUpdate[]
 }
 
+
 export interface BetOfferRemoved {
     betOfferId: number
 }
@@ -326,3 +334,31 @@ export interface BetOfferStatusUpdate {
     suspended: boolean
     visible: boolean
 }
+
+export interface EventScoreUpdate {
+    eventId: number
+    score: Score
+}
+
+export interface EventStatsUpdate {
+    eventId: number
+    statistics: EventStats
+}
+
+export interface AllBetOffersSuspended {
+    eventId: number
+}
+
+export interface MatchClockRemoved {
+    eventId: number
+}
+
+export interface EventRemoved {
+    eventId: number
+}
+
+export interface MatchClockUpdated {
+    eventId: number
+    matchClock: MatchClock
+}
+

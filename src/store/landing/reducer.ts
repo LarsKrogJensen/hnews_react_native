@@ -1,6 +1,6 @@
-import {LandingActions, LandingAction} from "./actions"
-import {LandingPageSection} from "api/typings";
-import {Range} from "api/typings";
+import {LandingAction, LandingActions} from "./actions"
+import {LandingPageSection, Range} from "api/typings";
+import {PushAction, PushActions} from "store/push/actions";
 
 export interface EventCollection {
     events: number[]
@@ -27,7 +27,7 @@ const initialState: LandingStore = {
     startingSoon: {events: [], range: {}}
 }
 
-export default function landingReducer(state: LandingStore = initialState, action: LandingAction): LandingStore {
+export default function landingReducer(state: LandingStore = initialState, action: LandingAction | PushAction): LandingStore {
     switch (action.type) {
         case LandingActions.START_LOADING:
             return {
@@ -50,6 +50,16 @@ export default function landingReducer(state: LandingStore = initialState, actio
                 ...state,
                 loading: false
             }
+        case PushActions.EVENT_REMOVED:
+            return {
+                loading: state.loading,
+                liveRightNow: removeEventFrom(state.liveRightNow, action.data.eventId),
+                popular: removeEventFrom(state.popular, action.data.eventId),
+                highlights: removeEventFrom(state.highlights, action.data.eventId),
+                shocker: removeEventFrom(state.shocker, action.data.eventId),
+                nextOff: removeEventFrom(state.nextOff, action.data.eventId),
+                startingSoon: removeEventFrom(state.startingSoon, action.data.eventId),
+            }
         default:
             return state
     }
@@ -64,6 +74,12 @@ function mapEvents(sectionName: string, sections: LandingPageSection[]): EventCo
         }
     }
 
-    return { events: [], range: {}}
+    return {events: [], range: {}}
+}
 
+function removeEventFrom(events: EventCollection, eventId: number): EventCollection {
+    return {
+        events: events.events.filter(id => id !== eventId),
+        range: events.range
+    }
 }

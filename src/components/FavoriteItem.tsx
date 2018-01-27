@@ -35,7 +35,7 @@ class FavoriteItem extends React.Component<Props> {
                         size={25}
                         color={isFavorite ? "darkorange" : "#717171"}
                         onPress={() => setFavorite(!isFavorite)}
-                        style={{container: this.props.style}}
+                        style={{container: {justifyContent: "center"}}}
             />
         )
     }

@@ -11,6 +11,7 @@ import {SoonEventsStore, default as soonReducer} from "store/soon/reducer";
 import {SportEventsStore, default as sportReducer} from "store/sport/reducer";
 import {AppState} from "react-native";
 import {pushInitialize} from "store/push/push-hub";
+import {API} from "store/API";
 
 export interface AppStore {
     favoriteStore: FavoriteStore,
@@ -41,6 +42,6 @@ const store: Store<AppStore> = createStore(
     composeWithDevTools(applyMiddleware(thunk))
 )
 
-pushInitialize(store)
+pushInitialize(store, "ev", `${API.pushLang}.ev`)
 
 export default store

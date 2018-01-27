@@ -42,7 +42,6 @@ export function loadBetOffers(eventId: number, live: boolean, fireStartLoad: boo
                     eventId
                 });
             } else {
-                console.warn(`${timerName} status code: ${response.status}`)
                 dispatch<BetOffersSuccessAction>({
                     type: BetOfferActions.LOAD_SUCCESS,
                     eventId,

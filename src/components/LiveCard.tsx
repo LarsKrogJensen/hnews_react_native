@@ -48,7 +48,7 @@ class LiveCardComponent extends React.Component<Props> {
                     style={{flex: 1}}
                     textStyle={{fontSize: 16, color: "#717171"}}
                 />
-                {liveData && <MatchClockItem matchClock={liveData.matchClock}/>}
+                {liveData && liveData.matchClock && <MatchClockItem matchClock={liveData.matchClock}/>}
             </View>
         )
     }

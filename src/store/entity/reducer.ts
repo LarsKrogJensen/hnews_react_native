@@ -3,10 +3,11 @@ import {SportAction, SportActions} from "store/sport/actions";
 import {SoonAction, SoonActions} from "store/soon/actions";
 import {LandingAction, LandingActions} from "store/landing/actions";
 import {
+    AllBetOffersSuspended,
     BetOffer,
     BetOfferAdded,
     BetOfferRemoved,
-    BetOfferStatusUpdate,
+    BetOfferStatusUpdate, EventRemoved,
     EventView,
     EventWithBetOffers,
     LiveEvent,
@@ -23,12 +24,14 @@ import * as _ from "lodash"
 import {BetOfferActions, BetOffersAction} from "store/entity/actions";
 import {PushAction, PushActions} from "store/push/actions";
 
+
 export interface EntityStore {
     events: Map<number, EventEntity>
     betoffers: Map<number, BetOfferEntity>
     outcomes: Map<number, OutcomeEntity>
     betOffersLoading: Set<number>
 }
+
 
 const initialState: EntityStore = {
     events: Map<number, EventEntity>(),
@@ -105,6 +108,16 @@ export default function entityReducer(state: EntityStore = initialState, action:
             return {
                 ...state,
                 betoffers: mergeBetOfferStatusUpdate(state, action.data)
+            }
+        case PushActions.ALL_BETOFFERS_SUSPENDED:
+            return {
+                ...state,
+                betoffers: mergeSuspendAllBetOffers(state, action.data)
+            }
+        case PushActions.EVENT_REMOVED:
+            return {
+                ...state,
+                ...mergeEventRemoved(state, action.data)
             }
         default:
             return state
@@ -221,7 +234,38 @@ function mergeOutcomeUpadates(state: Map<number, OutcomeEntity>, outcomes: Outco
     return state
 }
 
-function mergeBetOfferRemoved(state: EntityStore, update: BetOfferRemoved): { betoffers: Map<number, BetOfferEntity>, events: Map<number, EventEntity> } {
+function mergeEventRemoved(state: EntityStore, update: EventRemoved): Partial<EntityStore> {
+    const eventEntity = state.events.get(update.eventId)
+
+    if (eventEntity && eventEntity.betOffers) {
+        const events = state.events.remove(update.eventId)
+        let betoffers = state.betoffers
+        let outcomes = state.outcomes
+
+        for (let betOfferId of eventEntity.betOffers) {
+            const bo = betoffers.get(betOfferId)
+            if (bo) {
+                betoffers = betoffers.remove(betOfferId)
+
+                if (bo.outcomes) {
+                    for (let outcomeId of bo.outcomes) {
+                        outcomes = outcomes.remove(outcomeId)
+                    }
+                }
+            }
+        }
+
+        return {
+            events,
+            betoffers,
+            outcomes
+        }
+    }
+
+    return state
+}
+
+function mergeBetOfferRemoved(state: EntityStore, update: BetOfferRemoved): Partial<EntityStore> {
     const betOfferEntity = state.betoffers.get(update.betOfferId)
     let betoffers = state.betoffers
     let events = state.events
@@ -246,7 +290,7 @@ function mergeBetOfferRemoved(state: EntityStore, update: BetOfferRemoved): { be
     }
 }
 
-function mergeBetOfferAdded(state: EntityStore, update: BetOfferAdded): { betoffers: Map<number, BetOfferEntity>, events: Map<number, EventEntity>, outcomes: Map<number, OutcomeEntity> } {
+function mergeBetOfferAdded(state: EntityStore, update: BetOfferAdded): Partial<EntityStore> {
     const betOfferEntity = createBetOfferEntity(update.betOffer)
     let betoffers = state.betoffers.set(betOfferEntity.id, betOfferEntity)
     let events = state.events
@@ -275,6 +319,26 @@ function mergeBetOfferStatusUpdate(state: EntityStore, update: BetOfferStatusUpd
 
     if (betOfferEntity) {
         betoffers = betoffers.set(update.betOfferId, {...betOfferEntity, suspended: update.suspended})
+    }
+
+    return betoffers
+}
+
+function mergeSuspendAllBetOffers(state: EntityStore, update: AllBetOffersSuspended): Map<number, BetOfferEntity> {
+    const event = state.events.get(update.eventId)
+    let betoffers = state.betoffers
+
+    if (event && event.betOffers) {
+
+        for (let betOfferId of event.betOffers) {
+            const bo = betoffers.get(betOfferId)
+            if (bo && !bo.suspended) {
+                betoffers = betoffers.set(betOfferId, {
+                    ...bo,
+                    suspended: true
+                })
+            }
+        }
     }
 
     return betoffers

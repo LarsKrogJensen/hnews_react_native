@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Image, StatusBar, StyleSheet, View, ViewStyle} from "react-native"
+import {Image, StatusBar, StyleSheet, Text, View, ViewStyle} from "react-native"
 import {NavigationParams, NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
@@ -30,6 +30,8 @@ class EventScreenComponent extends React.Component<Props> {
 
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (this.props.eventId !== nextProps.eventId) return true
+        if (this.props.event && !nextProps.event) return true
+        if (!this.props.event && nextProps.event) return true
         if (this.props.event.state && nextProps.event.state) return true
         if (this.props.event.openForLiveBetting && nextProps.event.openForLiveBetting) return true
 
@@ -47,8 +49,13 @@ class EventScreenComponent extends React.Component<Props> {
 
     private renderTitle() {
         const {event, navigation} = this.props
+
+        if (!event) {
+            return "Event not found"
+        }
+
         if (event.state === "STARTED") {
-            return <LiveCardScore eventId={event.id} navigation={navigation}/>
+            return <LiveCardScore eventId={event.id} navigation={navigation} asHeader/>
         }
 
         return <EventInfoItem eventId={event.id} theme={Theme.Dark} viewStyle={{flex: 1}}/>
@@ -57,6 +64,9 @@ class EventScreenComponent extends React.Component<Props> {
     private renderBody() {
         const {event, navigation} = this.props
 
+        if (!event) {
+            return <Text>Event not available</Text>
+        }
         return <EventView eventId={event.id}
                           live={event.state === "STARTED"}
                           eventGroupid={event.groupId}

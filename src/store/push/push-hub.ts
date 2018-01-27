@@ -3,9 +3,17 @@ import {AppStore} from "store/store";
 import io from "socket.io-client"
 import {AppState, AppStateStatus} from "react-native";
 import {API} from "store/API";
-import {BetOfferStatusUpdate, PushMessage} from "api/typings";
+import {PushMessage} from "api/typings";
 import {
-    BetOfferAddedAction, BetOfferRemovedAction, BetOfferStatusUpdateAction, OddsUpdateAction,
+    AllBetOffersSuspendedAction,
+    BetOfferAddedAction,
+    BetOfferRemovedAction,
+    BetOfferStatusUpdateAction, EventRemovedAction,
+    EventScoreUpdateAction,
+    EventStatsUpdateAction,
+    MatchClockRemovedAction,
+    MatchClockUpdatedAction,
+    OddsUpdateAction,
     PushActions
 } from "store/push/actions";
 
@@ -22,7 +30,9 @@ const subscribed: Set<string> = new Set<string>()
 const pendingSubscribes: Set<string> = new Set<string>()
 const pendingUnsubscribes: Set<string> = new Set<string>()
 
-export function pushInitialize(store: Store<AppStore>) {
+export function pushInitialize(store: Store<AppStore>, ...defaultSubscribe: string[]) {
+    defaultSubscribe.forEach(topic => pendingSubscribes.add(topic))
+
     socket.on("connect", (s) => {
         console.log("Socket connected");
         connected = true
@@ -114,32 +124,85 @@ function handleData(data: string, store: Store<AppStore>) {
 
     for (let msg of msgs) {
         switch (msg.mt) {
-            case 11:
-                if (msg.boou) {
-                    console.log("Odds update: " + msg.boou.eventId)
-                    store.dispatch({type: PushActions.ODDS_UPDATE, data: msg.boou} as OddsUpdateAction)
-                }
-                break
             case 6:
                 if (msg.boa) {
-                    console.log("BO added: " + msg.boa.betOffer.id)
                     store.dispatch({type: PushActions.BETOFFER_ADDED, data: msg.boa} as BetOfferAddedAction)
                 }
                 break
             case 7:
                 if (msg.bor) {
-                    console.log("BO removed: " + msg.bor.betOfferId)
                     store.dispatch({type: PushActions.BETOFFER_REMOVED, data: msg.bor} as BetOfferRemovedAction)
                 }
                 break
             case 8:
                 if (msg.bosu) {
-                    console.log("BO status update: " + msg.bosu.betOfferId + ", suspended: ")
-                    store.dispatch({type: PushActions.BETOFFER_STATUS_UPDATE, data: msg.bosu} as BetOfferStatusUpdateAction)
+                    store.dispatch({
+                        type: PushActions.BETOFFER_STATUS_UPDATE,
+                        data: msg.bosu
+                    } as BetOfferStatusUpdateAction)
                 }
                 break
+            case 9:
+                if (msg.abos) {
+                    store.dispatch({
+                        type: PushActions.ALL_BETOFFERS_SUSPENDED,
+                        data: msg.abos
+                    } as AllBetOffersSuspendedAction)
+                }
+                break
+            case 11:
+                if (msg.boou) {
+                    store.dispatch({type: PushActions.ODDS_UPDATE, data: msg.boou} as OddsUpdateAction)
+                }
+                break
+            case 23:
+                if (msg.boor) {
+                    store.dispatch({type: PushActions.ODDS_UPDATE, data: msg.boor} as OddsUpdateAction)
+                }
+                break
+            case 12:
+                if (msg.mcr) {
+                    store.dispatch({
+                        type: PushActions.MATCH_CLOCK_REMOVED,
+                        data: msg.mcr
+                    } as MatchClockRemovedAction)
+                }
+                break;
+            case 15:
+                if (msg.mcu) {
+                    store.dispatch({
+                        type: PushActions.MATCH_CLOCK_UPDATED,
+                        data: msg.mcu
+                    } as MatchClockUpdatedAction)
+                }
+                break;
+            case 16:
+                if (msg.score) {
+                    store.dispatch({
+                        type: PushActions.EVENT_SCORE_UPDATE,
+                        data: msg.score
+                    } as EventScoreUpdateAction)
+                }
+                break;
+            case 17:
+                if (msg.stats) {
+                    store.dispatch({
+                        type: PushActions.EVENT_STATS_UPDATE,
+                        data: msg.stats
+                    } as EventStatsUpdateAction)
+                }
+                break;
+            case 18:
+                console.log("EVENT Removed")
+                if (msg.er) {
+                    store.dispatch({
+                        type: PushActions.EVENT_REMOVED,
+                        data: msg.er
+                    } as EventRemovedAction)
+                }
+                break;
             default:
-                // console.log("Message: " + msg && msg.mt)
+                console.log("Message: " + msg && msg.mt)
                 break
         }
     }

@@ -13,6 +13,7 @@ import {renderServe, renderTeamColors} from "components/RenderUtils";
 interface ExternalProps {
     eventId: number
     navigation: NavigationScreenProp<{}, {}>,
+    asHeader?: boolean
 }
 
 interface StateProps {
@@ -25,19 +26,19 @@ type Props = StateProps & ExternalProps
 export class LiveCardScoreComponent extends React.Component<Props> {
 
     public render() {
-        const {event, liveData} = this.props;
-
+        const {event, liveData, asHeader} = this.props;
+        const teamTextStyle = asHeader ? styles.teamTextHeader : styles.teamText
         return (
             <View style={{flexDirection: "row", marginRight: 8}}>
                 <View style={{flexDirection: "column", flex: 1}}>
                     <View style={styles.teamRow}>
                         {renderTeamColors(event.teamColors && event.teamColors.home)}
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.teamText, styles.defaultText]}>{event.homeName}</Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={teamTextStyle}>{event.homeName}</Text>
                         {renderServe(liveData, true)}
                     </View>
                     <View style={[styles.teamRow, {marginBottom: 8}]}>
                         {renderTeamColors(event.teamColors && event.teamColors.away)}
-                        <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.teamText, styles.defaultText]}>{event.awayName}</Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={teamTextStyle}>{event.awayName}</Text>
                         {renderServe(liveData, false)}
                     </View>
                 </View>
@@ -49,6 +50,7 @@ export class LiveCardScoreComponent extends React.Component<Props> {
     private renderScoreColumns(liveData: LiveData) {
         const {statistics: stats, score} = liveData
 
+        const scoreStyle = this.props.asHeader ? styles.scoreTextHeader : styles.scoreText
         if (stats && stats.sets && score) {
             const elements: JSX.Element[] = []
 
@@ -62,16 +64,16 @@ export class LiveCardScoreComponent extends React.Component<Props> {
                 elements.push(
                     <View key={"sets" + i + liveData.eventId}
                           style={{flexDirection: "column", alignItems: "center", marginLeft: 8}}>
-                        <Text style={styles.defaultText}>{home === -1 ? 0 : home}</Text>
-                        <Text style={{fontSize: 20}}>{away === -1 ? 0 : away}</Text>
+                        <Text style={scoreStyle}>{home === -1 ? 0 : home}</Text>
+                        <Text style={scoreStyle}>{away === -1 ? 0 : away}</Text>
                     </View>
                 )
             }
             elements.push(
                 <View key={"score" + liveData.eventId}
                       style={{flexDirection: "column", alignItems: "center", marginLeft: 8}}>
-                    <Text style={[styles.defaultText, {color: "#00ADC9"}]}>{score.home}</Text>
-                    <Text style={[styles.defaultText, {color: "#00ADC9"}]}>{score.away}</Text>
+                    <Text style={[scoreStyle, {color: "#00ADC9"}]}>{score.home}</Text>
+                    <Text style={[scoreStyle, {color: "#00ADC9"}]}>{score.away}</Text>
                 </View>
             )
 
@@ -79,8 +81,8 @@ export class LiveCardScoreComponent extends React.Component<Props> {
         } else if (score) {
             return (
                 <View style={{flexDirection: "column", alignItems: "center"}}>
-                    <Text style={styles.defaultText}>{score.home}</Text>
-                    <Text style={styles.defaultText}>{score.away}</Text>
+                    <Text style={scoreStyle}>{score.home}</Text>
+                    <Text style={scoreStyle}>{score.away}</Text>
                 </View>
             )
         }
@@ -91,10 +93,24 @@ export class LiveCardScoreComponent extends React.Component<Props> {
 }
 
 const styles = StyleSheet.create({
-    defaultText: {
-        fontSize: 20,
+    scoreText: {
+        fontSize: 20
+    },
+    scoreTextHeader: {
+        fontSize: 18,
+        color: "white",
+        paddingHorizontal: 2,
+        backgroundColor: "black",
+        marginVertical: 1,
+        borderRadius: 2
     } as TextStyle,
     teamText: {
+        fontSize: 18,
+        flex: 1,
+        marginLeft: 8
+    } as TextStyle,
+    teamTextHeader: {
+        fontSize: 18,
         flex: 1,
         marginLeft: 8
     } as TextStyle,

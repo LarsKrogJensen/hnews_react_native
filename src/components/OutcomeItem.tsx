@@ -85,7 +85,7 @@ class OutcomeItem extends React.Component<Props, State> {
         // console.log("OutcomeItem.render: " + outcome.id)
 
         if (!outcome || !betOffer) return null;
-        
+
         const outcomeLabel = this.formatOutcomeLabel(outcome, betOffer, event);
 
         const height = orientation === Orientation.Portrait ? 38 : 48
@@ -96,18 +96,20 @@ class OutcomeItem extends React.Component<Props, State> {
             ...this.props.style
         }
 
-        if (betOffer.suspended) {
+        if (betOffer.suspended || outcome.odds === 1000) {
             return (
-                <View style={[touchStyle, viewStyle, {backgroundColor: "#BBBBBB"}]}>
-                    <Text numberOfLines={1} ellipsizeMode="tail"
-                          style={[labelStyle, {color: "#959595"}]}>{outcomeLabel}</Text>
+                <View style={touchStyle}>
+                    <View style={[viewStyle, {backgroundColor: "#BBBBBB"}]}>
+                        <Text numberOfLines={1} ellipsizeMode="tail"
+                              style={[labelStyle, {color: "#959595"}]}>{outcomeLabel}</Text>
+                    </View>
                 </View>
             )
         }
 
-        if (outcome.odds === 1000) {
-            return <View style={[touchStyle, viewStyle, this.props.style, {backgroundColor: "transparent"}]}/>
-        }
+        // if (outcome.odds === 1000) {
+        //     return <View style={[touchStyle, this.props.style, {backgroundColor: "transparent"}]}/>
+        // }
 
         return (
             <Touchable key={outcome.id} style={touchStyle} onPress={() => console.log("Pressed")}>
