@@ -22,27 +22,24 @@ export class TabScreenDemo extends React.Component<ExternalProps> {
     state = {
         index: 0,
         routes: [
-            {key: 'first', title: 'First'},
-            {key: 'second', title: 'Second'}
+            {key: 'first', title: 'Markets'},
+            {key: 'second', title: 'Statistics'},
+            {key: 'second', title: 'League Table'},
+            {key: 'third', title: 'Events'}
         ]
     };
 
     private _renderScene = SceneMap({
         first: FirstRoute,
-        second: SecondRoute
+        second: SecondRoute,
+        third: FirstRoute
     });
-
-
-    _renderIcon = ({route}) => (
-        <PlatformIcon name="home" size={24} color="white"/>
-    );
 
     _handleIndexChange = index => this.setState({index});
 
     _renderHeader = props => (
         <TabBar {...props}
                 indicatorStyle={styles.indicator}
-                renderIcon={this._renderIcon}
                 style={styles.tabbar}/>
     )
 
@@ -63,12 +60,24 @@ export class TabScreenDemo extends React.Component<ExternalProps> {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
-    },
-    tabbar: {
-        backgroundColor: 'black'
+        flex: 1,
     },
     indicator: {
-        backgroundColor: 'white'
-    }
+        backgroundColor: '#00ADC9',
+    },
+    label: {
+        fontSize: 13,
+        fontWeight: 'bold',
+        margin: 8,
+    },
+    tabbar: {
+        backgroundColor: '#fff',
+    },
+    tab: {
+        opacity: 1,
+        flex: 1
+    },
+    page: {
+        backgroundColor: '#f9f9f9',
+    },
 });

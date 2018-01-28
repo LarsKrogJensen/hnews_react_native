@@ -61,7 +61,6 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
         <TabBar
             {...props}
             pressColor="rgba(255, 64, 129, .5)"
-            onTabPress={this._handleIndexChange}
             renderLabel={this._renderLabel(props)}
             indicatorStyle={styles.indicator}
             tabStyle={styles.tab}

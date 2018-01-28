@@ -21,7 +21,8 @@ const uiTheme = {
 };
 
 console.ignoredYellowBox = [
-    'Setting a timer'
+    'Setting a timer',
+    'Remote debugger'
 ];
 // __DEV__ = false
 

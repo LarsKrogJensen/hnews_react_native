@@ -9,6 +9,7 @@ import {Drawer} from "app/Drawer";
 import {SportScreen} from "screens/SportScreen";
 import {CollapsableScreen2} from "screens/CollapsableScreen2";
 import {TabScreenDemo} from "screens/TabScreenDemo";
+import {TopBarDemo2} from "screens/TabBarDemo2";
 
 
 const HomeStack = StackNavigator({
@@ -50,7 +51,7 @@ const SportStack = StackNavigator({
 const NavApp = DrawerNavigator(
     {
         Test: {
-            screen: TabScreenDemo
+            screen: TopBarDemo2
         },
         Test2: {
             screen: CollapsableScreen2
