@@ -27,7 +27,12 @@ interface StateProps {
 type Props = StateProps & ExternalProps
 
 class LiveCardComponent extends React.Component<Props> {
+
     public render() {
+        if (!this.props.event) {
+            return null
+        }
+
         return (
             <Card onPress={() => this.props.navigation.navigate("Event", {eventId: this.props.eventId})}>
                 <View>
