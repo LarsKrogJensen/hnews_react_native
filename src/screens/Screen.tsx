@@ -4,8 +4,8 @@ import {Toolbar} from "react-native-material-ui";
 import {NavigationScreenProp} from "react-navigation";
 import autobind from "autobind-decorator";
 import banner from "images/banner";
-import absoluteFill = StyleSheet.absoluteFill;
 import {Orientation, orientation} from "lib/device";
+import absoluteFill = StyleSheet.absoluteFill;
 
 interface Props {
     title: string | JSX.Element
@@ -39,9 +39,11 @@ export default class Screen extends React.Component<Props, State> {
                     <Toolbar leftElement={this.leftMenuIcon()}
                              onLeftElementPress={this.onLeftClick}
                              centerElement={this.props.title}
-                             searchable={{
-                                 autoFocus: true,
-                                 placeholder: 'Search'
+                             style={{
+                                 centerElementContainer: {
+                                     flex: 1,
+                                     marginLeft: 0,
+                                 }
                              }}
                     />
                 </View>

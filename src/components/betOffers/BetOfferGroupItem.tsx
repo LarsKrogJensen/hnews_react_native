@@ -36,7 +36,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
     public render() {
         const {outcomes, type, eventId, event} = this.props
 
-        console.log("BetOfferGroup: rendering bo type: " + type.englishName)
+        // console.log("BetOfferGroup: rendering bo type: " + type.englishName)
         switch (type.id) {
             case BetOfferTypes.OverUnder:
             case BetOfferTypes.AsianOverUnder:
