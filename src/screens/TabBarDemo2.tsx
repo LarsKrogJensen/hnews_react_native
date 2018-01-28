@@ -28,9 +28,9 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
     state = {
         index: 0,
         routes: [
-            {key: '1', title: 'In-play'},
-            {key: '2', title: 'League'},
-            {key: '3', title: 'Explore football'},
+            {key: '1', title: 'Markets'},
+            {key: '2', title: 'Events'},
+            {key: '3', title: 'Statistics'},
         ]
     };
 
@@ -61,7 +61,6 @@ export class TopBarDemo2 extends PureComponent<Props, State> {
         <TabBar
             {...props}
             pressColor="rgba(255, 64, 129, .5)"
-            onTabPress={this._handleIndexChange}
             renderLabel={this._renderLabel(props)}
             indicatorStyle={styles.indicator}
             tabStyle={styles.tab}

@@ -35,7 +35,7 @@ export default class CountDown extends React.Component<Props, State> {
 
     public render() {
         let diff: number = this.state.startTime.diff(this.state.now);
-        const timeToStart = moment.utc(diff).format(this.props.format)
+        const timeToStart = moment.utc(Math.abs(diff)).format(this.props.format)
 
         return <Text style={this.props.style}>{timeToStart}</Text>
     }
