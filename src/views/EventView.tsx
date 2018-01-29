@@ -305,11 +305,8 @@ class EventViewComponent extends React.Component<ComponentProps, ComponentState>
             </View>
         )
     }
-// <Text>
-//                    (Criterion: {group.criterion.id}) Ty: {group.key} ({group.type.id})
-//                </Text>
-//
 
+    @autobind
     private renderBetOfferGroup(group: BetOfferGroup): React.ReactNode {
 
         if (group.type.id === BetOfferTypes.OverUnder ||
