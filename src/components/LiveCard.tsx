@@ -12,6 +12,7 @@ import {Card} from "components/Card";
 import EventPathItem from "components/EventPathItem";
 import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
 import {LiveCardScore} from "components/LiveCardScore";
+import {navigate} from "lib/navigate";
 
 
 interface ExternalProps {
@@ -34,7 +35,7 @@ class LiveCardComponent extends React.Component<Props> {
         }
 
         return (
-            <Card onPress={() => this.props.navigation.navigate("Event", {eventId: this.props.eventId})}>
+            <Card onPress={() => navigate(this.props.navigation, "Event",{eventId: this.props.eventId})}>
                 <View>
                     {this.renderHeader()}
                     {this.renderBody()}

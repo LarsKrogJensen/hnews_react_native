@@ -10,6 +10,7 @@ import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
+import {navigate} from "lib/navigate";
 
 
 interface ExternalProps {
@@ -54,7 +55,7 @@ class EventListItem extends React.Component<Props> {
 
     @autobind
     private handleItemClick() {
-        this.props.navigation.navigate('Event', {eventId: this.props.eventId})
+        navigate(this.props.navigation, "Event",{eventId: this.props.eventId})
     }
 }
 

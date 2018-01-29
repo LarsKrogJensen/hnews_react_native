@@ -6,6 +6,7 @@ import autobind from "autobind-decorator";
 import banner from "images/banner";
 import {Orientation, orientation} from "lib/device";
 import absoluteFill = StyleSheet.absoluteFill;
+import {navigateBack, navigateDrawerOpen} from "lib/navigate";
 
 interface Props {
     title: string | JSX.Element
@@ -58,9 +59,9 @@ export default class Screen extends React.Component<Props, State> {
     private onLeftClick() {
         const {navigation, rootScreen} = this.props;
         if (rootScreen) {
-            navigation.navigate("DrawerOpen")
+            navigateDrawerOpen(navigation)
         } else {
-            navigation.goBack()
+            navigateBack(navigation)
         }
     }
 

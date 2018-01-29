@@ -16,6 +16,7 @@ import {EventGroup} from "api/typings";
 import connectAppState from "components/AppStateRefresh";
 import absoluteFill = StyleSheet.absoluteFill;
 import {loadOpenForLive} from "store/live/actions";
+import {navigate} from "lib/navigate";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -242,10 +243,11 @@ class DrawerComp extends React.Component<Props> {
                         ]
                     }
                 );
+                // navigate(navigation, {}, action)
                 navigation.navigate(item.path, {}, action)
                 // navigation.dispatch(action)
             } else {
-                navigation.navigate(item.path)
+                navigate(navigation, item.path)
             }
         }
     }

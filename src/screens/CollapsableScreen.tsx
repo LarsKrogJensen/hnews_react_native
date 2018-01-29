@@ -12,6 +12,7 @@ import autobind from "autobind-decorator";
 import {NavigationScreenProp} from "react-navigation";
 import AnimatedDiffClamp = Animated.AnimatedDiffClamp;
 import absoluteFill = StyleSheet.absoluteFill;
+import {navigateBack, navigateDrawerOpen} from "lib/navigate";
 
 const NAVBAR_HEIGHT = 64;
 const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
@@ -175,9 +176,9 @@ export class CollapsableScreen extends React.Component<Props, State> {
     private onLeftClick() {
         const {navigation, rootScreen} = this.props;
         if (rootScreen) {
-            navigation.navigate("DrawerOpen")
+            navigateDrawerOpen(navigation)
         } else {
-            navigation.goBack()
+            navigateBack(navigation)
         }
     }
 

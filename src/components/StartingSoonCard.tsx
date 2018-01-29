@@ -10,6 +10,7 @@ import {Orientation} from "lib/device";
 import EventPathItem from "components/EventPathItem";
 import CountDown from "components/CountDown";
 import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
+import {navigate} from "lib/navigate";
 
 interface ExternalProps {
     eventId: number
@@ -25,7 +26,7 @@ type Props = StateProps & ExternalProps
 class StartingSoonCard extends React.Component<Props> {
     public render() {
         return (
-            <Card onPress={() => this.props.navigation.navigate("Event", {eventId: this.props.eventId})}>
+            <Card onPress={() => navigate(this.props.navigation, "Event",{eventId: this.props.eventId})}>
                 <View>
                     {this.renderHeader()}
                     {this.renderBody()}

@@ -6,9 +6,9 @@ import {Text, View} from "react-native";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import EventPathItem from "components/EventPathItem";
-import * as moment from "moment";
 import Touchable from "components/Touchable";
 import {formatDateTime} from "lib/dates";
+import {navigate} from "lib/navigate";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>,
@@ -28,7 +28,8 @@ class HighlightItemComponent extends React.Component<Props> {
 
         const {date, time} = formatDateTime(event.start)
         return (
-            <Touchable style={{paddingVertical: 8}} onPress={() => this.props.navigation.navigate("Event", {eventId: this.props.eventId})}>
+            <Touchable style={{paddingVertical: 8}}
+                       onPress={() => navigate(this.props.navigation, "Event", {eventId: this.props.eventId})}>
                 <View>
                     <View style={{flexDirection: "row"}}>
                         <Text style={{color: "#333333", flex: 1}}>{event.homeName} - {event.awayName}</Text>
