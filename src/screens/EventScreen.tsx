@@ -44,8 +44,8 @@ class EventScreenComponent extends React.Component<Props, State> {
         index: 0,
         routes: [
             {key: 'markets', title: 'Markets'},
-            {key: 'events', title: 'Events'},
             {key: 'stats', title: 'Statistics'},
+            {key: 'events', title: 'Events'},
         ]
     }
 
@@ -94,9 +94,8 @@ class EventScreenComponent extends React.Component<Props, State> {
                                 renderScene={this.renderScene}
                                 renderFooter={this.renderFooter}
                                 onIndexChange={this.handleIndexChange}
-                                useNativeDriver
-                                initialLayout={initialLayout}
-        />
+                                // useNativeDriver
+                                initialLayout={initialLayout}/>
 
     }
 
@@ -132,7 +131,7 @@ class EventScreenComponent extends React.Component<Props, State> {
         return (
             <TabBar
                 {...props}
-                pressColor="rgba(255, 64, 129, .5)"
+                pressColor="#00ADC9"
                 renderLabel={this.renderLabel(props)}
                 indicatorStyle={styles.indicator}
                 tabStyle={styles.tab}
@@ -177,6 +176,11 @@ const styles = StyleSheet.create({
     },
     indicator: {
         backgroundColor: '#00ADC9',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        right: 0,
+        height: 2,
     },
     label: {
         fontSize: 13,
@@ -184,7 +188,7 @@ const styles = StyleSheet.create({
         margin: 8,
     },
     tabbar: {
-        backgroundColor: '#fff8',
+        backgroundColor: '#f9f9f9',
     },
     tab: {
         opacity: 1,

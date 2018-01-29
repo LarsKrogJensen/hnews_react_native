@@ -193,7 +193,6 @@ function handleData(data: string, store: Store<AppStore>) {
                 }
                 break;
             case 18:
-                console.log("EVENT Removed")
                 if (msg.er) {
                     store.dispatch({
                         type: PushActions.EVENT_REMOVED,
