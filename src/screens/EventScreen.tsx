@@ -9,7 +9,7 @@ import {EventInfoItem} from "components/EventInfoItem";
 import {Theme} from "lib/device";
 import Screen from "screens/Screen";
 import {LiveCardScore} from "components/LiveCardScore";
-import {RouteBase, Scene, SceneRendererProps, TabBar, TabViewAnimated} from "react-native-tab-view";
+import {NavigationState, RouteBase, Scene, SceneRendererProps, TabBar, TabViewAnimated} from "react-native-tab-view";
 import autobind from "autobind-decorator";
 import {EventView} from "views/EventView";
 
@@ -24,8 +24,7 @@ interface StateProps {
 }
 
 interface State {
-    index: number
-    routes: PageRoute[]
+    tabIndex: number
 }
 
 interface PageRoute extends RouteBase {
@@ -41,12 +40,7 @@ const initialLayout = {
 
 class EventScreenComponent extends React.Component<Props, State> {
     state = {
-        index: 0,
-        routes: [
-            {key: 'markets', title: 'Markets'},
-            {key: 'stats', title: 'Statistics'},
-            {key: 'events', title: 'Events'},
-        ]
+        tabIndex: 0
     }
 
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
@@ -55,7 +49,7 @@ class EventScreenComponent extends React.Component<Props, State> {
         if (!this.props.event && nextProps.event) return true
         if (this.props.event.state && nextProps.event.state) return true
         if (this.props.event.openForLiveBetting && nextProps.event.openForLiveBetting) return true
-        if (this.state.index !== nextState.index) return true
+        if (this.state.tabIndex !== nextState.tabIndex) return true
 
         return false
     }
@@ -89,12 +83,23 @@ class EventScreenComponent extends React.Component<Props, State> {
             return <Text>Event not available</Text>
         }
 
+        const navState: NavigationState<PageRoute> = {
+            index: this.state.tabIndex,
+            routes: [
+                {key: 'markets', title: 'Markets'},
+                {key: 'events', title: 'Events'},
+            ]
+        }
+        if (event.hasPrematchStatistics) {
+            navState.routes.push({key: 'stats', title: 'Statistics'})
+        }
+
         return <TabViewAnimated style={[styles.container]}
-                                navigationState={this.state}
+                                navigationState={navState}
                                 renderScene={this.renderScene}
                                 renderFooter={this.renderFooter}
                                 onIndexChange={this.handleIndexChange}
-                                // useNativeDriver
+            // useNativeDriver
                                 initialLayout={initialLayout}/>
 
     }
@@ -102,7 +107,7 @@ class EventScreenComponent extends React.Component<Props, State> {
     @autobind
     private handleIndexChange(index: number) {
         this.setState({
-            index
+            tabIndex: index
         });
     }
 
