@@ -94,10 +94,8 @@ class DrawerComp extends React.Component<Props> {
                 data: [
                     {name: "Home", path: "Home"},
                     {name: "Right Now", path: "Live", live: true},
-                    {name: "Starting Soon", path: "Soon"},
-                    {name: "Tabs test", path: "Test"},
-                    {name: "Collapse test", path: "Test2"}
-                ]
+                    {name: "Starting Soon", path: "Soon"}
+                    ]
             },
             {
                 title: "Popular",

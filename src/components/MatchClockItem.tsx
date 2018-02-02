@@ -13,8 +13,7 @@ interface State {
     second: number;
 }
 
-export default class MatchClockItem extends React.Component<Props, State> {
-
+export class MatchClockItem extends React.Component<Props, State> {
     private timer?: number = undefined
 
     constructor(props: Props) {

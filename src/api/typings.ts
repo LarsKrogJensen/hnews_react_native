@@ -267,6 +267,25 @@ export interface Range {
     total?: number;
 }
 
+export interface LeagueTable {
+    eventGroupId: number,
+    updated: string,
+    leagueTableRows: LeagueTableRow[]
+}
+
+export interface LeagueTableRow {
+    position: number
+    participantId: number
+    participantName: string
+    gamesPlayed: number
+    wins: number
+    draws: number
+    losses: number
+    goalsFor: number
+    goalsAgainst: number
+    points: number
+}
+
 export interface LandingPageSection {
     name: string;
     events?: EventWithBetOffers[];

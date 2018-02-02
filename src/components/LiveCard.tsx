@@ -6,7 +6,7 @@ import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
 import {LiveData} from "api/typings";
-import MatchClockItem from "components/MatchClockItem";
+import {MatchClockItem} from "components/MatchClockItem";
 import {CircularProgress} from 'react-native-circular-progress';
 import {Card} from "components/Card";
 import EventPathItem from "components/EventPathItem";
@@ -35,7 +35,7 @@ class LiveCardComponent extends React.Component<Props> {
         }
 
         return (
-            <Card onPress={() => navigate(this.props.navigation, "Event",{eventId: this.props.eventId})}>
+            <Card onPress={() => navigate(this.props.navigation, "Event", {eventId: this.props.eventId})}>
                 <View>
                     {this.renderHeader()}
                     {this.renderBody()}
