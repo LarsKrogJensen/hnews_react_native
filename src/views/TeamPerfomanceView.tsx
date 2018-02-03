@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {ActivityIndicator, Text, TextStyle, View, StyleSheet, ViewStyle} from "react-native"
+import {ActivityIndicator, StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native"
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
@@ -9,7 +9,6 @@ import {OrientationProps, withOrientationChange} from "components/OrientationCha
 import {HistoricalEvent, HistoricalEventScore, TeamParticipantWithEvents, TPIResponse} from "api/typings";
 import {loadTeamPerformance} from "store/stats/actions";
 import autobind from "autobind-decorator";
-
 
 interface ExternalProps {
     eventId: number,
@@ -60,14 +59,14 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
     }
 
     private renderBody() {
-        const {tpi} = this.props
+        const {tpi, style} = this.props
 
         if (!tpi) {
-            return <Text>TPI not found</Text>
+            return null
         }
 
         return (
-            <View>
+            <View style={style}>
                 {this.renderFormTitle()}
                 {this.renderFormSummary(tpi)}
                 {this.renderTeamHistory(tpi.homeParticipant)}
@@ -77,8 +76,7 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
     }
 
     private renderFormTitle() {
-        return <Text style={{fontSize: 18, fontWeight: "bold", alignSelf: "center"}}>FORM</Text>
-
+        return <Text style={styles.title}>FORM</Text>
     }
 
     private renderFormSummary(tpi: TPIResponse) {
@@ -98,10 +96,13 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
     }
 
     private renderTeamHistory(team: TeamParticipantWithEvents) {
-
         return (
             <View style={{marginHorizontal: 8}}>
-                <Text style={{fontSize: 16, paddingVertical: 8, borderBottomWidth: StyleSheet.hairlineWidth}}>{team.participantName}</Text>
+                <Text style={{
+                    fontSize: 16,
+                    paddingVertical: 8,
+                    borderBottomWidth: StyleSheet.hairlineWidth
+                }}>{team.participantName}</Text>
                 {team.lastEvents.map((hist, index) => this.renderHistoricalEvent(hist, team.participantId + "-" + index))}
             </View>
         )
@@ -118,74 +119,52 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
         let result = this.scoreToResult(hist.scores);
         return (
             <View key={key}
-                  style={{padding: 8, backgroundColor: "white", borderBottomWidth: StyleSheet.hairlineWidth, flexDirection: "row", alignItems: "center"}}>
+                  style={{
+                      padding: 8,
+                      backgroundColor: "white",
+                      borderBottomWidth: StyleSheet.hairlineWidth,
+                      flexDirection: "row",
+                      alignItems: "center"
+                  }}>
                 {this.renderResult(result, 1, {width: 40, height: 35, fontSize: 20})}
                 <View style={{flexDirection: "column", marginLeft: 8, height: 35, flex: 1}}>
                     <View style={{flexDirection: "row"}}>
-                        <Text style={{flex: 1, fontWeight: result > 0 ? "bold" : "normal"}}>{hist.homeParticipant.participantName}</Text>
+                        <Text style={{
+                            flex: 1,
+                            fontWeight: result > 0 ? "bold" : "normal"
+                        }}>{hist.homeParticipant.participantName}</Text>
                         <Text style={{fontWeight: result > 0 ? "bold" : "normal"}}>{score.homeScore}</Text>
                     </View>
                     <View style={{flexDirection: "row"}}>
-                        <Text style={{flex: 1, fontWeight: result < 0 ? "bold" : "normal"}}>{hist.awayParticipant.participantName}</Text>
+                        <Text style={{
+                            flex: 1,
+                            fontWeight: result < 0 ? "bold" : "normal"
+                        }}>{hist.awayParticipant.participantName}</Text>
                         <Text style={{fontWeight: result < 0 ? "bold" : "normal"}}>{score.awayScore}</Text>
                     </View>
 
                 </View>
-            </View>                                        
+            </View>
         )
     }
 
     private renderResult(result: number, key: number, style: TextStyle = {}) {
-        const defaultStyle: TextStyle = {
-            width: 25,
-            height: 35,
-            padding: 4,
-            textAlign: "center",
-            marginRight: 4,
-            fontSize: 18,
-            fontWeight: "bold",
-            borderRadius: 3
-        }
 
         if (result > 0) {
-            return (
-                <Text key={key}
-                      style={{
-                          ...defaultStyle,
-                          backgroundColor: "#B8E986",
-                          color: "#729D46",
-                          ...style
-                      }}>W</Text>
-            )
+            return <Text key={key} style={[styles.resultCommon, styles.resultWon, style]}>W</Text>
         }
         if (result < 0) {
-            return (
-                <Text key={key}
-                      style={{
-                          ...defaultStyle,
-                          backgroundColor: "#E98686",
-                          color: "#BE2828",
-                          ...style
-                      }}>L</Text>
-            )
+            return <Text key={key} style={[styles.resultCommon, styles.resultLost, style]}>L</Text>
         }
 
-        return (
-            <Text key={key}
-                  style={{
-                      ...defaultStyle,
-                      backgroundColor: "#98D5F4",
-                      color: "#4C88A6",
-                      ...style
-                  }}>D</Text>
-        )
+        return <Text key={key} style={[styles.resultCommon, styles.resultDraw, style]}>D</Text>
     }
 
     @autobind
     private scoreToResult(scores: HistoricalEventScore[]): number {
         if (scores && scores.length) {
             const score = scores[0]
-            if (score.homeScore && score.awayScore) {
+            if (score.homeScore !== undefined && score.awayScore !== undefined) {
                 return score.homeScore - score.awayScore
             } else if (score.winner) {
                 return score.winner === "HOME" ? 1 :
@@ -197,6 +176,35 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
     }
 }
 
+const styles = StyleSheet.create({
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        alignSelf: "center"
+    } as TextStyle,
+    resultCommon: {
+        width: 25,
+        height: 35,
+        padding: 4,
+        textAlign: "center",
+        marginRight: 4,
+        fontSize: 18,
+        fontWeight: "bold",
+        borderRadius: 3
+    } as TextStyle,
+    resultWon: {
+        backgroundColor: "#B8E986",
+        color: "#729D46",
+    } as TextStyle,
+    resultDraw: {
+        backgroundColor: "#98D5F4",
+        color: "#4C88A6",
+    } as TextStyle,
+    resultLost: {
+        backgroundColor: "#E98686",
+        color: "#BE2828",
+    } as TextStyle
+})
 
 // Redux connect
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({

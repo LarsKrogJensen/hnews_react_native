@@ -391,7 +391,6 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
 
     return {
         loadData: (fireStartLoad: boolean) => {
-            console.log("loading sports " + sport + ", " + region + "," + league + " fireStartLoad: " + fireStartLoad)
             if (sport && region && league) {
                 dispatch(loadSport(sport, region, league, fireStartLoad))
                 // dispatch(loadOpenForLive(fireStartLoad))
