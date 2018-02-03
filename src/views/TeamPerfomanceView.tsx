@@ -5,13 +5,12 @@ import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
-import {LeagueTable} from "api/typings";
-import {loadLeagueTable} from "store/stats/actions";
+import {H2HResponse, TPIResponse} from "api/typings";
+import {loadHead2Head, loadTeamPerformance} from "store/stats/actions";
 
 
 interface ExternalProps {
     eventId: number
-    eventGroupId: number
 }
 
 interface ComponentState {
@@ -23,19 +22,17 @@ interface DispatchProps {
 
 interface StateProps {
     loading: boolean,
-    leagueTable: LeagueTable
+    tpi?: TPIResponse
 }
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
 
-
-class LeagueTableViewComponent extends React.Component<ComponentProps, ComponentState> {
+class TeamPerformanceViewComponent extends React.Component<ComponentProps, ComponentState> {
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<ComponentState>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
         if (nextProps.eventId !== this.props.eventId) return true
-        if (nextProps.leagueTable !== this.props.leagueTable) return true
-        if (nextProps.leagueTable.leagueTableRows.length !== this.props.leagueTable.leagueTableRows.length) return true
+        if (nextProps.tpi !== this.props.tpi) return true
         if (nextProps.orientation !== this.props.orientation) return true;
 
         return false
@@ -60,16 +57,14 @@ class LeagueTableViewComponent extends React.Component<ComponentProps, Component
     }
 
     private renderBody() {
-        const {leagueTable} = this.props
+        const {tpi} = this.props
 
-        if (!leagueTable || !leagueTable.leagueTableRows || !leagueTable.leagueTableRows.length) {
-            return <Text>League table not found</Text>
+        if (!tpi) {
+            return <Text>TPI not found</Text>
         }
 
         return (
-            this.props.leagueTable.leagueTableRows.map(row => (
-                <Text key={row.position}>{row.participantName}</Text>
-            ))
+            <Text>TPI</Text>
         )
     }
 }
@@ -77,16 +72,16 @@ class LeagueTableViewComponent extends React.Component<ComponentProps, Component
 
 // Redux connect
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
-    loading: state.statsStore.leagueTableLoading.has(inputProps.eventGroupId),
-    leagueTable: state.statsStore.leagueTable.get(inputProps.eventGroupId)
+    loading: state.statsStore.tpiLoading.has(inputProps.eventId),
+    tpi: state.statsStore.tpi.get(inputProps.eventId)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => ({
     loadData: (fireStartLoad: boolean = true) => {
-        dispatch(loadLeagueTable(inputProps.eventGroupId, fireStartLoad))
+        dispatch(loadTeamPerformance(inputProps.eventId, fireStartLoad))
     },
 })
 
-export const LeagueTableView: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(withOrientationChange(LeagueTableViewComponent))
+export const TeamPerformanceView: ComponentClass<ExternalProps> =
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(withOrientationChange(TeamPerformanceViewComponent))
 

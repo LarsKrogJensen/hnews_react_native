@@ -381,3 +381,39 @@ export interface MatchClockUpdated {
     matchClock: MatchClock
 }
 
+
+export interface TeamParticipant {
+    participantName: string,
+    participantId: number,
+}
+
+export interface TeamParticipantWithEvents extends TeamParticipant{
+    lastEvents: HistoricalEvent[]
+}
+
+export interface HistoricalEventScore {
+    homeScore?: number
+    awayScore?: number
+    type?: string
+    winner?: string
+}
+
+export interface HistoricalEvent {
+    start: string,
+    homeParticipant: TeamParticipant
+    awayParticipant: TeamParticipant
+    scores: HistoricalEventScore[]
+}
+
+export interface H2HResponse {
+    eventId: number,
+    homeParticipant: TeamParticipant,
+    awayParticipant: TeamParticipant,
+    lastEvents: HistoricalEvent[]
+}
+
+export interface TPIResponse {
+    eventId: number,
+    homeParticipant: TeamParticipantWithEvents,
+    awayParticipant: TeamParticipantWithEvents,
+}

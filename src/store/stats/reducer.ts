@@ -3,30 +3,40 @@ import {
     EventScoreUpdate,
     EventStatsUpdate,
     EventWithBetOffers,
+    H2HResponse,
     LeagueTable,
     LiveData,
     MatchClockRemoved,
-    MatchClockUpdated
+    MatchClockUpdated,
+    TPIResponse
 } from "api/typings";
 import {Map, Set} from "immutable"
 import {LandingAction, LandingActions} from "store/landing/actions";
 import * as _ from "lodash"
 import {PushAction, PushActions} from "store/push/actions";
-import {LeagueTableAction, LeagueTableActions} from "store/stats/actions";
+import {H2HActions, LeagueTableActions, StatsAction, TPIActions} from "store/stats/actions";
 
 export interface StatsStore {
     liveData: Map<number, LiveData>
     leagueTable: Map<number, LeagueTable>
     leagueTableLoading: Set<number>
+    h2h: Map<number, H2HResponse>
+    h2hLoading: Set<number>
+    tpi: Map<number, TPIResponse>
+    tpiLoading: Set<number>
 }
 
 const initialState: StatsStore = {
-    liveData: Map<number, LiveData>(),
+    liveData: Map(),
     leagueTable: Map(),
-    leagueTableLoading: Set()
+    leagueTableLoading: Set(),
+    h2h: Map(),
+    h2hLoading: Set(),
+    tpi: Map(),
+    tpiLoading: Set(),
 }
 
-export default function statsReducer(state: StatsStore = initialState, action: LiveAction | LandingAction | PushAction | LeagueTableAction): StatsStore {
+export default function statsReducer(state: StatsStore = initialState, action: LiveAction | LandingAction | PushAction | StatsAction): StatsStore {
     switch (action.type) {
         case LiveActions.LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;
@@ -82,6 +92,38 @@ export default function statsReducer(state: StatsStore = initialState, action: L
             return {
                 ...state,
                 leagueTableLoading: state.leagueTableLoading.remove(action.eventGroupId)
+            }
+        case H2HActions.START_LOADING:
+            return {
+                ...state,
+                h2hLoading: state.h2hLoading.add(action.eventId)
+            }
+        case H2HActions.LOAD_SUCCESS:
+            return {
+                ...state,
+                h2h: state.h2h.set(action.eventId, action.data),
+                h2hLoading: state.h2hLoading.remove(action.eventId)
+            }
+        case H2HActions.LOAD_FAILED:
+            return {
+                ...state,
+                h2hLoading: state.h2hLoading.remove(action.eventId)
+            }
+        case TPIActions.START_LOADING:
+            return {
+                ...state,
+                tpiLoading: state.tpiLoading.add(action.eventId)
+            }
+        case TPIActions.LOAD_SUCCESS:
+            return {
+                ...state,
+                tpi: state.tpi.set(action.eventId, action.data),
+                tpiLoading: state.tpiLoading.remove(action.eventId)
+            }
+        case TPIActions.LOAD_FAILED:
+            return {
+                ...state,
+                tpiLoading: state.tpiLoading.remove(action.eventId)
             }
         default:
             return state

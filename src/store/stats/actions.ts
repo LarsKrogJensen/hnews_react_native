@@ -1,4 +1,4 @@
-import {EventGroup, LeagueTable} from "api/typings";
+import {EventGroup, H2HResponse, LeagueTable, TPIResponse} from "api/typings";
 import {DispatchAction} from "store/DispatchAction";
 import {ThunkAction} from "redux-thunk";
 import {AppStore} from "store/store";
@@ -9,6 +9,19 @@ export enum LeagueTableActions {
     LOAD_SUCCESS = "LEAGUETABLE_LOAD_SUCCESS",
     LOAD_FAILED = "LEAGUETABLE_LOAD_FAILED"
 }
+
+export enum H2HActions {
+    START_LOADING = "H2H_START_LOADING",
+    LOAD_SUCCESS = "H2H_LOAD_SUCCESS",
+    LOAD_FAILED = "H2H_LOAD_FAILED"
+}
+
+export enum TPIActions {
+    START_LOADING = "TPI_START_LOADING",
+    LOAD_SUCCESS = "TPI_LOAD_SUCCESS",
+    LOAD_FAILED = "TPI_LOAD_FAILED"
+}
+
 
 export interface LeagueTableStartAction extends DispatchAction<LeagueTableActions.START_LOADING> {
     eventGroupId: number
@@ -23,7 +36,35 @@ export interface LeagueTableFailedAction extends DispatchAction<LeagueTableActio
     eventGroupId: number
 }
 
-export type LeagueTableAction = LeagueTableStartAction | LeagueTableSuccessAction | LeagueTableFailedAction
+export interface H2HStartAction extends DispatchAction<H2HActions.START_LOADING> {
+    eventId: number
+}
+
+export interface H2HSuccessAction extends DispatchAction<H2HActions.LOAD_SUCCESS> {
+    eventId: number
+    data: H2HResponse
+}
+
+export interface H2HFailedAction extends DispatchAction<H2HActions.LOAD_FAILED> {
+    eventId: number
+}
+
+export interface TPIStartAction extends DispatchAction<TPIActions.START_LOADING> {
+    eventId: number
+}
+
+export interface TPISuccessAction extends DispatchAction<TPIActions.LOAD_SUCCESS> {
+    eventId: number
+    data: TPIResponse
+}
+
+export interface TPIFailedAction extends DispatchAction<TPIActions.LOAD_FAILED> {
+    eventId: number
+}
+
+export type StatsAction = LeagueTableStartAction | LeagueTableSuccessAction | LeagueTableFailedAction |
+    H2HStartAction | H2HSuccessAction | H2HFailedAction |
+    TPIStartAction | TPISuccessAction | TPIFailedAction
 
 
 export function loadLeagueTable(eventGroupId: number, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
@@ -49,7 +90,7 @@ export function loadLeagueTable(eventGroupId: number, fireStartLoad: boolean = t
             }
         }
 
-        fireStartLoad && dispatch<LeagueTableAction>({type: LeagueTableActions.START_LOADING, eventGroupId})
+        fireStartLoad && dispatch<StatsAction>({type: LeagueTableActions.START_LOADING, eventGroupId})
 
         try {
             console.time(`Fetching league table (${sport}/${region}/${league})`)
@@ -76,6 +117,64 @@ export function loadLeagueTable(eventGroupId: number, fireStartLoad: boolean = t
         } catch (error) {
             console.error(error);
             dispatch<LeagueTableFailedAction>({type: LeagueTableActions.LOAD_FAILED, eventGroupId})
+        }
+    };
+}
+
+export function loadHead2Head(eventId: number, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
+    return async (dispatch, getState) => {
+        if (getState().statsStore.h2h.has(eventId)) {
+            return
+        }
+
+        fireStartLoad && dispatch<StatsAction>({type: H2HActions.START_LOADING, eventId})
+
+        try {
+            console.time(`Fetching H2H (${eventId})`)
+            const response = await fetch(`${API.host}/statistics/api/${API.offering}/h2h/event/${eventId}.json?lang=${API.lang}&market=${API.market}`);
+            const responseJson = await response.json();
+            if (response.status === 200) {
+                dispatch<H2HSuccessAction>({
+                    type: H2HActions.LOAD_SUCCESS,
+                    eventId,
+                    data: responseJson
+                });
+            } else {
+                dispatch<H2HFailedAction>({type: H2HActions.LOAD_FAILED, eventId})
+            }
+            console.timeEnd(`Fetching H2H (${eventId})`)
+        } catch (error) {
+            console.error(error);
+            dispatch<H2HFailedAction>({type: H2HActions.LOAD_FAILED, eventId})
+        }
+    };
+}
+
+export function loadTeamPerformance(eventId: number, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
+    return async (dispatch, getState) => {
+        if (getState().statsStore.tpi.has(eventId)) {
+            return
+        }
+
+        fireStartLoad && dispatch<StatsAction>({type: TPIActions.START_LOADING, eventId})
+
+        try {
+            console.time(`Fetching TPI (${eventId})`)
+            const response = await fetch(`${API.host}/statistics/api/${API.offering}/tpi/event/${eventId}.json?lang=${API.lang}&market=${API.market}`);
+            const responseJson = await response.json();
+            if (response.status === 200) {
+                dispatch<TPISuccessAction>({
+                    type: TPIActions.LOAD_SUCCESS,
+                    eventId,
+                    data: responseJson
+                });
+            } else {
+                dispatch<TPIFailedAction>({type: TPIActions.LOAD_FAILED, eventId})
+            }
+            console.timeEnd(`Fetching TPI (${eventId})`)
+        } catch (error) {
+            console.error(error);
+            dispatch<TPIFailedAction>({type: TPIActions.LOAD_FAILED, eventId})
         }
     };
 }

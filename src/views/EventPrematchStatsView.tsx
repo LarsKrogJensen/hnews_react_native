@@ -2,6 +2,8 @@ import * as React from "react"
 import {NavigationScreenProp} from "react-navigation";
 import {ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {LeagueTableView} from "views/LeagueTableView";
+import {Head2HeadView} from "views/Head2HeadView";
+import {TeamPerformanceView} from "views/TeamPerfomanceView";
 
 
 interface ExternalProps {
@@ -19,7 +21,7 @@ export class EventPrematchStatsView extends React.Component<ExternalProps, Compo
 
     shouldComponentUpdate(nextProps: Readonly<ExternalProps>, nextState: Readonly<ComponentState>, nextContext: any): boolean {
         if (nextProps.eventId !== this.props.eventId) return true
-        if (nextProps.eventGroupid!== this.props.eventGroupid) return true
+        if (nextProps.eventGroupid !== this.props.eventGroupid) return true
 
         return false
     }
@@ -27,6 +29,13 @@ export class EventPrematchStatsView extends React.Component<ExternalProps, Compo
     public render() {
         const {eventId, eventGroupid} = this.props
 
-        return <LeagueTableView eventId={eventId} eventGroupid={eventGroupid}/>
+
+        return (
+            <React.Fragment>
+                <Head2HeadView eventId={eventId}/>
+                <TeamPerformanceView eventId={eventId}/>
+                <LeagueTableView eventId={eventId} eventGroupId={eventGroupid}/>
+            </React.Fragment>
+        )
     }
 }
