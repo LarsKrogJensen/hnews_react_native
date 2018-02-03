@@ -1,12 +1,20 @@
 import * as React from "react"
-import {ComponentClass, StatelessComponent} from "react"
+import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, StyleSheet, Text,
-    TextStyle, View, ViewStyle
+    ActivityIndicator,
+    Animated,
+    ListRenderItemInfo,
+    RefreshControl,
+    SectionList,
+    SectionListData,
+    StyleSheet,
+    Text,
+    TextStyle,
+    View,
+    ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
-import connectAppState from "components/AppStateRefresh";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";

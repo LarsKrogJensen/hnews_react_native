@@ -57,7 +57,7 @@ export interface Event {
 
 
 export interface Participant {
-    participanyId: number;
+    participantId: number;
     name: string;
     scratched?: boolean;
     nonRunner?: boolean;
@@ -269,7 +269,7 @@ export interface Range {
 
 export interface LeagueTable {
     eventGroupId: number,
-    updated: string,
+    updated?: string,
     leagueTableRows: LeagueTableRow[]
 }
 

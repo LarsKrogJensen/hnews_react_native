@@ -12,6 +12,7 @@ import {LiveCardScore} from "components/LiveCardScore";
 import {NavigationState, RouteBase, Scene, SceneRendererProps, TabBar, TabViewAnimated} from "react-native-tab-view";
 import autobind from "autobind-decorator";
 import {EventView} from "views/EventView";
+import {EventPrematchStatsView} from "views/EventPrematchStatsView";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: NavigationParams }, {}>
@@ -91,7 +92,7 @@ class EventScreenComponent extends React.Component<Props, State> {
             ]
         }
         if (event.hasPrematchStatistics) {
-            navState.routes.push({key: 'stats', title: 'Statistics'})
+            navState.routes.unshift({key: 'stats', title: 'Statistics'})
         }
 
         return <TabViewAnimated style={[styles.container]}
@@ -164,9 +165,7 @@ class EventScreenComponent extends React.Component<Props, State> {
                 );
             case 'stats':
                 return (
-                    <View
-                        style={[styles.page, {backgroundColor: '#9DB1B5'}]}
-                    />
+                    <EventPrematchStatsView navigation={navigation} eventId={event.id} eventGroupid={event.groupId}/>
                 );
             default:
                 return null

@@ -10,9 +10,9 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@types/lodash@^4.14.97":
-  version "4.14.97"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.97.tgz#7262d6d5fc5e87cdb3f68eb33accd4024f2b211e"
+"@types/lodash@^4.14.98":
+  version "4.14.98"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.98.tgz#aaf012ae443e657e7885e605a4c1b340db160609"
 
 "@types/react-native-material-ui@^1.12.3":
   version "1.12.3"
@@ -41,15 +41,15 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.52.5":
-  version "0.52.5"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.5.tgz#115bce4d15b1adb5f951b2f751e77d8e97b0c77b"
+"@types/react-native@0.52.6":
+  version "0.52.6"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.6.tgz#ce4007db91fdff8051e949825ddd9eb0ebe4b2ab"
   dependencies:
     "@types/react" "*"
 
-"@types/react-navigation@^1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.0.29.tgz#36e0fa049c51b2104d7800b11dbc34a86ebb8d34"
+"@types/react-navigation@^1.0.30":
+  version "1.0.30"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.0.30.tgz#02859ff8052285738d8a85ad564c28078ab23d18"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -1169,9 +1169,9 @@ buffer-shims@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/buffer-shims/-/buffer-shims-1.0.0.tgz#9978ce317388c649ad8793028c3477ef044a8b51"
 
-bugsnag-react-native@^2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-2.8.0.tgz#60f1d76b205f23eb58daf42a03e3c458dad84759"
+bugsnag-react-native@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-2.9.1.tgz#d719bf362ba7421abc0ee491f210c02090b8f925"
   dependencies:
     promise "^7"
     prop-types "^15.6.0"

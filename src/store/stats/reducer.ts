@@ -3,28 +3,35 @@ import {
     EventScoreUpdate,
     EventStatsUpdate,
     EventWithBetOffers,
+    LeagueTable,
     LiveData,
     MatchClockRemoved,
     MatchClockUpdated
 } from "api/typings";
-import {Map} from "immutable"
+import {Map, Set} from "immutable"
 import {LandingAction, LandingActions} from "store/landing/actions";
 import * as _ from "lodash"
 import {PushAction, PushActions} from "store/push/actions";
+import {LeagueTableAction, LeagueTableActions} from "store/stats/actions";
 
 export interface StatsStore {
     liveData: Map<number, LiveData>
+    leagueTable: Map<number, LeagueTable>
+    leagueTableLoading: Set<number>
 }
 
 const initialState: StatsStore = {
-    liveData: Map<number, LiveData>()
+    liveData: Map<number, LiveData>(),
+    leagueTable: Map(),
+    leagueTableLoading: Set()
 }
 
-export default function statsReducer(state: StatsStore = initialState, action: LiveAction | LandingAction | PushAction): StatsStore {
+export default function statsReducer(state: StatsStore = initialState, action: LiveAction | LandingAction | PushAction | LeagueTableAction): StatsStore {
     switch (action.type) {
         case LiveActions.LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;
             return {
+                ...state,
                 liveData: mergeLiveData(state.liveData, liveEvents.map(evt => evt.liveData))
             }
         case LandingActions.LOAD_SUCCESS:
@@ -32,27 +39,49 @@ export default function statsReducer(state: StatsStore = initialState, action: L
             let liveData = landingEvents.map(evt => evt.liveData).filter(ld => ld != undefined)
 
             return {
+                ...state,
                 liveData: mergeLiveData(state.liveData, liveData)
             }
         case PushActions.EVENT_SCORE_UPDATE:
             return {
+                ...state,
                 liveData: mergeScore(state.liveData, action.data),
             }
         case PushActions.EVENT_STATS_UPDATE:
             return {
+                ...state,
                 liveData: mergeEventStats(state.liveData, action.data),
             }
         case PushActions.MATCH_CLOCK_UPDATED:
             return {
+                ...state,
                 liveData: mergeMatchClockUpdate(state.liveData, action.data),
             }
         case PushActions.MATCH_CLOCK_REMOVED:
             return {
+                ...state,
                 liveData: mergeMatchClockRemoved(state.liveData, action.data),
             }
         case PushActions.EVENT_REMOVED:
             return {
+                ...state,
                 liveData: state.liveData.remove(action.data.eventId),
+            }
+        case LeagueTableActions.START_LOADING:
+            return {
+                ...state,
+                leagueTableLoading: state.leagueTableLoading.add(action.eventGroupId)
+            }
+        case LeagueTableActions.LOAD_SUCCESS:
+            return {
+                ...state,
+                leagueTable: state.leagueTable.set(action.eventGroupId, action.data),
+                leagueTableLoading: state.leagueTableLoading.remove(action.eventGroupId)
+            }
+        case LeagueTableActions.LOAD_FAILED:
+            return {
+                ...state,
+                leagueTableLoading: state.leagueTableLoading.remove(action.eventGroupId)
             }
         default:
             return state

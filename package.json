@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "autobind-decorator": "^2.1.0",
-    "bugsnag-react-native": "^2.8.0",
+    "bugsnag-react-native": "^2.9.1",
     "immutable": "^3.8.2",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
@@ -35,13 +35,13 @@
     "tslib": "^1.9.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.97",
+    "@types/lodash": "^4.14.98",
     "@types/react": "16.0.31",
-    "@types/react-native": "0.52.5",
+    "@types/react-native": "0.52.6",
     "@types/react-native-material-ui": "^1.12.3",
     "@types/react-native-tab-view": "^0.0.2",
     "@types/react-native-vector-icons": "^4.4.2",
-    "@types/react-navigation": "^1.0.29",
+    "@types/react-navigation": "^1.0.30",
     "@types/react-redux": "^5.0.14",
     "@types/socket.io-client": "^1.4.32",
     "babel-jest": "22.1.0",

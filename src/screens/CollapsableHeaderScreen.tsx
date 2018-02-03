@@ -2,16 +2,24 @@ import * as React from "react"
 import {ReactNode} from "react"
 
 import {
-    Animated, ImageStyle, NativeScrollEvent, NativeSyntheticEvent, Platform, StatusBar, StyleSheet, TextStyle, View,
+    Animated,
+    ImageStyle,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+    Platform,
+    StatusBar,
+    StyleSheet,
+    TextStyle,
+    View,
     ViewStyle
 } from 'react-native';
 import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
 import autobind from "autobind-decorator";
 import {NavigationScreenProp} from "react-navigation";
+import {navigateBack, navigateDrawerOpen} from "lib/navigate";
 import AnimatedDiffClamp = Animated.AnimatedDiffClamp;
 import absoluteFill = StyleSheet.absoluteFill;
-import {navigate, navigateBack} from "lib/navigate";
 
 export const NAVBAR_HEIGHT = 64;
 export const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
@@ -106,7 +114,6 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
     }
 
     render() {
-        // console.log("CollapsableHeaderScreen.render")
 
         const {clampedScroll, scrollAnim} = this.state;
 
@@ -115,21 +122,11 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
             outputRange: [0, -(NAVBAR_HEIGHT - STATUS_BAR_HEIGHT)],
             extrapolate: 'clamp',
         });
-        // const contentTranslate = clampedScroll.interpolate({
-        //     inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
-        //     outputRange: [NAVBAR_HEIGHT, STATUS_BAR_HEIGHT],
-        //     extrapolate: 'clamp',
-        // });
         const navbarOpacity: Animated.AnimatedInterpolation = clampedScroll.interpolate({
             inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
             outputRange: [1, 0],
             extrapolate: 'clamp',
         });
-        // const contentPadding: Animated.AnimatedInterpolation = clampedScroll.interpolate({
-        //     inputRange: [0, NAVBAR_HEIGHT],
-        //     outputRange: [NAVBAR_HEIGHT, 0],
-        //     extrapolate: 'clamp',
-        // });
 
         const scrollHooks: ScrollHooks = {
             onMomentumScrollBegin: this.onMomentumScrollBegin,
@@ -144,9 +141,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         }
         return (
             <View style={styles.fill}>
-                {/*<Animated.View style={{transform: [{translateY: contentTranslate}]}}>*/}
                 {this.props.renderBody(scrollHooks)}
-                {/*</Animated.View>*/}
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarHidden}/>
 
@@ -197,7 +192,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
     private onLeftClick() {
         const {navigation, rootScreen} = this.props;
         if (rootScreen) {
-            navigate(navigation, "DrawerOpen")
+            navigateDrawerOpen(navigation)
         } else {
             navigateBack(navigation)
         }

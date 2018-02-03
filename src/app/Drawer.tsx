@@ -2,7 +2,13 @@ import * as React from "react"
 import {ComponentClass} from "react"
 import {NavigationActions, NavigationNavigateAction, NavigationScreenProp} from "react-navigation";
 import {
-    ActivityIndicator, Image, ListRenderItemInfo, SectionList, SectionListData, StyleSheet, Text,
+    ActivityIndicator,
+    Image,
+    ListRenderItemInfo,
+    SectionList,
+    SectionListData,
+    StyleSheet,
+    Text,
     View
 } from "react-native";
 import banner from "images/banner";
@@ -14,9 +20,9 @@ import {loadGroups, loadHighlights} from "store/groups/actions";
 import {connect} from "react-redux";
 import {EventGroup} from "api/typings";
 import connectAppState from "components/AppStateRefresh";
-import absoluteFill = StyleSheet.absoluteFill;
 import {loadOpenForLive} from "store/live/actions";
 import {navigate} from "lib/navigate";
+import absoluteFill = StyleSheet.absoluteFill;
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -94,8 +100,8 @@ class DrawerComp extends React.Component<Props> {
                 data: [
                     {name: "Home", path: "Home"},
                     {name: "Right Now", path: "Live", live: true},
-                    {name: "Starting Soon", path: "Soon"}
-                    ]
+                    {name: "Starting Soon", path: "Soon"},
+                ]
             },
             {
                 title: "Popular",
