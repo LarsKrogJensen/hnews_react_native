@@ -7,7 +7,8 @@ import {
     BetOffer,
     BetOfferAdded,
     BetOfferRemoved,
-    BetOfferStatusUpdate, EventRemoved,
+    BetOfferStatusUpdate,
+    EventRemoved,
     EventView,
     EventWithBetOffers,
     LiveEvent,
@@ -204,15 +205,17 @@ function flatMapOutcomes(betoffers: (BetOffer | undefined)[]): Outcome[] {
 
 function mergeOutcomes(state: Map<number, OutcomeEntity>, outcomes: Outcome[]): Map<number, OutcomeEntity> {
 
-    for (let outcome of outcomes.filter(o => o)) {
-        const entity = state.get(outcome.id)
-        if (entity) {
-            state = state.set(outcome.id, {
-                ...entity,
-                ...outcome
-            })
-        } else {
-            state = state.set(outcome.id, outcome) // for now Outcome is structural equal to OutcomeEntity
+    if (outcomes) {
+        for (let outcome of outcomes.filter(o => o)) {
+            const entity = state.get(outcome.id)
+            if (entity) {
+                state = state.set(outcome.id, {
+                    ...entity,
+                    ...outcome
+                })
+            } else {
+                state = state.set(outcome.id, outcome) // for now Outcome is structural equal to OutcomeEntity
+            }
         }
     }
 
@@ -221,13 +224,15 @@ function mergeOutcomes(state: Map<number, OutcomeEntity>, outcomes: Outcome[]): 
 
 function mergeOutcomeUpadates(state: Map<number, OutcomeEntity>, outcomes: OutcomeUpdate[]): Map<number, OutcomeEntity> {
 
-    for (let outcome of outcomes) {
-        const entity = state.get(outcome.id)
-        if (entity) {
-            state = state.set(outcome.id, {
-                ...entity,
-                ...outcome
-            })
+    if (outcomes) {
+        for (let outcome of outcomes) {
+            const entity = state.get(outcome.id)
+            if (entity) {
+                state = state.set(outcome.id, {
+                    ...entity,
+                    ...outcome
+                })
+            }
         }
     }
 

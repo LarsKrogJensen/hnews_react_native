@@ -1,16 +1,19 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {ActivityIndicator, Text, View} from "react-native"
+import {ActivityIndicator, Text, TextStyle, View, StyleSheet, ViewStyle} from "react-native"
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
-import {H2HResponse, TPIResponse} from "api/typings";
-import {loadHead2Head, loadTeamPerformance} from "store/stats/actions";
+import {HistoricalEvent, HistoricalEventScore, TeamParticipantWithEvents, TPIResponse} from "api/typings";
+import {loadTeamPerformance} from "store/stats/actions";
+import autobind from "autobind-decorator";
 
 
 interface ExternalProps {
-    eventId: number
+    eventId: number,
+    style?: ViewStyle
 }
 
 interface ComponentState {
@@ -43,11 +46,11 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
     }
 
     public render() {
-        const {loading} = this.props;
+        const {loading, style} = this.props;
         if (loading) {
 
             return (
-                <View>
+                <View style={style}>
                     <ActivityIndicator style={{marginTop: 8}}/>
                 </View>
             )
@@ -64,8 +67,133 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
         }
 
         return (
-            <Text>TPI</Text>
+            <View>
+                {this.renderFormTitle()}
+                {this.renderFormSummary(tpi)}
+                {this.renderTeamHistory(tpi.homeParticipant)}
+                {this.renderTeamHistory(tpi.awayParticipant)}
+            </View>
         )
+    }
+
+    private renderFormTitle() {
+        return <Text style={{fontSize: 18, fontWeight: "bold", alignSelf: "center"}}>FORM</Text>
+
+    }
+
+    private renderFormSummary(tpi: TPIResponse) {
+        const homeResults: number[] = tpi.homeParticipant.lastEvents.map(hist => this.scoreToResult(hist.scores))
+        const awayResults: number[] = tpi.awayParticipant.lastEvents.map(hist => this.scoreToResult(hist.scores))
+
+        return (
+            <View style={{flexDirection: "row", justifyContent: "center", marginVertical: 4}}>
+                {homeResults.map((value, index) => this.renderResult(value, index * 1000))}
+                <Icon style={{padding: 4, marginRight: 8, marginLeft: 4}}
+                      name="md-trending-up"
+                      size={30}
+                      color="black"/>
+                {awayResults.map((value, index) => this.renderResult(value, index * 1000))}
+            </View>
+        )
+    }
+
+    private renderTeamHistory(team: TeamParticipantWithEvents) {
+
+        return (
+            <View style={{marginHorizontal: 8}}>
+                <Text style={{fontSize: 16, paddingVertical: 8, borderBottomWidth: StyleSheet.hairlineWidth}}>{team.participantName}</Text>
+                {team.lastEvents.map((hist, index) => this.renderHistoricalEvent(hist, team.participantId + "-" + index))}
+            </View>
+        )
+    }
+
+    private renderHistoricalEvent(hist: HistoricalEvent, key: string) {
+
+        const score = hist.scores && hist.scores.length ? hist.scores[0] : undefined;
+
+        if (!score) {
+            return null
+        }
+
+        let result = this.scoreToResult(hist.scores);
+        return (
+            <View key={key}
+                  style={{padding: 8, backgroundColor: "white", borderBottomWidth: StyleSheet.hairlineWidth, flexDirection: "row", alignItems: "center"}}>
+                {this.renderResult(result, 1, {width: 40, height: 35, fontSize: 20})}
+                <View style={{flexDirection: "column", marginLeft: 8, height: 35, flex: 1}}>
+                    <View style={{flexDirection: "row"}}>
+                        <Text style={{flex: 1, fontWeight: result > 0 ? "bold" : "normal"}}>{hist.homeParticipant.participantName}</Text>
+                        <Text style={{fontWeight: result > 0 ? "bold" : "normal"}}>{score.homeScore}</Text>
+                    </View>
+                    <View style={{flexDirection: "row"}}>
+                        <Text style={{flex: 1, fontWeight: result < 0 ? "bold" : "normal"}}>{hist.awayParticipant.participantName}</Text>
+                        <Text style={{fontWeight: result < 0 ? "bold" : "normal"}}>{score.awayScore}</Text>
+                    </View>
+
+                </View>
+            </View>                                        
+        )
+    }
+
+    private renderResult(result: number, key: number, style: TextStyle = {}) {
+        const defaultStyle: TextStyle = {
+            width: 25,
+            height: 35,
+            padding: 4,
+            textAlign: "center",
+            marginRight: 4,
+            fontSize: 18,
+            fontWeight: "bold",
+            borderRadius: 3
+        }
+
+        if (result > 0) {
+            return (
+                <Text key={key}
+                      style={{
+                          ...defaultStyle,
+                          backgroundColor: "#B8E986",
+                          color: "#729D46",
+                          ...style
+                      }}>W</Text>
+            )
+        }
+        if (result < 0) {
+            return (
+                <Text key={key}
+                      style={{
+                          ...defaultStyle,
+                          backgroundColor: "#E98686",
+                          color: "#BE2828",
+                          ...style
+                      }}>L</Text>
+            )
+        }
+
+        return (
+            <Text key={key}
+                  style={{
+                      ...defaultStyle,
+                      backgroundColor: "#98D5F4",
+                      color: "#4C88A6",
+                      ...style
+                  }}>D</Text>
+        )
+    }
+
+    @autobind
+    private scoreToResult(scores: HistoricalEventScore[]): number {
+        if (scores && scores.length) {
+            const score = scores[0]
+            if (score.homeScore && score.awayScore) {
+                return score.homeScore - score.awayScore
+            } else if (score.winner) {
+                return score.winner === "HOME" ? 1 :
+                    score.winner === "AWAY" ? -1 : 0
+            }
+        }
+
+        return 0 //draw
     }
 }
 

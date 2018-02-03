@@ -4,6 +4,7 @@ import {ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {LeagueTableView} from "views/LeagueTableView";
 import {Head2HeadView} from "views/Head2HeadView";
 import {TeamPerformanceView} from "views/TeamPerfomanceView";
+import {ScrollView} from "react-native";
 
 
 interface ExternalProps {
@@ -31,11 +32,11 @@ export class EventPrematchStatsView extends React.Component<ExternalProps, Compo
 
 
         return (
-            <React.Fragment>
+            <ScrollView style={{marginTop: 8}}>
+                <TeamPerformanceView eventId={eventId} />
                 <Head2HeadView eventId={eventId}/>
-                <TeamPerformanceView eventId={eventId}/>
                 <LeagueTableView eventId={eventId} eventGroupId={eventGroupid}/>
-            </React.Fragment>
+            </ScrollView>
         )
     }
 }
