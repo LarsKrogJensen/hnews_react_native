@@ -33,6 +33,7 @@ import {BetOfferGroupItem} from "components/betOffers/BetOfferGroupItem";
 import * as _ from "lodash"
 import {withPush} from "components/withPush";
 import {API} from "store/API";
+import connectAppState from "components/AppStateRefresh";
 
 
 interface ExternalProps {
@@ -79,7 +80,7 @@ interface BetOfferGroup {
     key: string
 }
 
-class EventViewComponent extends React.Component<ComponentProps, ComponentState> {
+class EventMarketsViewComponent extends React.Component<ComponentProps, ComponentState> {
     constructor(props: ComponentProps) {
         super(props);
 
@@ -455,8 +456,13 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     },
 })
 
-const PushWrapper = withPush(EventViewComponent, (props) => [`ev.${props.eventId}`, `${API.pushLang}.ev.${props.eventId}`])
+const PushWrapper = withPush(EventMarketsViewComponent, (props) => [`ev.${props.eventId}`, `${API.pushLang}.ev.${props.eventId}`])
 
-export const EventView: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(withOrientationChange(PushWrapper))
+const WithOrientationChange = withOrientationChange(PushWrapper)
+
+const WithAppStateRefresh: ComponentClass<ComponentProps> =
+    connectAppState((props: ComponentProps) => props.loadData(false))(WithOrientationChange)
+
+export const EventMarketsView: ComponentClass<ExternalProps> =
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 

@@ -1,4 +1,4 @@
-import {EventGroup, H2HResponse, LeagueTable, TPIResponse} from "api/typings";
+import {EventGroup, H2HResponse, LeagueTable, LiveData, TPIResponse} from "api/typings";
 import {DispatchAction} from "store/DispatchAction";
 import {ThunkAction} from "redux-thunk";
 import {AppStore} from "store/store";
@@ -22,6 +22,11 @@ export enum TPIActions {
     LOAD_FAILED = "TPI_LOAD_FAILED"
 }
 
+export enum LiveDataActions {
+    START_LOADING = "LIVE_DATA_START_LOADING",
+    LOAD_SUCCESS = "LIVE_DATA_LOAD_SUCCESS",
+    LOAD_FAILED = "LIVE_DATA_LOAD_FAILED"
+}
 
 export interface LeagueTableStartAction extends DispatchAction<LeagueTableActions.START_LOADING> {
     eventGroupId: number
@@ -62,9 +67,23 @@ export interface TPIFailedAction extends DispatchAction<TPIActions.LOAD_FAILED> 
     eventId: number
 }
 
+export interface LiveDataStartAction extends DispatchAction<LiveDataActions.START_LOADING> {
+    eventId: number
+}
+
+export interface LiveDataSuccessAction extends DispatchAction<LiveDataActions.LOAD_SUCCESS> {
+    eventId: number
+    data?: LiveData
+}
+
+export interface LiveDataFailedAction extends DispatchAction<LiveDataActions.LOAD_FAILED> {
+    eventId: number
+}
+
 export type StatsAction = LeagueTableStartAction | LeagueTableSuccessAction | LeagueTableFailedAction |
     H2HStartAction | H2HSuccessAction | H2HFailedAction |
-    TPIStartAction | TPISuccessAction | TPIFailedAction
+    TPIStartAction | TPISuccessAction | TPIFailedAction |
+    LiveDataStartAction | LiveDataSuccessAction | LiveDataFailedAction
 
 
 export function loadLeagueTable(eventGroupId: number, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
@@ -176,5 +195,31 @@ export function loadTeamPerformance(eventId: number, fireStartLoad: boolean = tr
             console.error(error);
             dispatch<TPIFailedAction>({type: TPIActions.LOAD_FAILED, eventId})
         }
-    };
+    }
+}
+
+export function loadLiveData(eventId: number, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
+    return async (dispatch) => {
+
+        fireStartLoad && dispatch<LiveDataStartAction>({type: LiveDataActions.START_LOADING, eventId})
+
+        try {
+            console.time(`Fetching LiveData (${eventId})`)
+            const response = await fetch(`${API.host}/offering/api/v2/${API.offering}/event/${eventId}/livedata.json?lang=${API.lang}&market=${API.market}`);
+            const responseJson = await response.json();
+            if (response.status === 200) {
+                dispatch<LiveDataSuccessAction>({
+                    type: LiveDataActions.LOAD_SUCCESS,
+                    eventId,
+                    data: responseJson
+                });
+            } else {
+                dispatch<LiveDataFailedAction>({type: LiveDataActions.LOAD_FAILED, eventId})
+            }
+            console.timeEnd(`Fetching LiveData (${eventId})`)
+        } catch (error) {
+            console.error(error);
+            dispatch<LiveDataFailedAction>({type: LiveDataActions.LOAD_FAILED, eventId})
+        }
+    }
 }

@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Animated, Dimensions, StyleSheet, Text, View, ViewStyle} from "react-native"
+import {Animated, Dimensions, StyleSheet, Text, ViewStyle} from "react-native"
 import {NavigationParams, NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
@@ -11,8 +11,9 @@ import Screen from "screens/Screen";
 import {LiveCardScore} from "components/LiveCardScore";
 import {NavigationState, RouteBase, Scene, SceneRendererProps, TabBar, TabViewAnimated} from "react-native-tab-view";
 import autobind from "autobind-decorator";
-import {EventView} from "views/EventView";
+import {EventMarketsView} from "views/EventMarketsView";
 import {EventPrematchStatsView} from "views/EventPrematchStatsView";
+import {EventLiveStatsView} from "views/EventLiveStatsView";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: NavigationParams }, {}>
@@ -87,12 +88,12 @@ class EventScreenComponent extends React.Component<Props, State> {
         const navState: NavigationState<PageRoute> = {
             index: this.state.tabIndex,
             routes: [
-                {key: 'markets', title: 'Markets'},
                 {key: 'events', title: 'Events'},
+                {key: 'markets', title: 'Markets'},
             ]
         }
         if (event.hasPrematchStatistics) {
-            navState.routes.unshift({key: 'stats', title: 'Statistics'})
+            navState.routes.push({key: 'stats', title: 'Statistics'})
         }
 
         return <TabViewAnimated style={[styles.container]}
@@ -153,16 +154,14 @@ class EventScreenComponent extends React.Component<Props, State> {
         switch (props.route.key) {
             case 'markets':
                 return (
-                    <EventView eventId={event.id}
-                               live={event.state === "STARTED"}
-                               eventGroupid={event.groupId}
-                               navigation={navigation}/>
+                    <EventMarketsView eventId={event.id}
+                                      live={event.state === "STARTED"}
+                                      eventGroupid={event.groupId}
+                                      navigation={navigation}/>
                 );
             case 'events':
                 return (
-                    <View
-                        style={[styles.page, {backgroundColor: '#E6BDC5'}]}
-                    />
+                    <EventLiveStatsView eventId={event.id} eventGroupId={event.groupId} style={styles.liveStats}/>
                 );
             case 'stats':
                 return (
@@ -179,6 +178,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    liveStats: {
+        marginTop: 8
+    } as ViewStyle,
     indicator: {
         backgroundColor: '#00ADC9',
         position: 'absolute',

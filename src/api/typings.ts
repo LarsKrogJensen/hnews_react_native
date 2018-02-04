@@ -124,6 +124,17 @@ export interface LiveStatistic {
     count: number;
 }
 
+export interface Occurence {
+    id: number
+    eventId: number
+    occurrenceTypeId: string, //"CARDS_YELLOW_AWAY",
+    secondInPeriod: number,
+    secondInMatch: number
+    periodId: string //"SECOND_HALF",
+    action: string, //"ADDED", DELETED,MODIFIED
+    periodIndex: number 
+}
+
 export interface LiveData {
     eventId: number;
     matchClock?: MatchClock;
@@ -132,6 +143,7 @@ export interface LiveData {
     visualizationSupported: boolean;
     statistics: EventStats;
     liveStatistics: LiveStatistic[];
+    occurrences: Occurence[]
 }
 
 export interface Criterion {

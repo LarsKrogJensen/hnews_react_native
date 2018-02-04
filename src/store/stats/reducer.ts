@@ -8,16 +8,19 @@ import {
     LiveData,
     MatchClockRemoved,
     MatchClockUpdated,
+    Occurence,
     TPIResponse
 } from "api/typings";
 import {Map, Set} from "immutable"
 import {LandingAction, LandingActions} from "store/landing/actions";
 import * as _ from "lodash"
 import {PushAction, PushActions} from "store/push/actions";
-import {H2HActions, LeagueTableActions, StatsAction, TPIActions} from "store/stats/actions";
+import {H2HActions, LeagueTableActions, LiveDataActions, StatsAction, TPIActions} from "store/stats/actions";
 
 export interface StatsStore {
     liveData: Map<number, LiveData>
+    liveDataLoading: Set<number>
+    occurences: Map<number, Occurence[]>
     leagueTable: Map<number, LeagueTable>
     leagueTableLoading: Set<number>
     h2h: Map<number, H2HResponse>
@@ -28,6 +31,8 @@ export interface StatsStore {
 
 const initialState: StatsStore = {
     liveData: Map(),
+    liveDataLoading: Set(),
+    occurences: Map(),
     leagueTable: Map(),
     leagueTableLoading: Set(),
     h2h: Map(),
@@ -42,7 +47,7 @@ export default function statsReducer(state: StatsStore = initialState, action: L
             const liveEvents = action.data.liveEvents;
             return {
                 ...state,
-                liveData: mergeLiveData(state.liveData, liveEvents.map(evt => evt.liveData))
+                ...mergeLiveData(state, liveEvents.map(evt => evt.liveData))
             }
         case LandingActions.LOAD_SUCCESS:
             let landingEvents: EventWithBetOffers[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
@@ -50,7 +55,23 @@ export default function statsReducer(state: StatsStore = initialState, action: L
 
             return {
                 ...state,
-                liveData: mergeLiveData(state.liveData, liveData)
+                ...mergeLiveData(state, liveData)
+            }
+        case LiveDataActions.START_LOADING:
+            return {
+                ...state,
+                liveDataLoading: state.liveDataLoading.add(action.eventId)
+            }
+        case LiveDataActions.LOAD_SUCCESS:
+            return {
+                ...state,
+                ...mergeLiveData(state,[action.data]),
+                liveDataLoading: state.liveDataLoading.remove(action.eventId)
+            }
+        case LiveDataActions.LOAD_FAILED:
+            return {
+                ...state,
+                liveDataLoading: state.liveDataLoading.remove(action.eventId)
             }
         case PushActions.EVENT_SCORE_UPDATE:
             return {
@@ -76,6 +97,7 @@ export default function statsReducer(state: StatsStore = initialState, action: L
             return {
                 ...state,
                 liveData: state.liveData.remove(action.data.eventId),
+                occurences: state.occurences.remove(action.data.eventId)
             }
         case LeagueTableActions.START_LOADING:
             return {
@@ -130,15 +152,21 @@ export default function statsReducer(state: StatsStore = initialState, action: L
     }
 }
 
-function mergeLiveData(state: Map<number, LiveData>, liveDataList: (LiveData | undefined)[]): Map<number, LiveData> {
-    for (let liveData of liveDataList) {
-        // TODO: should merge in changes
-        if (!liveData) continue
-
-        state = state.set(liveData.eventId, liveData);
+function mergeLiveData(state: StatsStore, items: (LiveData | undefined)[]): Partial<StatsStore> {
+    let liveData = state.liveData
+    let occurences = state.occurences
+    for (let item of items) {
+        if (!item) continue
+        liveData = liveData.set(item.eventId, item);
+        if (item.occurrences) {
+            occurences = occurences.set(item.eventId, item.occurrences)
+        }
     }
 
-    return state
+    return {
+        liveData,
+        occurences
+    }
 }
 
 function mergeScore(state: Map<number, LiveData>, update: EventScoreUpdate): Map<number, LiveData> {
