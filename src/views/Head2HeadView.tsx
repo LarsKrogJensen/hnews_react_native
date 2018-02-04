@@ -70,13 +70,13 @@ class Head2HeadViewComponent extends React.Component<ComponentProps, ComponentSt
                 <Text style={styles.title}>Head 2 Head</Text>
                 {
                     h2h.lastEvents.map((hist, index) =>
-                        this.renderHistoricalEvent(hist, "" + index))
+                        this.renderHistoricalEvent(hist, index))
                 }
             </View>
         )
     }
 
-    private renderHistoricalEvent(hist: HistoricalEvent, key: string) {
+    private renderHistoricalEvent(hist: HistoricalEvent, index: number) {
 
         const score = hist.scores && hist.scores.length ? hist.scores[0] : undefined;
 
@@ -84,16 +84,8 @@ class Head2HeadViewComponent extends React.Component<ComponentProps, ComponentSt
             return null
         }
 
-
         return (
-            <View key={key}
-                  style={{
-                      padding: 8,
-                      backgroundColor: "white",
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                      flexDirection: "column",
-                      alignItems: "center"
-                  }}>
+            <View key={index} style={[styles.row, {borderTopWidth: index === 0 ? StyleSheet.hairlineWidth : 0}]}>
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <Text style={[styles.team, {textAlign: "right"}]}>{hist.homeParticipant.participantName}</Text>
                     <View style={styles.resultBox}>
@@ -119,6 +111,14 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginBottom: 8
     } as TextStyle,
+    row: {
+        padding: 8,
+        marginHorizontal: 8,
+        backgroundColor: "white",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        flexDirection: "column",
+        alignItems: "center",
+    },
     resultBox: {
         width: 50,
         height: 40,

@@ -149,6 +149,7 @@ class EventScreenComponent extends React.Component<Props, State> {
     @autobind
     private renderScene(props: SceneRendererProps<PageRoute> & Scene<PageRoute>) {
         const {event, navigation} = this.props
+
         switch (props.route.key) {
             case 'markets':
                 return (
