@@ -8,5 +8,5 @@
 ----
 Upgrade notes
 @types/react 16.0.35 clashes with some other packages.
-react-native-svg is weird
+
 react-native-vector icons has some bug which forces a postinstall action
