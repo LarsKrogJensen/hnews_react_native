@@ -151,19 +151,29 @@ class EventScreenComponent extends React.Component<Props, State> {
     private renderScene(props: SceneRendererProps<PageRoute> & Scene<PageRoute>) {
         const {event, navigation} = this.props
 
+        const {tabIndex} = this.state
+        console.log("Route: " + props.route.key + ", current tab index: " + tabIndex)
         switch (props.route.key) {
+            case 'events':
+                // if (this.state.tabIndex !== 0) return null
+
+                return (
+                    <EventLiveStatsView eventId={event.id} eventGroupId={event.groupId} style={styles.liveStats}/>
+                );
+
             case 'markets':
+                // if (this.state.tabIndex !== 1) return null
+
                 return (
                     <EventMarketsView eventId={event.id}
                                       live={event.state === "STARTED"}
                                       eventGroupid={event.groupId}
                                       navigation={navigation}/>
                 );
-            case 'events':
-                return (
-                    <EventLiveStatsView eventId={event.id} eventGroupId={event.groupId} style={styles.liveStats}/>
-                );
+
             case 'stats':
+                // if (this.state.tabIndex !== 2) return null
+
                 return (
                     <EventPrematchStatsView navigation={navigation} eventId={event.id} eventGroupid={event.groupId}/>
                 );
@@ -179,7 +189,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     liveStats: {
-        marginTop: 8
+
     } as ViewStyle,
     indicator: {
         backgroundColor: '#00ADC9',

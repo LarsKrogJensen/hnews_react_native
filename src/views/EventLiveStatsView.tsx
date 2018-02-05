@@ -1,6 +1,15 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {ActivityIndicator, ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
+import {
+    ActivityIndicator,
+    FlatList,
+    ListRenderItemInfo,
+    StyleSheet,
+    Text,
+    TextStyle,
+    View,
+    ViewStyle
+} from "react-native";
 import {Occurence} from "api/typings";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {Dispatch} from "redux";
@@ -9,7 +18,7 @@ import {loadLiveData} from "store/stats/actions";
 import {AppStore} from "store/store";
 import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
-import {formatDateTime} from "lib/dates";
+import autobind from "autobind-decorator";
 
 interface ExternalProps {
     eventId: number
@@ -36,7 +45,7 @@ class EventLiveStatsViewComponent extends React.Component<ComponentProps, Compon
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<ComponentState>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
         if (nextProps.eventId !== this.props.eventId) return true
-        if (nextProps.occurences !== this.props.occurences) return true
+        if (!this.occerencesEquals(nextProps.occurences, this.props.occurences)) return true
         if (nextProps.orientation !== this.props.orientation) return true;
 
         return false
@@ -47,6 +56,7 @@ class EventLiveStatsViewComponent extends React.Component<ComponentProps, Compon
     }
 
     public render() {
+        console.log("render event feed")
         const {loading, style, occurences} = this.props;
         if (loading) {
             return (
@@ -63,22 +73,44 @@ class EventLiveStatsViewComponent extends React.Component<ComponentProps, Compon
     }
 
     private renderBody(occurences: Occurence[]) {
-        return (
-            <ScrollView style={this.props.style}>
-                <Text style={styles.title}>Events</Text>
-                {occurences.sort((o1,o2) => o2.secondInMatch - o1.secondInMatch).map((o, index) => this.renderOccurence(o, index))}
-            </ScrollView>
-        )
+        const data: Occurence[] = occurences.sort((o1, o2) => o2.secondInMatch - o1.secondInMatch)
+
+        return <FlatList
+            data={data}
+            style={this.props.style}
+            renderItem={this.renderItem}
+            keyExtractor={this.keyExtractor}
+        />
     }
 
-    private renderOccurence(occurence: Occurence, index: number) {
+    @autobind
+    private renderItem(info: ListRenderItemInfo<Occurence>) {
+        const occurence = info.item
         return (
-            <View key={index} style={[styles.row, {borderTopWidth: index === 0 ? StyleSheet.hairlineWidth : 0}]}>
+            <View key={occurence.id} style={styles.row}>
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <Text>{JSON.stringify(occurence)}</Text>
                 </View>
             </View>
         )
+    }
+
+    @autobind
+    private keyExtractor(item: Occurence) {
+        return item.id.toString()
+    }
+
+    private occerencesEquals(o1?: Occurence[], o2?: Occurence[]): boolean {
+        if (o1 && o2) {
+            if (o1.length !== o2.length) return false;
+            //if (o1.map(o => o.id).join() !== o2.map(o => o.id).join()) return false
+        } else if (!o1 && o2) {
+            return false
+        } else if (o1 && !o2) {
+            return false
+        }
+
+        return true
     }
 }
 
@@ -91,7 +123,6 @@ const styles = StyleSheet.create({
     } as TextStyle,
     row: {
         padding: 8,
-        marginHorizontal: 8,
         backgroundColor: "white",
         borderBottomWidth: StyleSheet.hairlineWidth,
         flexDirection: "column",

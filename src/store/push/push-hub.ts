@@ -200,6 +200,9 @@ function handleData(data: string, store: Store<AppStore>) {
                     } as EventRemovedAction)
                 }
                 break;
+            case 25: {
+                console.log("Match occurence: " + JSON.stringify(msg))
+            }
             default:
                 console.log("Message: " + msg && msg.mt)
                 break

@@ -6,8 +6,7 @@ interface State {
 }
 
 const connectAppState = <TOriginalProps extends {}>(onActive: (props: TOriginalProps, incrementalLoad: boolean) => any) =>
-    (Component: (React.ComponentClass<TOriginalProps>
-        | React.StatelessComponent<TOriginalProps>)) => {
+    (Component: (React.ComponentClass<TOriginalProps> | React.StatelessComponent<TOriginalProps>)) => {
 
         return class extends React.Component<TOriginalProps, State> {
             private timer: number

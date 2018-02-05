@@ -1,12 +1,7 @@
-- crashlytics
-- event header
-- player point (NBA)
-- event statistics (large)
-- live event (large)
-- review icon
+- crashlytics imporove stack traces
+- event header, could be improved. When live add match clock, prematch rewrite.
+- live event opened push
 - collapse section delay, request animate frame? improve perf
-- realtime socket.js support (major)
-- event page (major)
 - tabbed sports page (inluclude league an explore)
 - implement search
 
