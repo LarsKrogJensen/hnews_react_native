@@ -119,13 +119,7 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
         let result = this.scoreToResult(hist.scores);
         return (
             <View key={key}
-                  style={{
-                      padding: 8,
-                      backgroundColor: "white",
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                      flexDirection: "row",
-                      alignItems: "center"
-                  }}>
+                  style={styles.row}>
                 {this.renderResult(result, 1, {width: 40, height: 35, fontSize: 20})}
                 <View style={{flexDirection: "column", marginLeft: 8, height: 35, flex: 1}}>
                     <View style={{flexDirection: "row"}}>
@@ -172,11 +166,19 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
             }
         }
 
-        return 0 //draw
+        return 0 // draw
     }
 }
 
 const styles = StyleSheet.create({
+    row: {
+        padding: 8,
+        backgroundColor: "white",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: "#D1D1D1",
+        flexDirection: "row",
+        alignItems: "center"
+    } as ViewStyle,
     title: {
         fontSize: 18,
         fontWeight: "bold",

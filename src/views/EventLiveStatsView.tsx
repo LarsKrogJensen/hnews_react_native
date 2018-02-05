@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: StyleSheet.hairlineWidth,
         flexDirection: "column",
         alignItems: "center",
+        borderColor: "#D1D1D1"
     },
     resultBox: {
         width: 50,

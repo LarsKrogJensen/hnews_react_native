@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 8,
         backgroundColor: "white",
         borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: "#D1D1D1",
         flexDirection: "column",
         alignItems: "center",
     },

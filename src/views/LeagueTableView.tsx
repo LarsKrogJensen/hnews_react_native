@@ -106,7 +106,8 @@ class LeagueTableViewComponent extends React.Component<ComponentProps, Component
                 <View style={this.positionToBackgroundStyle(row.position)}>
                     <Text style={this.positionToTextStyle(row.position)}>{row.position}</Text>
                 </View>
-                <Text numberOfLines={1} ellipsizeMode="tail" style={{marginLeft: 8, flex: 1, fontWeight: "bold"}}>{row.participantName}</Text>
+                <Text numberOfLines={1} ellipsizeMode="tail"
+                      style={{marginLeft: 8, flex: 1, fontWeight: "bold"}}>{row.participantName}</Text>
                 <Text style={styles.col}>{row.gamesPlayed}</Text>
                 <Text style={styles.col}>{row.wins}</Text>
                 <Text style={styles.col}>{row.draws}</Text>
@@ -198,6 +199,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 8,
         backgroundColor: "white",
         borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: "#D1D1D1",
         flexDirection: "row",
         alignItems: "center",
     },

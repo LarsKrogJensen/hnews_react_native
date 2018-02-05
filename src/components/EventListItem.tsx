@@ -45,7 +45,8 @@ class EventListItem extends React.Component<Props> {
         return (
             <Touchable onPress={this.handleItemClick}>
                 <View style={viewStyle}>
-                    <EventInfoItem eventId={event.id} viewStyle={{flex: 1, height: 68}} theme={Theme.Light} showFavorites/>
+                    <EventInfoItem eventId={event.id} viewStyle={{flex: 1, height: 68}} theme={Theme.Light}
+                                   showFavorites/>
                     {event.mainBetOfferId &&
                     <DefaultBetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>}
                 </View>
@@ -55,7 +56,7 @@ class EventListItem extends React.Component<Props> {
 
     @autobind
     private handleItemClick() {
-        navigate(this.props.navigation, "Event",{eventId: this.props.eventId})
+        navigate(this.props.navigation, "Event", {eventId: this.props.eventId})
     }
 }
 
