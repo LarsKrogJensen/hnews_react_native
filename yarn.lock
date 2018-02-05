@@ -10,13 +10,13 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@types/lodash@^4.14.98":
-  version "4.14.98"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.98.tgz#aaf012ae443e657e7885e605a4c1b340db160609"
+"@types/lodash@^4.14.101":
+  version "4.14.101"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.101.tgz#512f6c9e1749890f4d024e98cb995a63f562d458"
 
-"@types/react-native-material-ui@^1.12.3":
-  version "1.12.3"
-  resolved "https://registry.yarnpkg.com/@types/react-native-material-ui/-/react-native-material-ui-1.12.3.tgz#cb2474cac5fc610e7ae7369d310283527c9bb22d"
+"@types/react-native-material-ui@^1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-material-ui/-/react-native-material-ui-1.19.0.tgz#b84f51a580df8a7494e3162de0035d62b58235da"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -41,9 +41,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.52.6":
-  version "0.52.6"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.6.tgz#ce4007db91fdff8051e949825ddd9eb0ebe4b2ab"
+"@types/react-native@0.52.8":
+  version "0.52.8"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.8.tgz#dd5aa7c4eb944d7c0b2b249a2bb811aa119f49c6"
   dependencies:
     "@types/react" "*"
 
@@ -4065,9 +4065,9 @@ react-native@0.52.2:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation@1.0.0-beta.29:
-  version "1.0.0-beta.29"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.0.0-beta.29.tgz#bef504eba5603d25bee1967ad233aa2be1704a07"
+react-navigation@1.0.0-beta.30:
+  version "1.0.0-beta.30"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.0.0-beta.30.tgz#91cd9683a4bda74c35fbe882d0b63139e8fb5652"
   dependencies:
     clamp "^1.0.1"
     hoist-non-react-statics "^2.2.0"
