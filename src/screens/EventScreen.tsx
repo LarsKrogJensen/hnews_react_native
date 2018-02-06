@@ -101,7 +101,7 @@ class EventScreenComponent extends React.Component<Props, State> {
                                 renderScene={this.renderScene}
                                 renderFooter={this.renderFooter}
                                 onIndexChange={this.handleIndexChange}
-            // useNativeDriver
+                                // useNativeDriver
                                 initialLayout={initialLayout}/>
 
     }
@@ -158,7 +158,8 @@ class EventScreenComponent extends React.Component<Props, State> {
                 // if (this.state.tabIndex !== 0) return null
 
                 return (
-                    <EventLiveStatsView eventId={event.id} eventGroupId={event.groupId} style={styles.liveStats}/>
+                    <EventLiveStatsView eventId={event.id} eventGroupId={event.groupId} sport={event.sport}
+                                        style={styles.liveStats}/>
                 );
 
             case 'markets':
@@ -188,9 +189,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    liveStats: {
-
-    } as ViewStyle,
+    liveStats: {} as ViewStyle,
     indicator: {
         backgroundColor: '#00ADC9',
         position: 'absolute',
