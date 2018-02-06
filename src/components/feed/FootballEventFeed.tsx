@@ -66,6 +66,7 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
                 </View>
             )
         }
+
         if (!occurences) {
             return null
         }
@@ -74,7 +75,7 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
     }
 
     private renderBody(occurences: Occurence[]) {
-        const data: Occurence[] = occurences.sort((o1, o2) => o2.secondInMatch - o1.secondInMatch)
+        const data: Occurence[] = occurences.reverse() // .sort((o1, o2) => o2.secondInMatch - o1.secondInMatch)
 
         return <FlatList
             data={data}
@@ -118,6 +119,13 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
                     {this.renderVissle()}
                 </View>
             )
+        } else if (occurence.occurrenceTypeId === "LIFETIME_END") {
+            let score = this.calculateScore(occurence.id);
+            return (
+                <View style={[styles.row, {justifyContent: "center", backgroundColor: "white"}]}>
+                    <Text>{occurence.periodIndex === 0 ? "Half time" : "Full time"} {score.home} - {score.away}</Text>
+                </View>
+            )
         }
 
         return (
@@ -150,9 +158,26 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
     }
 
     private renderOccurenceText(occurence: Occurence, team: string, align: "left" | "right") {
+        const id = occurence.occurrenceTypeId.toLowerCase()
+        let text = ""
+        if (id.startsWith("corners")) {
+            text = "Corner"
+        } else if (id.startsWith("goals")) {
+            const score = this.calculateScore(occurence.id);
+            text = `${score.home} - ${score.away}`
+        } else if (id.startsWith("cards_yellow")) {
+            text = "Yellow Card"
+        } else if (id.startsWith("cards_red")) {
+            text = "Red Card"
+        } else if (id.startsWith("penalty_awarded")) {
+            text = "Penalty Awarded"
+        } else if (id.startsWith("penalty_missed")) {
+            text = "Penalty Missed"
+        }
+
         return (
             <View style={{flexDirection: "column"}}>
-                <Text>{occurence.occurrenceTypeId}</Text>
+                <Text style={{textAlign: align, fontWeight: "bold"}}>{text}</Text>
                 <Text style={{textAlign: align}}>{team}</Text>
             </View>
         )
@@ -303,6 +328,20 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
         }
 
         return true
+    }
+
+    @autobind
+    private calculateScore(occurenceId: number): { home: number, away: number } {
+        const occurences = this.props.occurences!.sort((o1, o2) => o1.secondInMatch - o2.secondInMatch);
+        let home = 0, away = 0
+
+        for (let o of occurences) {
+            if (o.occurrenceTypeId.toLowerCase() === "goals_home") home++
+            if (o.occurrenceTypeId.toLowerCase() === "goals_away") away++
+            if (o.id === occurenceId) break;
+        }
+
+        return {home, away}
     }
 }
 
