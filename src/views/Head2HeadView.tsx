@@ -61,7 +61,7 @@ class Head2HeadViewComponent extends React.Component<ComponentProps, ComponentSt
     private renderBody() {
         const {h2h, style} = this.props
 
-        if (!h2h) {
+        if (!h2h || !h2h.lastEvents || !h2h.lastEvents.length) {
             return null
         }
 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     row: {
         padding: 8,
         marginHorizontal: 8,
-        backgroundColor: "white",
+        backgroundColor: "#F6F6F6",
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderColor: "#D1D1D1",
         flexDirection: "column",

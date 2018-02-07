@@ -88,8 +88,8 @@ class EventScreenComponent extends React.Component<Props, State> {
         const navState: NavigationState<PageRoute> = {
             index: this.state.tabIndex,
             routes: [
-                {key: 'events', title: 'Events'},
                 {key: 'markets', title: 'Markets'},
+                {key: 'events', title: 'Events'},
             ]
         }
         if (event.hasPrematchStatistics) {

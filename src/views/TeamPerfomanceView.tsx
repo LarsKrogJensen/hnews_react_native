@@ -98,11 +98,7 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
     private renderTeamHistory(team: TeamParticipantWithEvents) {
         return (
             <View style={{marginHorizontal: 8}}>
-                <Text style={{
-                    fontSize: 16,
-                    paddingVertical: 8,
-                    borderBottomWidth: StyleSheet.hairlineWidth
-                }}>{team.participantName}</Text>
+                <Text style={styles.teamTitle}>{team.participantName}</Text>
                 {team.lastEvents.map((hist, index) => this.renderHistoricalEvent(hist, team.participantId + "-" + index))}
             </View>
         )
@@ -173,7 +169,7 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
 const styles = StyleSheet.create({
     row: {
         padding: 8,
-        backgroundColor: "white",
+        backgroundColor: "#F6F6F6",
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderColor: "#D1D1D1",
         flexDirection: "row",
@@ -183,6 +179,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         alignSelf: "center"
+    } as TextStyle,
+    teamTitle: {
+        fontSize: 16,
+        paddingVertical: 8,
+        borderColor: "#D1D1D1",
+        borderBottomWidth: StyleSheet.hairlineWidth
     } as TextStyle,
     resultCommon: {
         width: 25,

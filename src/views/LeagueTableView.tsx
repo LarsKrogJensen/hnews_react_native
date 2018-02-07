@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     row: {
         padding: 8,
         marginHorizontal: 8,
-        backgroundColor: "white",
+        backgroundColor: "#F6F6F6",
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderColor: "#D1D1D1",
         flexDirection: "row",

@@ -120,7 +120,7 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
                 </View>
             )
         } else if (occurence.occurrenceTypeId === "LIFETIME_END") {
-            let score = this.calculateScore(occurence.id);
+            let score = this.calculateHalfFullTimeScore(occurence.periodIndex);
             return (
                 <View style={[styles.row, {justifyContent: "center", backgroundColor: "white"}]}>
                     <Text>{occurence.periodIndex === 0 ? "Half time" : "Full time"} {score.home} - {score.away}</Text>
@@ -309,9 +309,6 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
         )
     }
 
-    // MISSING, PENALTY_AWARDED/MISSED_HOME/AWAY
-    // goals_home, corners, lifetime_start/end , cards_yellow/red
-
     @autobind
     private keyExtractor(item: Occurence) {
         return item.id.toString()
@@ -320,7 +317,6 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
     private occerencesEquals(o1?: Occurence[], o2?: Occurence[]): boolean {
         if (o1 && o2) {
             if (o1.length !== o2.length) return false;
-            //if (o1.map(o => o.id).join() !== o2.map(o => o.id).join()) return false
         } else if (!o1 && o2) {
             return false
         } else if (o1 && !o2) {
@@ -339,6 +335,19 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
             if (o.occurrenceTypeId.toLowerCase() === "goals_home") home++
             if (o.occurrenceTypeId.toLowerCase() === "goals_away") away++
             if (o.id === occurenceId) break;
+        }
+
+        return {home, away}
+    }
+
+    @autobind
+    private calculateHalfFullTimeScore(periodIndex: number): { home: number, away: number } {
+        const occurences = this.props.occurences!;
+        let home = 0, away = 0
+
+        for (let o of occurences.filter(o => o.periodIndex <= periodIndex)) {
+            if (o.occurrenceTypeId.toLowerCase() === "goals_home") home++
+            if (o.occurrenceTypeId.toLowerCase() === "goals_away") away++
         }
 
         return {home, away}
