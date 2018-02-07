@@ -19,7 +19,7 @@
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
     "react": "16.2.0",
-    "react-native": "0.52.2",
+    "react-native": "0.53.0",
     "react-native-animatable": "^1.2.4",
     "react-native-circular-progress": "^0.1.2",
     "react-native-material-ui": "^1.19.0",
