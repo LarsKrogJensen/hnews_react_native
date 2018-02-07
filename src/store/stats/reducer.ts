@@ -6,6 +6,7 @@ import {
     H2HResponse,
     LeagueTable,
     LiveData,
+    LiveFeedEvent,
     MatchClockRemoved,
     MatchClockUpdated,
     Occurence,
@@ -21,6 +22,7 @@ export interface StatsStore {
     liveData: Map<number, LiveData>
     liveDataLoading: Set<number>
     occurences: Map<number, Occurence[]>
+    liveFeed: Map<number, LiveFeedEvent[]>
     leagueTable: Map<number, LeagueTable>
     leagueTableLoading: Set<number>
     h2h: Map<number, H2HResponse>
@@ -33,6 +35,7 @@ const initialState: StatsStore = {
     liveData: Map(),
     liveDataLoading: Set(),
     occurences: Map(),
+    liveFeed: Map(),
     leagueTable: Map(),
     leagueTableLoading: Set(),
     h2h: Map(),
@@ -65,7 +68,7 @@ export default function statsReducer(state: StatsStore = initialState, action: L
         case LiveDataActions.LOAD_SUCCESS:
             return {
                 ...state,
-                ...mergeLiveData(state,[action.data]),
+                ...mergeLiveData(state, [action.data]),
                 liveDataLoading: state.liveDataLoading.remove(action.eventId)
             }
         case LiveDataActions.LOAD_FAILED:
@@ -76,7 +79,7 @@ export default function statsReducer(state: StatsStore = initialState, action: L
         case PushActions.EVENT_SCORE_UPDATE:
             return {
                 ...state,
-                liveData: mergeScore(state.liveData, action.data),
+                ...mergeScore(state, action.data),
             }
         case PushActions.EVENT_STATS_UPDATE:
             return {
@@ -155,31 +158,42 @@ export default function statsReducer(state: StatsStore = initialState, action: L
 function mergeLiveData(state: StatsStore, items: (LiveData | undefined)[]): Partial<StatsStore> {
     let liveData = state.liveData
     let occurences = state.occurences
+    let liveFeed = state.liveFeed
     for (let item of items) {
         if (!item) continue
         liveData = liveData.set(item.eventId, item);
         if (item.occurrences) {
             occurences = occurences.set(item.eventId, item.occurrences)
         }
+        if (item.liveFeedUpdates) {
+            liveFeed = liveFeed.set(item.eventId, item.liveFeedUpdates)
+        }
     }
 
     return {
         liveData,
-        occurences
+        occurences,
+        liveFeed
     }
 }
 
-function mergeScore(state: Map<number, LiveData>, update: EventScoreUpdate): Map<number, LiveData> {
+function mergeScore(state: StatsStore, update: EventScoreUpdate): Partial<StatsStore> {
 
-    const liveData: LiveData = state.get(update.eventId)
+    let liveData: Map<number, LiveData> = state.liveData
+    let liveFeed: Map<number, LiveFeedEvent[]> = state.liveFeed
+
+    const ld = liveData.get(update.eventId)
     if (liveData) {
-        return state.set(update.eventId, {
-            ...liveData,
+        liveData = liveData.set(update.eventId, {
+            ...ld,
             score: update.score
         })
     }
 
-    return state
+    const feed = liveFeed.get(update.eventId) || []
+    liveFeed = liveFeed.set(update.eventId, feed.concat({score: update.score, type: "SCORE"}))
+
+    return {liveData, liveFeed}
 }
 
 function mergeEventStats(state: Map<number, LiveData>, update: EventStatsUpdate): Map<number, LiveData> {

@@ -1,6 +1,7 @@
 import * as React from "react"
 import {ViewStyle} from "react-native";
 import {FootballEventFeed} from "components/feed/FootballEventFeed";
+import {TennisEventFeed} from "components/feed/TennisEventFeed";
 
 interface Props {
     eventId: number
@@ -22,10 +23,11 @@ export class EventLiveStatsView extends React.Component<Props> {
     public render() {
         const {sport, eventGroupId, eventId} = this.props
 
-        if (sport.toLowerCase() === "football") {
+        let s = sport.toLowerCase();
+        if (s === "football") {
             return <FootballEventFeed eventGroupId={eventGroupId} eventId={eventId}/>
-        } else if (sport.toLowerCase() === "tennis") {
-            return null
+        } else if (s === "tennis" || s === "volleyball") {
+            return <TennisEventFeed eventGroupId={eventGroupId} eventId={eventId}/>
         }
 
         return null

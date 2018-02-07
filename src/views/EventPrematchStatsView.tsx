@@ -32,10 +32,10 @@ export class EventPrematchStatsView extends React.Component<ExternalProps, Compo
 
 
         return (
-            <ScrollView style={{marginVertical: 8}}>
-                <TeamPerformanceView eventId={eventId} />
-                <Head2HeadView eventId={eventId} style={{marginTop: 8}}/>
-                <LeagueTableView eventId={eventId} eventGroupId={eventGroupid} style={{marginTop: 8}}/>
+            <ScrollView>
+                <TeamPerformanceView eventId={eventId} style={{marginTop: 8}}/>
+                <Head2HeadView eventId={eventId} style={{marginVertical: 8}}/>
+                <LeagueTableView eventId={eventId} eventGroupId={eventGroupid} style={{marginBottom: 8}}/>
             </ScrollView>
         )
     }

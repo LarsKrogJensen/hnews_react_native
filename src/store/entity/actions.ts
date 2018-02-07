@@ -41,7 +41,7 @@ export function loadBetOffers(eventId: number, live: boolean, fireStartLoad: boo
                     data: responseJson,
                     eventId
                 });
-            } else {
+            } else if (response.status === 404) {
                 dispatch<BetOffersSuccessAction>({
                     type: BetOfferActions.LOAD_SUCCESS,
                     eventId,
@@ -50,6 +50,8 @@ export function loadBetOffers(eventId: number, live: boolean, fireStartLoad: boo
                         betoffers: []
                     }
                 })
+            } else {
+                dispatch<BetOffersFailedAction>({type: BetOfferActions.LOAD_FAILED, eventId})
             }
             console.timeEnd(timerName)
         } catch (error) {

@@ -20,6 +20,7 @@ import {EventEntity} from "model/EventEntity";
 import connectAppState from "components/AppStateRefresh";
 import autobind from "autobind-decorator";
 import {default as Svg, G, Path, Polygon, Rect} from "react-native-svg";
+import {formatDateTime} from "lib/dates";
 
 interface ExternalProps {
     eventId: number
@@ -67,11 +68,20 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
             )
         }
 
-        if (!occurences) {
-            return null
-        }
+        const clone: Occurence[] = occurences ? [...occurences] : []
 
-        return this.renderBody(occurences)
+        clone.unshift({
+            occurrenceTypeId: "KICK_OFF",
+            eventId: this.props.eventId,
+            id: -1,
+            periodIndex: 0,
+            action: "ADD",
+            secondInMatch: -1,
+            secondInPeriod: -1,
+            periodId: ""
+        })
+
+        return this.renderBody(clone)
     }
 
     private renderBody(occurences: Occurence[]) {
@@ -124,6 +134,14 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
             return (
                 <View style={[styles.row, {justifyContent: "center", backgroundColor: "white"}]}>
                     <Text>{occurence.periodIndex === 0 ? "Half time" : "Full time"} {score.home} - {score.away}</Text>
+                </View>
+            )
+        } else if (occurence.occurrenceTypeId === "KICK_OFF") {
+            let dateTime = formatDateTime(this.props.event!.start);
+            return (
+                <View style={[styles.row, {justifyContent: "center", backgroundColor: "white", flexDirection: "column"}]}>
+                    <Text style={{fontWeight: "bold", fontSize: 16}}>Kick-Off</Text>
+                    <Text style={{fontSize: 16}}>{dateTime.date} at {dateTime.time}</Text>
                 </View>
             )
         }
@@ -386,7 +404,8 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     } as ViewStyle,
     row: {
-        padding: 8,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
         backgroundColor: "#F6F6F6",
         borderBottomWidth: StyleSheet.hairlineWidth,
         flexDirection: "row",

@@ -132,7 +132,7 @@ export interface Occurence {
     secondInMatch: number
     periodId: string //"SECOND_HALF",
     action: string, //"ADDED", DELETED,MODIFIED
-    periodIndex: number 
+    periodIndex: number
 }
 
 export interface LiveData {
@@ -144,6 +144,21 @@ export interface LiveData {
     statistics: EventStats;
     liveStatistics: LiveStatistic[];
     occurrences: Occurence[]
+    liveFeedUpdates?: LiveFeedEvent[]
+}
+
+export interface LiveFeedEvent {
+    type: "SCORE" | "TICKER"
+    score?: Score,
+    ticker?: Ticker
+}
+
+export interface Ticker {
+    id: number,
+    eventId: number,
+    type: string,
+    minute: number
+    message: string,
 }
 
 export interface Criterion {
@@ -399,7 +414,7 @@ export interface TeamParticipant {
     participantId: number,
 }
 
-export interface TeamParticipantWithEvents extends TeamParticipant{
+export interface TeamParticipantWithEvents extends TeamParticipant {
     lastEvents: HistoricalEvent[]
 }
 
