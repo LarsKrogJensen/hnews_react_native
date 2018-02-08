@@ -65,7 +65,7 @@ class LiveCardComponent extends React.Component<Props> {
         return (
             <View style={styles.body}>
                 <LiveCardScore eventId={eventId} navigation={navigation}/>
-                {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId}/>}
+                {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId} navigation={navigation}/>}
             </View>
         )
     }

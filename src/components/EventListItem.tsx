@@ -37,9 +37,8 @@ class EventListItem extends React.Component<Props> {
     }
 
     public render() {
-        const orient = this.props.orientation
-        const event = this.props.event
-        const viewStyle = orient === Orientation.Portrait ? portraitStyle : landscapeStyle;
+        const {event, orientation, navigation} = this.props
+        const viewStyle = orientation === Orientation.Portrait ? portraitStyle : landscapeStyle;
 
         // console.log("Rendering EventListItem")
         return (
@@ -48,7 +47,7 @@ class EventListItem extends React.Component<Props> {
                     <EventInfoItem eventId={event.id} viewStyle={{flex: 1, height: 68}} theme={Theme.Light}
                                    showFavorites/>
                     {event.mainBetOfferId &&
-                    <DefaultBetOfferItem orientation={orient} betofferId={event.mainBetOfferId}/>}
+                    <DefaultBetOfferItem orientation={orientation} betofferId={event.mainBetOfferId} navigation={navigation}/>}
                 </View>
             </Touchable>
         );

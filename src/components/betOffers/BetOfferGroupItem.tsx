@@ -4,13 +4,14 @@ import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import OutcomeItem from "../OutcomeItem"
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {OutcomeEntity} from "model/OutcomeEntity";
-import {BetOfferType, Criterion} from "api/typings";
+import {BetOfferType} from "api/typings";
 import {OutcomeTypes} from "components/betOffers/OutcomeTypes";
 import {EventEntity} from "model/EventEntity";
 import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {GoalScorerItem} from "components/betOffers/GoalScorerItem";
+import {WinnerBetOfferItem} from "components/betOffers/WinnerBetOfferItem";
 
 interface ExternalProps {
     outcomes: number[]
@@ -36,8 +37,9 @@ class BetOfferGroupComponent extends React.Component<Props> {
     public render() {
         const {outcomes, type, eventId, event} = this.props
 
-        // console.log("BetOfferGroup: rendering bo type: " + type.englishName)
         switch (type.id) {
+            case BetOfferTypes.Winner:
+                return <WinnerBetOfferItem outcomes={outcomes} event={event}/>
             case BetOfferTypes.OverUnder:
             case BetOfferTypes.AsianOverUnder:
                 return this.renderOverUnder(outcomes, eventId)

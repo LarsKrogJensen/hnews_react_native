@@ -1,5 +1,5 @@
 import * as React from "react"
-import {ComponentClass} from "react"
+import {ComponentClass, ReactNode} from "react"
 import {BetOfferEntity} from "model/BetOfferEntity";
 import {StyleSheet, Text, View, ViewStyle} from "react-native";
 import autobind from "autobind-decorator";
@@ -10,10 +10,14 @@ import {connect} from "react-redux";
 import Touchable from "components/Touchable";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {EventEntity} from "model/EventEntity";
+import {WinnerBetOfferComponent, WinnerBetOfferItem} from "components/betOffers/WinnerBetOfferItem";
+import {NavigationScreenProp} from "react-navigation";
+import {navigate} from "lib/navigate";
 
 interface ExternalProps {
     betofferId: number
     orientation?: Orientation
+    navigation: NavigationScreenProp<{}, {}>,
 }
 
 interface StateProps {
@@ -70,20 +74,18 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
     private renderOutcomes(outcomes: ReadonlyArray<number>,
                            betOffer: BetOfferEntity,
                            event: EventEntity,
-                           outcomeStyle: ViewStyle) {
+                           outcomeStyle: ViewStyle): ReactNode[] {
 
         if (outcomes.length > 3 && event.type === "ET_COMPETITION") {
-            const items = outcomes.slice(0, 4).map(outcomeId => (
-                <OutcomeItem
-                    style={outcomeStyle}
-                    key={outcomeId}
-                    outcomeId={outcomeId}
-                    eventId={betOffer.eventId}
-                    betOfferId={betOffer.id}/>
+            const items: ReactNode[] = []
+            items.push((
+                <WinnerBetOfferComponent eventId={event.id} outcomes={[...outcomes]} limit={4}/>
             ))
 
-            items.push(<Touchable key={123345}><Text style={{textAlign: "center", padding: 8}}>View
-                all {outcomes.length} participants</Text></Touchable>)
+            items.push((
+                <Touchable key={123345} onPress={() => navigate(this.props.navigation, "Event",{eventId: event.id})}>
+                    <Text style={{textAlign: "center", padding: 8}}>View all {outcomes.length} participants</Text>
+                </Touchable>))
             return items;
         }
 

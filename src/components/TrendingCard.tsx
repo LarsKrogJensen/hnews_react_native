@@ -45,12 +45,12 @@ class TrendingCard extends React.Component<Props> {
     }
 
     private renderBody() {
-        let event = this.props.event;
+        const {event, navigation} = this.props
         return (
             <View style={bodyStyle}>
                 <Text style={{fontSize: 20, marginTop: 8, textAlign: "center"}}>{event.name}</Text>
                 <EventPathItem path={event.path} style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
-                {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId}/>}
+                {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId} navigation={navigation}/>}
             </View>
         )
     }

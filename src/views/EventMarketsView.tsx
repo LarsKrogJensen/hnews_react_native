@@ -320,6 +320,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
 
         if (group.type.id === BetOfferTypes.OverUnder ||
             group.type.id === BetOfferTypes.CorrectScore ||
+            group.type.id === BetOfferTypes.Winner ||
             group.type.id === BetOfferTypes.Handicap ||
             group.type.id === BetOfferTypes.GoalScorer ||
             group.type.id === BetOfferTypes.ThreeWayHandicap ||
@@ -337,7 +338,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
 
         return group.betoffers.map(bo => (
             <View key={bo.id} style={{marginVertical: 2}}>
-                <DefaultBetOfferItem betofferId={bo.id}/>
+                <DefaultBetOfferItem betofferId={bo.id} navigation={this.props.navigation}/>
             </View>
         ))
     }
