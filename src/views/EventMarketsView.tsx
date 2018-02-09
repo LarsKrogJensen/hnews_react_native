@@ -309,6 +309,9 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
                 <Text style={{fontSize: 18, marginVertical: 4}}>
                     {group.criterion.label}
                 </Text>
+                {/*<Text>*/}
+                    {/*(Criterion: {group.criterion.id}) Ty: {group.key} ({group.type.name})*/}
+                {/*</Text>*/}
 
                 {this.renderBetOfferGroup(group)}
             </View>
@@ -321,6 +324,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         if (group.type.id === BetOfferTypes.OverUnder ||
             group.type.id === BetOfferTypes.CorrectScore ||
             group.type.id === BetOfferTypes.Winner ||
+            group.type.id === BetOfferTypes.Position ||
             group.type.id === BetOfferTypes.Handicap ||
             group.type.id === BetOfferTypes.GoalScorer ||
             group.type.id === BetOfferTypes.ThreeWayHandicap ||
@@ -331,6 +335,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
             return (
                 <BetOfferGroupItem eventId={this.props.eventId}
                                    type={group.type}
+                                   betOfferIds={group.betoffers.map(bo => bo.id)}
                                    outcomes={_.flatMap(group.betoffers.map(bo => bo.outcomes))}/>
             )
         }

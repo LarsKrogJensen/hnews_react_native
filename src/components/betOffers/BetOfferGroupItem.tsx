@@ -11,17 +11,21 @@ import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {GoalScorerItem} from "components/betOffers/GoalScorerItem";
-import {WinnerBetOfferItem} from "components/betOffers/WinnerBetOfferItem";
+import {WinnerBetOfferGroupItem} from "components/betOffers/WinnerBetOfferGroupItem";
+import {BetOfferEntity} from "model/BetOfferEntity";
+import {PositionBetOfferGroupItem} from "components/betOffers/PositionBetOfferGroupItem";
 
 interface ExternalProps {
     outcomes: number[]
+    betOfferIds: number[],
     eventId: number,
     type: BetOfferType
 }
 
 interface StateProps {
     outcomes: OutcomeEntity[]
-    event: EventEntity
+    event: EventEntity,
+    betOffers: BetOfferEntity[]
 }
 
 type Props = StateProps & ExternalProps
@@ -35,11 +39,13 @@ class BetOfferGroupComponent extends React.Component<Props> {
     }
 
     public render() {
-        const {outcomes, type, eventId, event} = this.props
+        const {outcomes, type, eventId, event, betOffers} = this.props
 
         switch (type.id) {
             case BetOfferTypes.Winner:
-                return <WinnerBetOfferItem outcomes={outcomes} event={event}/>
+                return <WinnerBetOfferGroupItem outcomes={outcomes} event={event} betoffers={betOffers}/>
+            case BetOfferTypes.Position:
+                return <PositionBetOfferGroupItem outcomes={outcomes} event={event} betoffers={betOffers}/>
             case BetOfferTypes.OverUnder:
             case BetOfferTypes.AsianOverUnder:
                 return this.renderOverUnder(outcomes, eventId)
@@ -57,7 +63,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
             case BetOfferTypes.HeadToHead:
                 return this.renderHeadToHead(outcomes, eventId)
             default:
-                return <Text>BetOffer type '{type.englishName}' seems not implemented yet</Text>
+                return <Text>BetOffer type '{type.name}' seems not implemented yet</Text>
         }
     }
 
@@ -406,6 +412,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     outcomes: inputProps.outcomes.map(outId => state.entityStore.outcomes.get(outId)).filter(o => o),
+    betOffers: inputProps.betOfferIds.map(id => state.entityStore.betoffers.get(id)).filter(bo => bo),
     event: state.entityStore.events.get(inputProps.eventId)
 })
 

@@ -25,14 +25,14 @@ export interface SportFailedAction extends DispatchAction<SportActions.LOAD_FAIL
 
 export type SportAction = SportStartAction | SportSuccessAction | SportFailedAction
 
-export function loadSport(sport: string, region: string, league: string, fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
+export function loadSport(sport: string, region: string, league: string, filter: "matches" | "competitions", fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
     return async dispatch => {
         const key = `${sport}.${region}.${league}`
         fireStartLoad && dispatch<SportAction>({type: SportActions.START_LOADING, key})
 
         try {
             console.time(`Fetching sport (${sport}/${region}/${league})`)
-            const response = await fetch(`${API.host}/offering/api/v3/${API.offering}/listView/${sport}/${region}/${league}.json?lang=${API.lang}&market=${API.market}&categoryGroup=COMBINED&displayDefault=true`);
+            const response = await fetch(`${API.host}/offering/api/v3/${API.offering}/listView/${sport}/${region}/${league}/all/${filter}.json?lang=${API.lang}&market=${API.market}&categoryGroup=COMBINED&displayDefault=true`);
             const responseJson = await response.json();
             if (response.status === 200) {
                 dispatch<SportSuccessAction>({

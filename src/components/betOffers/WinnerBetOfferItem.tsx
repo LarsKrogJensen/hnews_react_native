@@ -7,13 +7,10 @@ import OutcomeItem from "components/OutcomeItem";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 
-interface OptionalProps {
-    limit?: number
-}
-
-interface ExternalProps extends OptionalProps {
+interface ExternalProps {
     outcomes: number[]
     eventId: number
+    limit: number
 }
 
 interface StateProps {
@@ -21,17 +18,25 @@ interface StateProps {
     event: EventEntity
 }
 
-type Props = StateProps & OptionalProps
+type Props = StateProps & ExternalProps
 
-export class WinnerBetOfferItem extends React.Component<Props> {
+class WinnerBetOfferComponent extends React.Component<Props> {
+    
+    shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
+        if (nextProps.eventId != this.props.eventId) return true
+        if (nextProps.outcomes.length != this.props.outcomes.length) return true
+
+        return false
+    }
 
     render(): React.ReactNode {
         const {outcomes, event, limit} = this.props
-        
+
         return (
             <View style={styles.columnLayout}>
                 {outcomes
                     .sort((o1, o2) => o1.odds - o2.odds)
+                    .filter(o => o.odds > 1000)
                     .slice(0, limit ? Math.min(limit, outcomes.length - 1) : outcomes.length - 1)
                     .map(outcome => (
                         <OutcomeItem
@@ -47,6 +52,10 @@ export class WinnerBetOfferItem extends React.Component<Props> {
 }
 
 const styles = StyleSheet.create({
+    rowLayout: {
+        flex: 1,
+        flexDirection: 'row'
+    } as ViewStyle,
     columnLayout: {
         flex: 1,
         flexDirection: 'column',
@@ -60,5 +69,5 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     event: state.entityStore.events.get(inputProps.eventId)
 })
 
-export const WinnerBetOfferComponent: ComponentClass<ExternalProps> =
-    connect<StateProps, {}, ExternalProps>(mapStateToProps)(WinnerBetOfferItem)
+export const WinnerBetOfferItem: ComponentClass<ExternalProps> =
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(WinnerBetOfferComponent)

@@ -1,4 +1,4 @@
-import {BetOfferType, Criterion} from "api/typings";
+import {BetOfferType, Criterion, EachWay} from "api/typings";
 
 export interface BetOfferEntity {
     readonly id: number;
@@ -18,4 +18,5 @@ export interface BetOfferEntity {
     readonly open?: boolean;
     readonly extra: string;
     readonly startingPrice?: boolean;
+    readonly eachWay?: EachWay
 }

@@ -1,8 +1,17 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, StyleSheet, Text,
-    TextStyle, View, ViewStyle
+    ActivityIndicator,
+    Animated,
+    ListRenderItemInfo,
+    RefreshControl,
+    SectionList,
+    SectionListData,
+    StyleSheet,
+    Text,
+    TextStyle,
+    View,
+    ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
@@ -11,7 +20,6 @@ import connectAppState from "components/AppStateRefresh";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import {loadOpenForLive} from "store/live/actions";
 import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
 import LiveEventListItem from "components/EventListItem";
@@ -26,7 +34,8 @@ interface ExternalProps {
     sport: string,
     region: string,
     league: string,
-    scrollHooks: ScrollHooks
+    scrollHooks: ScrollHooks,
+    filter: "matches" | "competitions"
 }
 
 interface ComponentState {
@@ -60,7 +69,7 @@ interface SportSection extends SectionListData<EventEntity> {
     count: number
 }
 
-class SportScreenComponent extends React.Component<ComponentProps, ComponentState> {
+class SportViewComponent extends React.Component<ComponentProps, ComponentState> {
     constructor(props: ComponentProps) {
         super(props);
 
@@ -74,6 +83,7 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<ComponentState>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
+        if (nextProps.filter !== this.props.filter) return true
         if (nextProps.region !== this.props.region) return true
         if (nextProps.sport !== this.props.sport) return true
         if (nextProps.league !== this.props.league) return true
@@ -140,7 +150,6 @@ class SportScreenComponent extends React.Component<ComponentProps, ComponentStat
     }
 
     private prepareData(events: EventEntity[]) {
-        // const sections = this.groupEvents(events, this.groupByDate);
         const groupByLeague = this.props.league === "all"
         const sections = this.groupEvents(events,
             groupByLeague ? this.groupByLeague : this.groupByDate,
@@ -379,20 +388,20 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => {
-    let {sport, region, league} = inputProps
+    let {sport, region, league, filter} = inputProps
 
-    const params = inputProps.navigation.state.params
-
-    if (!sport && params) {
-        sport = params.sport
-        region = params.region
-        league = params.league
-    }
+    // const params = inputProps.navigation.state.params
+    //
+    // if (!sport && params) {
+    //     sport = params.sport
+    //     region = params.region
+    //     league = params.league
+    // }
 
     return {
         loadData: (fireStartLoad: boolean) => {
             if (sport && region && league) {
-                dispatch(loadSport(sport, region, league, fireStartLoad))
+                dispatch(loadSport(sport, region, league, filter, fireStartLoad))
                 // dispatch(loadOpenForLive(fireStartLoad))
             }
         }
@@ -400,7 +409,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
 }
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(SportScreenComponent))
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(SportViewComponent))
 
 export const SportView: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)

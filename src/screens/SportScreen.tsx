@@ -27,7 +27,7 @@ export class SportScreen extends React.Component<ExternalProps> {
         const {navigation: {state: {params}}} = this.props;
 
         return (
-            <CollapsableHeaderScreen title={params.group.englishName}
+            <CollapsableHeaderScreen title={params.group.name}
                                      rootScreen={true}
                                      navigation={this.props.navigation}
                                      renderBody={props => (this.renderBody(props, params))}
@@ -43,6 +43,7 @@ export class SportScreen extends React.Component<ExternalProps> {
                        sport={params.sport}
                        region={params.region}
                        league={params.league}
+                       filter="matches"
             />
         )
     }

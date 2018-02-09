@@ -185,13 +185,13 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
                         favorites: Set<number>) {
         // console.log("Prepare live data")
         const sections: LiveSection[] = groups.map(group => ({
-            title: group.englishName,
+            title: group.name,
             sport: group.sport,
             sortOrder: group.sortOrder && parseInt(group.sortOrder) || 100,
             events: events.filter(event => event.sport === group.sport),
             data: [],
             count: 0,
-            key: group.englishName
+            key: group.name
         })).sort((a, b) => a.sortOrder - b.sortOrder);
 
         if (!favorites.isEmpty()) {

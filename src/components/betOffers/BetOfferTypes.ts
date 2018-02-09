@@ -16,4 +16,5 @@ export enum BetOfferTypes {
     YesNo = 18,
     WinCast = 20,
     AsianOverUnder = 21,
+    Position = 117,
 }

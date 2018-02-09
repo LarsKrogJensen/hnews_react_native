@@ -56,8 +56,8 @@ class DrawerComp extends React.Component<Props> {
         if (nextProps.loading !== this.props.loading) return true
         if (nextProps.sports.length !== this.props.sports.length) return true
         if (nextProps.highlights.length !== this.props.highlights.length) return true
-        if (nextProps.sports.map(s => s.id).join() !== this.props.sports.map(s => s.id).join()) return true
-        if (nextProps.highlights.map(s => s.id).join() !== this.props.highlights.map(s => s.id).join()) return true
+        // if (nextProps.sports.map(s => s.id).join() !== this.props.sports.map(s => s.id).join()) return true
+        // if (nextProps.highlights.map(s => s.id).join() !== this.props.highlights.map(s => s.id).join()) return true
 
 
         return false

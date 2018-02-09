@@ -80,7 +80,7 @@ class OutcomeItem extends React.Component<Props, State> {
     }
 
     public render() {
-        const {outcome, event, orientation, betOffer} = this.props;
+        const {outcome, event, orientation, betOffer, style} = this.props;
         const {oddsChange} = this.state
         // console.log("OutcomeItem.render: " + outcome.id)
 
@@ -90,10 +90,11 @@ class OutcomeItem extends React.Component<Props, State> {
 
         const height = orientation === Orientation.Portrait ? 38 : 48
         const viewStyle = orientation === Orientation.Portrait ? portraitViewStyle : landscapeViewStyle
+        // console.log("Style: " + JSON.stringify(style))
         const touchStyle: ViewStyle = {
             ...touchBaseStyle,
             height,
-            ...this.props.style
+            ...style
         }
 
         if (betOffer.suspended || outcome.odds === 1000) {
@@ -130,7 +131,10 @@ class OutcomeItem extends React.Component<Props, State> {
                 betoffer.betOfferType.id === BetOfferTypes.AsianOverUnder) && outcome.line) {
             return outcome.label + " " + outcome.line / 1000
         }
-        if (betoffer.betOfferType.id === BetOfferTypes.HeadToHead || betoffer.betOfferType.id === BetOfferTypes.GoalScorer) {
+        if (betoffer.betOfferType.id === BetOfferTypes.HeadToHead ||
+            betoffer.betOfferType.id === BetOfferTypes.Winner ||
+            betoffer.betOfferType.id === BetOfferTypes.Position ||
+            betoffer.betOfferType.id === BetOfferTypes.GoalScorer) {
             return undefined
         }
         if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance) {

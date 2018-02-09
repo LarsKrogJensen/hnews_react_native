@@ -228,6 +228,14 @@ export interface BetOffer {
     open?: boolean;
     extra: string;
     startingPrice?: boolean;
+    eachWay?: EachWay
+}
+
+export interface EachWay {
+    terms: string
+    fractionMilli: number
+    placeLimit: number
+    tags: string[]
 }
 
 export interface LiveEvent {

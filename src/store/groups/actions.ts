@@ -141,7 +141,7 @@ export function loadBetOfferCategories(eventGroupId: number, categoryName: strin
                     categoryName
                 });
             } else {
-                console.warn(timeName)
+                //console.warn(timeName)
                 dispatch<PrematchCategoriesFailedAction>({
                     type: BetOfferCategoryActions.LOAD_FAILED, eventGroupId,
                     categoryName

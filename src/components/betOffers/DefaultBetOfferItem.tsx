@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 import Touchable from "components/Touchable";
 import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
 import {EventEntity} from "model/EventEntity";
-import {WinnerBetOfferComponent, WinnerBetOfferItem} from "components/betOffers/WinnerBetOfferItem";
+import {WinnerBetOfferItem} from "components/betOffers/WinnerBetOfferItem";
 import {NavigationScreenProp} from "react-navigation";
 import {navigate} from "lib/navigate";
 
@@ -55,6 +55,7 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
 
             if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance ||
                 betoffer.betOfferType.id === BetOfferTypes.Winner ||
+                betoffer.betOfferType.id === BetOfferTypes.Position ||
                 outcomes.length > 3) {
                 layout = styles.columnLayout
                 outcomeStyle.marginBottom = 4
@@ -76,10 +77,10 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
                            event: EventEntity,
                            outcomeStyle: ViewStyle): ReactNode[] {
 
-        if (outcomes.length > 3 && event.type === "ET_COMPETITION") {
+        if (outcomes.length > 3 && event.type === "ET_COMPETITION" || betOffer.betOfferType.id === BetOfferTypes.Position) {
             const items: ReactNode[] = []
             items.push((
-                <WinnerBetOfferComponent eventId={event.id} outcomes={[...outcomes]} limit={4}/>
+                <WinnerBetOfferItem key="12" eventId={event.id} outcomes={[...outcomes]} limit={4}/>
             ))
 
             items.push((

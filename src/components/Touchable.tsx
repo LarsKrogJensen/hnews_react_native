@@ -3,7 +3,7 @@ import {TouchableHighlight, TouchableNativeFeedback, View, ViewStyle} from "reac
 import {isIos} from "lib/device";
 
 interface Props {
-    style?: ViewStyle,
+    style?: ViewStyle | ViewStyle[],
     onPress?: () => void
 }
 
