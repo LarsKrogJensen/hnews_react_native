@@ -182,7 +182,7 @@ class EventScreenComponent extends React.Component<Props, State> {
                 return null
 
         }
-    };
+    }
 }
 
 const styles = StyleSheet.create({

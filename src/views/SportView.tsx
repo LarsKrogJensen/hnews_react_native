@@ -370,16 +370,9 @@ const styles = StyleSheet.create({
 
 // Redux connect
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => {
-    let {sport, region, league} = inputProps
-    const params = inputProps.navigation.state.params
+    let {sport, region, league, filter} = inputProps
 
-    if (!sport && params) {
-        sport = params.sport
-        region = params.region
-        league = params.league
-    }
-
-    const key = `${sport}.${region}.${league}`
+    const key = `${sport}.${region}.${league}.${filter}`
 
     return {
         loading: state.sportStore.loading.contains(key),
@@ -389,14 +382,6 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => {
     let {sport, region, league, filter} = inputProps
-
-    // const params = inputProps.navigation.state.params
-    //
-    // if (!sport && params) {
-    //     sport = params.sport
-    //     region = params.region
-    //     league = params.league
-    // }
 
     return {
         loadData: (fireStartLoad: boolean) => {

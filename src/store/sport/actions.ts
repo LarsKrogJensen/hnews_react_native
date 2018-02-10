@@ -27,12 +27,13 @@ export type SportAction = SportStartAction | SportSuccessAction | SportFailedAct
 
 export function loadSport(sport: string, region: string, league: string, filter: "matches" | "competitions", fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
     return async dispatch => {
-        const key = `${sport}.${region}.${league}`
+        const key = `${sport}.${region}.${league}.${filter}`
         fireStartLoad && dispatch<SportAction>({type: SportActions.START_LOADING, key})
 
         try {
-            console.time(`Fetching sport (${sport}/${region}/${league})`)
-            const response = await fetch(`${API.host}/offering/api/v3/${API.offering}/listView/${sport}/${region}/${league}/all/${filter}.json?lang=${API.lang}&market=${API.market}&categoryGroup=COMBINED&displayDefault=true`);
+            console.time(`Fetching sport (${sport}/${region}/${league}/${filter})`)
+            let url = `${API.host}/offering/api/v3/${API.offering}/listView/${sport}/${region}/${league}/all/${filter}.json?lang=${API.lang}&market=${API.market}&categoryGroup=COMBINED&displayDefault=true`;
+            const response = await fetch(url);
             const responseJson = await response.json();
             if (response.status === 200) {
                 dispatch<SportSuccessAction>({
@@ -41,10 +42,10 @@ export function loadSport(sport: string, region: string, league: string, filter:
                     data: responseJson
                 });
             } else {
-                console.warn("Bad status code on sports load: " + response.status);
+                console.warn("Bad status code on sports load: " + response.status + " url: " + url);
                 dispatch<SportFailedAction>({type: SportActions.LOAD_FAILED, key})
             }
-            console.timeEnd(`Fetching sport (${sport}/${region}/${league})`)
+            console.timeEnd(`Fetching sport (${sport}/${region}/${league}/${filter})`)
         } catch (error) {
             console.error(error);
             dispatch<SportFailedAction>({type: SportActions.LOAD_FAILED, key})
