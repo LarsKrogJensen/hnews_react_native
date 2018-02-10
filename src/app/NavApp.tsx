@@ -6,10 +6,9 @@ import SoonScreen from "screens/StartingSoonScreen"
 import {NativeModules} from "react-native";
 import {EventScreen} from "screens/EventScreen";
 import {Drawer} from "app/Drawer";
-import {SportScreen} from "screens/SportScreen";
 import {CollapsableScreen2} from "screens/CollapsableScreen2";
-import {TabScreenDemo} from "screens/TabScreenDemo";
 import {TopBarDemo2} from "screens/TabBarDemo2";
+import {TabbedSportScreen} from "screens/TabbedSportScreen";
 
 
 const HomeStack = StackNavigator({
@@ -41,7 +40,7 @@ const SoonStack = StackNavigator({
     });
 
 const SportStack = StackNavigator({
-        Spring: {screen: SportScreen},
+        Spring: {screen: TabbedSportScreen},
         Event: {screen: EventScreen}
     },
     {
