@@ -1,11 +1,12 @@
 import * as React from "react"
-import {Text, TextStyle} from "react-native";
+import {Text, TextStyle, View} from "react-native";
 import {MatchClock} from "api/typings";
 import autobind from "autobind-decorator";
 
 interface Props {
     matchClock: MatchClock,
-    style?: TextStyle
+    style?: TextStyle,
+    asHeader?: boolean
 }
 
 interface State {
@@ -54,9 +55,18 @@ export class MatchClockItem extends React.Component<Props, State> {
     }
 
     public render() {
-        let {minute, second} = this.state
+        const {minute, second} = this.state
+        const {style, asHeader} = this.props
 
-        return <Text style={this.props.style}>{this.padTime(minute) + ":" + this.padTime(second)}</Text>
+        if (asHeader) {
+            return (
+                <View style={[style, {backgroundColor: "black", paddingHorizontal: 4, borderRadius: 2, alignItems: "center", justifyContent: "center"}]}>
+                    <Text style={{color: "white", fontWeight: "bold", fontSize: 16}}>{this.padTime(minute) + ":" + this.padTime(second)}</Text>
+                </View>
+            )
+        }
+
+        return <Text style={style}>{this.padTime(minute) + ":" + this.padTime(second)}</Text>
     }
 
     @autobind

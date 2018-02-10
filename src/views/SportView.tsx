@@ -139,6 +139,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         return (
             <AnimatedSectionList
                 {...this.props.scrollHooks}
+                ListEmptyComponent={<Text> Empty </Text>}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}
@@ -156,9 +157,24 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
             groupByLeague ? this.sortByLeague : this.sortByDate
         );
 
+        let {expanded, hasInitExpanded } = this.state
+
+        if (!hasInitExpanded && sections.length) {
+            // make sure we fill screen with exapnded sections (at least 5 events)
+            let count = 0;
+            expanded = Set()
+            for (let section of sections) {
+                count += section.count
+                expanded = expanded.add(section.key)
+                if (count > 5) {
+                    break
+                }
+            }
+        }
+
         this.setState(prevState => ({
             sections,
-            expanded: prevState.hasInitExpanded && sections.length > 0 ? prevState.expanded : Set(sections.length > 0 ? [sections[0].key] : []),
+            expanded,
             hasInitExpanded: prevState.hasInitExpanded || sections.length > 0
         }))
     }

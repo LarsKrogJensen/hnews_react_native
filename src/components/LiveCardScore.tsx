@@ -5,15 +5,18 @@ import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import {LiveData} from "api/typings";
+import {LiveData, MatchClock} from "api/typings";
 import {CircularProgress} from 'react-native-circular-progress';
 import {renderServe, renderTeamColors} from "components/RenderUtils";
+import {MatchClockItem} from "components/MatchClockItem";
 
 
 interface ExternalProps {
     eventId: number
     navigation: NavigationScreenProp<{}, {}>,
-    asHeader?: boolean
+    asHeader?: boolean,
+    style?: ViewStyle,
+    showMatchClock?: boolean
 }
 
 interface StateProps {
@@ -26,10 +29,10 @@ type Props = StateProps & ExternalProps
 export class LiveCardScoreComponent extends React.Component<Props> {
 
     public render() {
-        const {event, liveData, asHeader} = this.props;
+        const {event, liveData, asHeader, style, showMatchClock} = this.props;
         const teamTextStyle = asHeader ? styles.teamTextHeader : styles.teamText
         return (
-            <View style={{flexDirection: "row", marginRight: 8}}>
+            <View style={[style, {flexDirection: "row", marginRight: 8}]}>
                 <View style={{flexDirection: "column", flex: 1}}>
                     <View style={styles.teamRow}>
                         {renderTeamColors(event.teamColors && event.teamColors.home)}
@@ -43,6 +46,7 @@ export class LiveCardScoreComponent extends React.Component<Props> {
                     </View>
                 </View>
                 {this.renderScoreColumns(liveData)}
+                {showMatchClock && this.renderMatchClock(event, liveData.matchClock)}
             </View>
         )
     }
@@ -90,6 +94,13 @@ export class LiveCardScoreComponent extends React.Component<Props> {
         return null;
     }
 
+    private renderMatchClock(event: EventEntity, matchClock?: MatchClock) {
+         if (matchClock) {
+             return (
+                 <MatchClockItem matchClock={matchClock} style={{marginLeft: 8, alignSelf: "center"}} asHeader/>
+             )
+         }
+    }
 }
 
 const styles = StyleSheet.create({
@@ -112,7 +123,10 @@ const styles = StyleSheet.create({
     teamTextHeader: {
         fontSize: 18,
         flex: 1,
-        marginLeft: 8
+        marginLeft: 8,
+        textShadowColor: "white",
+        textShadowOffset: {width: -2, height: 2},
+        textShadowRadius: 2
     } as TextStyle,
     teamRow: {
         flexDirection: "row",

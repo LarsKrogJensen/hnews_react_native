@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Animated, Dimensions, StyleSheet, Text, ViewStyle} from "react-native"
+import {Animated, Dimensions, StyleSheet, Text, View, ViewStyle} from "react-native"
 import {NavigationParams, NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
@@ -14,6 +14,7 @@ import autobind from "autobind-decorator";
 import {EventMarketsView} from "views/EventMarketsView";
 import {EventPrematchStatsView} from "views/EventPrematchStatsView";
 import {EventLiveStatsView} from "views/EventLiveStatsView";
+import {MatchClockItem} from "components/MatchClockItem";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: NavigationParams }, {}>
@@ -72,7 +73,7 @@ class EventScreenComponent extends React.Component<Props, State> {
         }
 
         if (event.state === "STARTED") {
-            return <LiveCardScore eventId={event.id} navigation={navigation} asHeader/>
+            return <LiveCardScore eventId={event.id} navigation={navigation} asHeader showMatchClock/>
         }
 
         return <EventInfoItem eventId={event.id} theme={Theme.Dark} viewStyle={{flex: 1}}/>
@@ -101,7 +102,7 @@ class EventScreenComponent extends React.Component<Props, State> {
                                 renderScene={this.renderScene}
                                 renderFooter={this.renderFooter}
                                 onIndexChange={this.handleIndexChange}
-                                // useNativeDriver
+            // useNativeDriver
                                 initialLayout={initialLayout}/>
 
     }
