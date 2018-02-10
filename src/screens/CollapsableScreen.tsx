@@ -8,7 +8,6 @@ import {
 import data from './data';
 import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
-import autobind from "autobind-decorator";
 import {NavigationScreenProp} from "react-navigation";
 import AnimatedDiffClamp = Animated.AnimatedDiffClamp;
 import absoluteFill = StyleSheet.absoluteFill;
@@ -140,19 +139,16 @@ export class CollapsableScreen extends React.Component<Props, State> {
         );
     }
 
-    @autobind
-    private onScrollEndDrag() {
+    private onScrollEndDrag = () => {
         this.scrollEndTimer = setTimeout(this.onMomentumScrollEnd, 250);
-    };
+    }
 
 
-    @autobind
-    private onMomentumScrollBegin() {
+    private onMomentumScrollBegin = () => {
         clearTimeout(this.scrollEndTimer);
     }
 
-    @autobind
-    private onMomentumScrollEnd() {
+    private onMomentumScrollEnd = () => {
         const toValue = this.scrollValue > NAVBAR_HEIGHT &&
         this.clampedScrollValue > (NAVBAR_HEIGHT - STATUS_BAR_HEIGHT) / 2
             ? this.offsetValue + NAVBAR_HEIGHT
@@ -165,15 +161,13 @@ export class CollapsableScreen extends React.Component<Props, State> {
         }).start();
     };
 
-    @autobind
-    private renderRow(rowData, sectionId, rowId) {
+    private renderRow = (rowData, sectionId, rowId) => {
         return (
             <Image key={rowId} style={styles.row} source={{uri: rowData.image}} resizeMode="cover"/>
         )
     }
 
-    @autobind
-    private onLeftClick() {
+    private onLeftClick = () => {
         const {navigation, rootScreen} = this.props;
         if (rootScreen) {
             navigateDrawerOpen(navigation)
@@ -182,8 +176,7 @@ export class CollapsableScreen extends React.Component<Props, State> {
         }
     }
 
-    @autobind
-    private leftMenuIcon() {
+    private leftMenuIcon = () => {
         const {rootScreen} = this.props;
         if (rootScreen) {
             return "menu"

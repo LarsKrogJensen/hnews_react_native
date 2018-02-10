@@ -2,7 +2,7 @@ import * as React from "react"
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import FavoriteItem from "components/FavoriteItem";
 import {EventEntity} from "model/EventEntity";
-import EventPathItem from "components/EventPathItem";
+import EventPathItem from "components/event/EventPathItem";
 import {LiveData} from "api/typings";
 import {renderServe} from "components/RenderUtils";
 import {Theme} from "lib/device";

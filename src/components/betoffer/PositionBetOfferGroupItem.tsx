@@ -2,7 +2,6 @@ import * as React from "react"
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {StyleSheet, Text, View, ViewStyle} from "react-native";
-import autobind from "autobind-decorator";
 import OutcomeItem from "components/OutcomeItem";
 import {BetOfferEntity} from "model/BetOfferEntity";
 
@@ -36,8 +35,7 @@ export class PositionBetOfferGroupItem extends React.Component<Props> {
         )
     }
 
-    @autobind
-    private renderPlayer(outcome: OutcomeEntity, eventId: number) {
+    private renderPlayer = (outcome: OutcomeEntity, eventId: number) => {
         return (
             <View key={outcome.id} style={[styles.rowLayout, {marginVertical: 2, alignItems: "center"}]}>
                 <Text style={{flex: 1}}>{outcome.label}</Text>

@@ -18,22 +18,21 @@ import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
 import {is, Set} from "immutable";
 import {ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {BetOfferEntity} from "model/BetOfferEntity";
-import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
+import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {loadBetOffers} from "store/entity/actions";
 import {BetOfferCategory, BetOfferType, Criterion} from "api/typings";
 import {loadBetOfferCategories} from "store/groups/actions";
-import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
-import {BetOfferGroupItem} from "components/betOffers/BetOfferGroupItem";
+import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
+import {BetOfferGroupItem} from "components/betoffer/BetOfferGroupItem";
 import * as _ from "lodash"
-import {withPush} from "components/withPush";
+import {withPush} from "components/hoc/withPush";
 import {API} from "store/API";
-import connectAppState from "components/AppStateRefresh";
+import connectAppState from "components/hoc/AppStateRefresh";
 
 
 interface ExternalProps {
@@ -162,7 +161,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         )
     }
 
-    private prepareData(betOffers: BetOfferEntity[], categories: BetOfferCategory[], selected: BetOfferCategory[], instant: BetOfferCategory[]) {
+    private prepareData = (betOffers: BetOfferEntity[], categories: BetOfferCategory[], selected: BetOfferCategory[], instant: BetOfferCategory[]) => {
 
         const sections: BetOfferSection[] = categories
             .filter(category => category.mappings)
@@ -209,7 +208,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         }))
     }
 
-    private filterAndGroupBetOffers(betOffers: BetOfferEntity[], category: BetOfferCategory): BetOfferGroup[] {
+    private filterAndGroupBetOffers = (betOffers: BetOfferEntity[], category: BetOfferCategory): BetOfferGroup[] => {
         return betOffers
             .filter(bo => category.mappings.find(mapping => mapping.criterionId === bo.criterion.id))
             .reduceRight<BetOfferGroup[]>((groups, betoffer) => {
@@ -230,7 +229,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
 
     }
 
-    private findAndBuildCustomSelections(betOffers: BetOfferEntity[], categories: BetOfferCategory[], onlyOnePerCategory: boolean = true): BetOfferGroup[] {
+    private findAndBuildCustomSelections = (betOffers: BetOfferEntity[], categories: BetOfferCategory[], onlyOnePerCategory: boolean = true): BetOfferGroup[] => {
         const betOfferGroups: BetOfferGroup[] = []
 
         for (let category of categories.sort((c1, c2) => c1.sortOrder - c2.sortOrder)) {
@@ -261,7 +260,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         return betOfferGroups
     }
 
-    private findBetOfferByCategory(category: BetOfferCategory, betOffers: BetOfferEntity[]): BetOfferGroup[] {
+    private findBetOfferByCategory = (category: BetOfferCategory, betOffers: BetOfferEntity[]): BetOfferGroup[] => {
         const groups: BetOfferGroup[] = []
         for (let betOffer of betOffers) {
             if (category.mappings && category.mappings.find(mapping => mapping.criterionId === betOffer.criterion.id)) {
@@ -278,7 +277,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
     }
 
 
-    private compareBetOffers(bo1: BetOfferGroup, bo2: BetOfferGroup, category: BetOfferCategory): number {
+    private compareBetOffers = (bo1: BetOfferGroup, bo2: BetOfferGroup, category: BetOfferCategory): number => {
         const mappingBo1 = category.mappings.find(mapping => mapping.criterionId === bo1.criterion.id)
         const mappingBo2 = category.mappings.find(mapping => mapping.criterionId === bo2.criterion.id)
 
@@ -295,13 +294,11 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         return 0;
     }
 
-    @autobind
-    private onRefresh() {
+    private onRefresh = () => {
         this.props.loadData(true)
     }
 
-    @autobind
-    private renderItem(info: ListRenderItemInfo<BetOfferGroup>) {
+    private renderItem = (info: ListRenderItemInfo<BetOfferGroup>) => {
         const group: BetOfferGroup = info.item
 
         return (
@@ -318,8 +315,8 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         )
     }
 
-    @autobind
-    private renderBetOfferGroup(group: BetOfferGroup): React.ReactNode {
+
+    private renderBetOfferGroup = (group: BetOfferGroup): React.ReactNode => {
 
         if (group.type.id === BetOfferTypes.OverUnder ||
             group.type.id === BetOfferTypes.CorrectScore ||
@@ -348,8 +345,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         ))
     }
 
-    @autobind
-    private renderSectionHeader(info: { section: BetOfferSection }) {
+    private renderSectionHeader = (info: { section: BetOfferSection }) => {
         const section = info.section
 
         return (
@@ -362,8 +358,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         )
     }
 
-    @autobind
-    private toggleSection(key: number) {
+    private toggleSection = (key: number) => {
         this.setState(prevState => {
                 let expanded: Set<number> = prevState.expanded
                 expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
@@ -373,8 +368,8 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
             }
         )
     }
-
-    private keyExtractor(betOfferGroup: BetOfferGroup): string {
+    
+    private keyExtractor = (betOfferGroup: BetOfferGroup): string => {
         return betOfferGroup.key
     }
 }

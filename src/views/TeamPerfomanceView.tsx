@@ -8,7 +8,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {HistoricalEvent, HistoricalEventScore, TeamParticipantWithEvents, TPIResponse} from "api/typings";
 import {loadTeamPerformance} from "store/stats/actions";
-import autobind from "autobind-decorator";
 
 interface ExternalProps {
     eventId: number,
@@ -138,7 +137,7 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
         )
     }
 
-    private renderResult(result: number, key: number, style: TextStyle = {}) {
+    private renderResult = (result: number, key: number, style: TextStyle = {}) => {
 
         if (result > 0) {
             return <Text key={key} style={[styles.resultCommon, styles.resultWon, style]}>W</Text>
@@ -150,8 +149,7 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
         return <Text key={key} style={[styles.resultCommon, styles.resultDraw, style]}>D</Text>
     }
 
-    @autobind
-    private scoreToResult(scores: HistoricalEventScore[]): number {
+    private scoreToResult = (scores: HistoricalEventScore[]): number => {
         if (scores && scores.length) {
             const score = scores[0]
             if (score.homeScore !== undefined && score.awayScore !== undefined) {

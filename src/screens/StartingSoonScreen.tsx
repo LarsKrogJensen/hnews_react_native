@@ -1,18 +1,25 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
-    View, ViewStyle
+    ActivityIndicator,
+    Animated,
+    ListRenderItemInfo,
+    RefreshControl,
+    SectionList,
+    SectionListData,
+    Text,
+    TextStyle,
+    View,
+    ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
-import LiveEventListItem from "components/EventListItem";
-import autobind from "autobind-decorator";
+import LiveEventListItem from "components/event/EventListItem";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import * as SoonActions from "store/soon/actions"
 import {EventEntity} from "model/EventEntity";
-import connectAppState from "components/AppStateRefresh";
+import connectAppState from "components/hoc/AppStateRefresh";
 import Touchable from "components/Touchable";
 import {is, Set} from "immutable"
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
@@ -96,8 +103,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         )
     }
 
-    @autobind
-    private renderBody(scrollHooks: ScrollHooks) {
+    private renderBody = (scrollHooks: ScrollHooks) => {
         const {loading} = this.props;
         const {expanded, sections} = this.state
 
@@ -127,18 +133,17 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         )
     }
 
-    @autobind
-    private onRefresh() {
+    private onRefresh = () => {
         this.props.loadData(true)
     }
 
-    private hasPropsChanges(nextProps: ComponentProps, props: ComponentProps): boolean {
+    private hasPropsChanges = (nextProps: ComponentProps, props: ComponentProps): boolean => {
         return nextProps.events.length !== props.events.length ||
             nextProps.events.map(e => e.id).join() !== props.events.map(e => e.id).join()
     }
 
-    @autobind
-    private renderItem(info: ListRenderItemInfo<EventEntity>) {
+
+    private renderItem = (info: ListRenderItemInfo<EventEntity>) => {
         const {orientation, navigation} = this.props
         const event: EventEntity = info.item;
 
@@ -147,8 +152,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
                                   orientation={orientation}/>
     }
 
-    @autobind
-    private renderSectionHeader(info: { section: DateSection }) {
+    private renderSectionHeader = (info: { section: DateSection }) => {
         const date = info.section.date
         const {date: datum} = formatDateTime(date.toISOString())
 
@@ -171,7 +175,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         )
     }
 
-    private prepareData(events: EventEntity[]) {
+    private prepareData = (events: EventEntity[]) => {
         const sections: DateSection[] = []
 
         for (let event of events) {
@@ -209,8 +213,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         }))
     }
 
-    @autobind
-    private toggleSection(key: string) {
+    private toggleSection = (key: string) => {
         this.setState(prevState => {
                 let expanded: Set<string> = prevState.expanded
                 expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
@@ -221,8 +224,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         )
     }
 
-    @autobind
-    private padHours(hours: number): string {
+    private padHours = (hours: number): string => {
         if (hours === 24)
             hours = 0;
         if (hours < 10) return "0" + hours
@@ -230,7 +232,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         return hours.toString()
     }
 
-    private keyExtractor(event: EventEntity): string {
+    private keyExtractor = (event: EventEntity): string => {
         return event.id.toString()
     }
 }

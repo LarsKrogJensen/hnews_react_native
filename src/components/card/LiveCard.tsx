@@ -9,9 +9,9 @@ import {LiveData} from "api/typings";
 import {MatchClockItem} from "components/MatchClockItem";
 import {CircularProgress} from 'react-native-circular-progress';
 import {Card} from "components/Card";
-import EventPathItem from "components/EventPathItem";
-import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
-import {LiveCardScore} from "components/LiveCardScore";
+import EventPathItem from "components/event/EventPathItem";
+import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
+import {LiveCardScore} from "components/card/LiveCardScore";
 import {navigate} from "lib/navigate";
 
 

@@ -1,6 +1,5 @@
 import * as React from "react"
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
-import autobind from "autobind-decorator";
 import {Path} from "api/typings";
 import {Theme} from "lib/device";
 
@@ -19,8 +18,7 @@ export default class EventPathItem extends React.Component<Props> {
         )
     }
 
-    @autobind
-    private renderPath(path: ReadonlyArray<Path>): JSX.Element[] {
+    private renderPath = (path: ReadonlyArray<Path>): JSX.Element[] => {
         const pathArray: JSX.Element[] = []
 
         path.map((p, index) => {

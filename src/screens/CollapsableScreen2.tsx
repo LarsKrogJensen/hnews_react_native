@@ -1,18 +1,27 @@
 import * as React from "react"
 
 import {
-    Animated, FlatList, Image, ImageStyle, ListRenderItemInfo, ListView, Platform, StatusBar, StyleSheet, TextStyle,
-    View, ViewStyle
+    Animated,
+    FlatList,
+    Image,
+    ImageStyle,
+    ListRenderItemInfo,
+    ListView,
+    Platform,
+    StatusBar,
+    StyleSheet,
+    TextStyle,
+    View,
+    ViewStyle
 } from 'react-native';
 
 import {data, TestData} from './data';
 import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
-import autobind from "autobind-decorator";
 import {NavigationScreenProp} from "react-navigation";
+import {navigateBack, navigateDrawerOpen} from "lib/navigate";
 import AnimatedDiffClamp = Animated.AnimatedDiffClamp;
 import absoluteFill = StyleSheet.absoluteFill;
-import {navigateBack, navigateDrawerOpen} from "lib/navigate";
 
 const NAVBAR_HEIGHT = 64;
 const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
@@ -141,19 +150,15 @@ export class CollapsableScreen2 extends React.Component<Props, State> {
         );
     }
 
-    @autobind
-    private onScrollEndDrag() {
+    private onScrollEndDrag = () => {
         this.scrollEndTimer = setTimeout(this.onMomentumScrollEnd, 250);
     };
-
-
-    @autobind
-    private onMomentumScrollBegin() {
-        clearTimeout(this.scrollEndTimer);
+    
+    private onMomentumScrollBegin = () => {
+        clearTimeout(this.scrollEndTimer)
     }
 
-    @autobind
-    private onMomentumScrollEnd() {
+    private onMomentumScrollEnd = () => {
         const toValue = this.scrollValue > NAVBAR_HEIGHT &&
         this.clampedScrollValue > (NAVBAR_HEIGHT - STATUS_BAR_HEIGHT) / 2
             ? this.offsetValue + NAVBAR_HEIGHT
@@ -166,20 +171,17 @@ export class CollapsableScreen2 extends React.Component<Props, State> {
         }).start();
     };
 
-    @autobind
-    private renderRow(listItem: ListRenderItemInfo<TestData>) {
+    private renderRow = (listItem: ListRenderItemInfo<TestData>) => {
         return (
             <Image key={listItem.item.title} style={styles.row} source={{uri: listItem.item.image}} resizeMode="cover"/>
         )
     }
 
-    @autobind
-    private keyExtractor(item: TestData) {
+    private keyExtractor = (item: TestData) => {
         return item.key
     }
 
-    @autobind
-    private onLeftClick() {
+    private onLeftClick = () => {
         const {navigation, rootScreen} = this.props;
         if (rootScreen) {
             navigateDrawerOpen(navigation)
@@ -187,9 +189,8 @@ export class CollapsableScreen2 extends React.Component<Props, State> {
             navigateBack(navigation)
         }
     }
-
-    @autobind
-    private leftMenuIcon() {
+    
+    private leftMenuIcon = () => {
         const {rootScreen} = this.props;
         if (rootScreen) {
             return "menu"

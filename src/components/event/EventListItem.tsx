@@ -1,15 +1,14 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {EventInfoItem} from "components/EventInfoItem";
+import {EventInfoItem} from "components/event/EventInfoItem";
 import Touchable from "components/Touchable";
 import {Orientation, Theme} from "lib/device";
 import {NavigationScreenProp} from "react-navigation";
 import {View, ViewStyle} from "react-native";
-import autobind from "autobind-decorator";
 import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
-import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
+import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {navigate} from "lib/navigate";
 
 
@@ -53,8 +52,8 @@ class EventListItem extends React.Component<Props> {
         );
     }
 
-    @autobind
-    private handleItemClick() {
+
+    private handleItemClick = () => {
         navigate(this.props.navigation, "Event", {eventId: this.props.eventId})
     }
 }

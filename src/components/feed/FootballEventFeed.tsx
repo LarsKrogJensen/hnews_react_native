@@ -17,8 +17,7 @@ import {connect} from "react-redux";
 import {loadLiveData} from "store/stats/actions";
 import {AppStore} from "store/store";
 import {EventEntity} from "model/EventEntity";
-import connectAppState from "components/AppStateRefresh";
-import autobind from "autobind-decorator";
+import connectAppState from "components/hoc/AppStateRefresh";
 import {default as Svg, G, Path, Polygon, Rect} from "react-native-svg";
 import {formatDateTime} from "lib/dates";
 
@@ -95,8 +94,7 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
         />
     }
 
-    @autobind
-    private renderItem(info: ListRenderItemInfo<Occurence>) {
+    private renderItem = (info: ListRenderItemInfo<Occurence>) => {
         const occurence = info.item
 
         if (occurence.occurrenceTypeId.endsWith("HOME")) {
@@ -327,8 +325,7 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
         )
     }
 
-    @autobind
-    private keyExtractor(item: Occurence) {
+    private keyExtractor = (item: Occurence) => {
         return item.id.toString()
     }
 
@@ -344,8 +341,7 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
         return true
     }
 
-    @autobind
-    private calculateScore(occurenceId: number): { home: number, away: number } {
+    private calculateScore = (occurenceId: number): { home: number, away: number } => {
         const occurences = this.props.occurences!.sort((o1, o2) => o1.secondInMatch - o2.secondInMatch);
         let home = 0, away = 0
 
@@ -358,8 +354,7 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
         return {home, away}
     }
 
-    @autobind
-    private calculateHalfFullTimeScore(periodIndex: number): { home: number, away: number } {
+    private calculateHalfFullTimeScore = (periodIndex: number): { home: number, away: number } => {
         const occurences = this.props.occurences!;
         let home = 0, away = 0
 

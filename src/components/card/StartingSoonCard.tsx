@@ -7,9 +7,9 @@ import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
 import {Orientation} from "lib/device";
-import EventPathItem from "components/EventPathItem";
+import EventPathItem from "components/event/EventPathItem";
 import CountDown from "components/CountDown";
-import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
+import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {navigate} from "lib/navigate";
 
 interface ExternalProps {

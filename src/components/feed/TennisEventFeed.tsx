@@ -17,8 +17,7 @@ import {connect} from "react-redux";
 import {loadLiveData} from "store/stats/actions";
 import {AppStore} from "store/store";
 import {EventEntity} from "model/EventEntity";
-import connectAppState from "components/AppStateRefresh";
-import autobind from "autobind-decorator";
+import connectAppState from "components/hoc/AppStateRefresh";
 
 interface ExternalProps {
     eventId: number
@@ -94,8 +93,7 @@ class TennisEventFeedComponent extends React.Component<ComponentProps, Component
         />
     }
 
-    @autobind
-    private renderItem(info: ListRenderItemInfo<LiveFeedEventWithId>) {
+    private renderItem = (info: ListRenderItemInfo<LiveFeedEventWithId>) => {
         const feedEvent = info.item
 
         // if (feedEvent.occurrenceTypeId.endsWith("HOME")) {
@@ -153,10 +151,8 @@ class TennisEventFeedComponent extends React.Component<ComponentProps, Component
             </View>
         )
     }
-
-
-    @autobind
-    private keyExtractor(item: LiveFeedEventWithId) {
+    
+    private keyExtractor = (item: LiveFeedEventWithId) => {
         return item.id.toString()
     }
 

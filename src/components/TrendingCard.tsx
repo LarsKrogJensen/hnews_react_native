@@ -6,9 +6,9 @@ import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import EventPathItem from "components/EventPathItem";
+import EventPathItem from "components/event/EventPathItem";
 import {formatDateTime} from "lib/dates";
-import {DefaultBetOfferItem} from "components/betOffers/DefaultBetOfferItem";
+import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {navigate} from "lib/navigate";
 
 interface ExternalProps {

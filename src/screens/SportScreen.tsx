@@ -2,7 +2,6 @@ import * as React from "react"
 import {NavigationScreenProp} from "react-navigation";
 import {SportView} from "views/SportView";
 import {CollapsableHeaderScreen, ScrollHooks} from "screens/CollapsableHeaderScreen";
-import autobind from "autobind-decorator";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: any }, {}>
@@ -37,8 +36,7 @@ export class SportScreen extends React.Component<ExternalProps> {
         )
     }
 
-    @autobind
-    private renderBody(scrollHooks: ScrollHooks) {
+    private renderBody = (scrollHooks: ScrollHooks) => {
         const {navigation, sport, region, league, filter} = this.props
         return (
             <SportView navigation={navigation}

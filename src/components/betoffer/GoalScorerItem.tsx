@@ -3,7 +3,6 @@ import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {OutcomeCriterion} from "api/typings";
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
-import autobind from "autobind-decorator";
 import OutcomeItem from "components/OutcomeItem";
 
 
@@ -71,15 +70,13 @@ export class GoalScorerItem extends React.Component<Props> {
         ]
     }
 
-    @autobind
-    private renderTeamPlayers(players: Player[], criterions: OutcomeCriterion[]) {
+    private renderTeamPlayers = (players: Player[], criterions: OutcomeCriterion[]) => {
         return players
             .sort((a, b) => a.name.localeCompare(b.name))
             .map(player => this.renderPlayer(player, criterions))
     }
 
-    @autobind
-    private renderPlayer(player: Player, criterions: OutcomeCriterion[]): React.ReactNode {
+    private renderPlayer = (player: Player, criterions: OutcomeCriterion[]): React.ReactNode => {
         return (
             <View key={player.name} style={[styles.columnLayout, styles.playerBox]}>
                 <Text style={styles.playerNameStyle}>{player.name}</Text>
@@ -104,8 +101,7 @@ export class GoalScorerItem extends React.Component<Props> {
         )
     }
 
-    @autobind
-    private resolvePlayer(outcome: OutcomeEntity, team: Team): Player {
+    private resolvePlayer = (outcome: OutcomeEntity, team: Team): Player => {
         let current = team.players.get(outcome.participantId!);
         if (!current) {
             current = {

@@ -5,7 +5,7 @@ import {EventEntity} from "model/EventEntity";
 import {Text, View} from "react-native";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
-import EventPathItem from "components/EventPathItem";
+import EventPathItem from "components/event/EventPathItem";
 import Touchable from "components/Touchable";
 import {formatDateTime} from "lib/dates";
 import {navigate} from "lib/navigate";

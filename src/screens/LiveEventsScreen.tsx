@@ -1,20 +1,27 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {
-    ActivityIndicator, Animated, ListRenderItemInfo, RefreshControl, SectionList, SectionListData, Text, TextStyle,
-    View, ViewStyle
+    ActivityIndicator,
+    Animated,
+    ListRenderItemInfo,
+    RefreshControl,
+    SectionList,
+    SectionListData,
+    Text,
+    TextStyle,
+    View,
+    ViewStyle
 } from "react-native"
 import Icon from 'react-native-vector-icons/Ionicons';
 import {is, Set} from "immutable"
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup} from "api/typings";
-import EventListItem from "components/EventListItem";
-import autobind from "autobind-decorator";
+import EventListItem from "components/event/EventListItem";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {EventEntity} from "model/EventEntity";
-import connectAppState from "components/AppStateRefresh";
+import connectAppState from "components/hoc/AppStateRefresh";
 import Touchable from "components/Touchable";
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
@@ -102,8 +109,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         )
     }
 
-    @autobind
-    private renderBody(scrollHooks: ScrollHooks) {
+    private renderBody = (scrollHooks: ScrollHooks) => {
         const {loading} = this.props;
         let {expanded, sections} = this.state
 
@@ -133,13 +139,11 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         )
     }
 
-    @autobind
-    private onRefresh() {
+    private onRefresh = () => {
         this.props.loadData(true)
     }
 
-    @autobind
-    private renderItem(info: ListRenderItemInfo<EventEntity>) {
+    private renderItem = (info: ListRenderItemInfo<EventEntity>) => {
         const event: EventEntity = info.item;
 
         return <EventListItem eventId={event.id}
@@ -147,8 +151,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
                               orientation={this.props.orientation}/>
     }
 
-    @autobind
-    private renderSectionHeader(info: { section: LiveSection }) {
+    private renderSectionHeader = (info: { section: LiveSection }) => {
         if (info.section.title === "Favorites") {
 
             return (
@@ -175,14 +178,13 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         )
     }
 
-    @autobind
-    private keyExtractor(event: EventEntity): string {
+    private keyExtractor = (event: EventEntity): string => {
         return event.id.toString()
     }
 
-    private prepareData(events: EventEntity[],
-                        groups: EventGroup[],
-                        favorites: Set<number>) {
+    private prepareData = (events: EventEntity[],
+                           groups: EventGroup[],
+                           favorites: Set<number>) => {
         // console.log("Prepare live data")
         const sections: LiveSection[] = groups.map(group => ({
             title: group.name,
@@ -218,8 +220,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         }))
     }
 
-    @autobind
-    private toggleSection(key: string) {
+    private toggleSection = (key: string) => {
         this.setState(prevState => {
                 let expanded: Set<string> = prevState.expanded
                 expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)

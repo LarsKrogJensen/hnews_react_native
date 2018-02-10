@@ -2,18 +2,17 @@ import * as React from "react"
 import {ComponentClass} from "react"
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import OutcomeItem from "../OutcomeItem"
-import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
+import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
 import {OutcomeEntity} from "model/OutcomeEntity";
 import {BetOfferType} from "api/typings";
-import {OutcomeTypes} from "components/betOffers/OutcomeTypes";
+import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
 import {EventEntity} from "model/EventEntity";
-import autobind from "autobind-decorator";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
-import {GoalScorerItem} from "components/betOffers/GoalScorerItem";
-import {WinnerBetOfferGroupItem} from "components/betOffers/WinnerBetOfferGroupItem";
+import {GoalScorerItem} from "components/betoffer/GoalScorerItem";
+import {WinnerBetOfferGroupItem} from "components/betoffer/WinnerBetOfferGroupItem";
 import {BetOfferEntity} from "model/BetOfferEntity";
-import {PositionBetOfferGroupItem} from "components/betOffers/PositionBetOfferGroupItem";
+import {PositionBetOfferGroupItem} from "components/betoffer/PositionBetOfferGroupItem";
 
 interface ExternalProps {
     outcomes: number[]
@@ -364,25 +363,23 @@ class BetOfferGroupComponent extends React.Component<Props> {
         )
     }
 
-    @autobind
-    private sortThreeWay(outcome1: OutcomeEntity, outcome2: OutcomeEntity): number {
+    private sortThreeWay = (outcome1: OutcomeEntity, outcome2: OutcomeEntity): number => {
         return this.threeWayLabelToNumber(outcome1.label) - this.threeWayLabelToNumber(outcome2.label)
     }
 
-    @autobind
-    private threeWayLabelToNumber(label: string): number {
+    private threeWayLabelToNumber = (label: string): number => {
         return label.toLowerCase() === "x" ? 1.5 : parseInt(label)
     }
-
-    private formatHandicapTitle(handicap: number): string {
+    
+    private formatHandicapTitle = (handicap: number): string => {
         if (handicap > 0) {
             return `${handicap / 1000}-0`
         }
 
         return `0${handicap / 1000}`
     }
-
-    private parseScore(scoreLabel: string): { homeScore: number, awayScore: number } {
+    
+    private parseScore = (scoreLabel: string): { homeScore: number, awayScore: number } => {
         let scoreParts: string[] = scoreLabel.split("-");
 
         if (scoreParts.length !== 2) {

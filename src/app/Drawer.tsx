@@ -12,14 +12,13 @@ import {
     View
 } from "react-native";
 import banner from "images/banner";
-import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {loadGroups, loadHighlights} from "store/groups/actions";
 import {connect} from "react-redux";
 import {EventGroup} from "api/typings";
-import connectAppState from "components/AppStateRefresh";
+import connectAppState from "components/hoc/AppStateRefresh";
 import {loadOpenForLive} from "store/live/actions";
 import {navigate} from "lib/navigate";
 import absoluteFill = StyleSheet.absoluteFill;
@@ -87,8 +86,7 @@ class DrawerComp extends React.Component<Props> {
         )
     }
 
-    @autobind
-    private renderBody() {
+    private renderBody = () => {
         if (this.props.loading) {
             return <View>
                 <ActivityIndicator style={{marginTop: 8}}/>
@@ -147,8 +145,7 @@ class DrawerComp extends React.Component<Props> {
         )
     }
 
-    @autobind
-    private renderItem(info: ListRenderItemInfo<Item>) {
+    private renderItem = (info: ListRenderItemInfo<Item>) => {
         const item: Item = info.item;
         const navigation = this.props.navigation
 
@@ -193,8 +190,7 @@ class DrawerComp extends React.Component<Props> {
         })
     }
 
-    @autobind
-    private formatCategory(group: EventGroup | undefined): string | null {
+    private formatCategory = (group: EventGroup | undefined): string | null => {
         if (!group) return null
 
         let eg = group;
@@ -207,8 +203,7 @@ class DrawerComp extends React.Component<Props> {
         return flattenPath.join(" / ")
     }
 
-    @autobind
-    private renderSectionHeader(info: { section: SectionListData<Item> }) {
+    private renderSectionHeader = (info: { section: SectionListData<Item> }) => {
         if (!info.section.title) return null;
 
         return (
@@ -229,13 +224,11 @@ class DrawerComp extends React.Component<Props> {
         )
     }
 
-    @autobind
-    private keyExtractor(item: Item): string {
+    private keyExtractor = (item: Item): string => {
         return item.name
     }
 
-    @autobind
-    private onItemClick(navigation: NavigationScreenProp<any, any>, item: Item) {
+    private onItemClick = (navigation: NavigationScreenProp<any, any>, item: Item) => {
         if (navigation && item.path) {
             if (item.action) {
                 // navigation.navigate(item.path, {}, item.action)

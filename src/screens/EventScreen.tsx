@@ -1,20 +1,18 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Animated, Dimensions, StyleSheet, Text, View, ViewStyle} from "react-native"
+import {Animated, Dimensions, StyleSheet, Text, ViewStyle} from "react-native"
 import {NavigationParams, NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import {EventInfoItem} from "components/EventInfoItem";
+import {EventInfoItem} from "components/event/EventInfoItem";
 import {Theme} from "lib/device";
 import Screen from "screens/Screen";
-import {LiveCardScore} from "components/LiveCardScore";
+import {LiveCardScore} from "components/card/LiveCardScore";
 import {NavigationState, RouteBase, Scene, SceneRendererProps, TabBar, TabViewAnimated} from "react-native-tab-view";
-import autobind from "autobind-decorator";
 import {EventMarketsView} from "views/EventMarketsView";
 import {EventPrematchStatsView} from "views/EventPrematchStatsView";
 import {EventLiveStatsView} from "views/EventLiveStatsView";
-import {MatchClockItem} from "components/MatchClockItem";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: NavigationParams }, {}>
@@ -107,15 +105,13 @@ class EventScreenComponent extends React.Component<Props, State> {
 
     }
 
-    @autobind
-    private handleIndexChange(index: number) {
+    private handleIndexChange = (index: number) => {
         this.setState({
             tabIndex: index
         });
     }
 
-    @autobind
-    private renderLabel(props: SceneRendererProps<PageRoute>) {
+    private renderLabel = (props: SceneRendererProps<PageRoute>) => {
         return (scene: Scene<PageRoute>) => {
             const inputRange = props.navigationState.routes.map((x, i) => i);
             const outputRange = inputRange.map(
@@ -134,8 +130,7 @@ class EventScreenComponent extends React.Component<Props, State> {
         }
     }
 
-    @autobind
-    private renderFooter(props: SceneRendererProps<PageRoute>) {
+    private renderFooter = (props: SceneRendererProps<PageRoute>) => {
         return (
             <TabBar
                 {...props}
@@ -148,8 +143,7 @@ class EventScreenComponent extends React.Component<Props, State> {
         )
     }
 
-    @autobind
-    private renderScene(props: SceneRendererProps<PageRoute> & Scene<PageRoute>) {
+    private renderScene = (props: SceneRendererProps<PageRoute> & Scene<PageRoute>) => {
         const {event, navigation} = this.props
 
         const {tabIndex} = this.state

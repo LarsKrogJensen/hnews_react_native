@@ -6,14 +6,12 @@ import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {loadLanding} from "store/landing/actions";
-import {loadOpenForLive} from "store/live/actions";
 import {EventCollection} from "store/landing/reducer";
-import connectAppState from "components/AppStateRefresh";
-import StartingSoonCard from "components/StartingSoonCard";
+import connectAppState from "components/hoc/AppStateRefresh";
+import StartingSoonCard from "components/card/StartingSoonCard";
 import TrendingCard from "components/TrendingCard";
-import autobind from "autobind-decorator";
-import LiveCard from "components/LiveCard";
-import {HighlightsCard} from "components/HighlightsCard";
+import LiveCard from "components/card/LiveCard";
+import {HighlightsCard} from "components/card/HighlightsCard";
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen"
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {Orientation} from "lib/device";
@@ -70,8 +68,7 @@ class HomeScreen extends React.Component<ComponentProps> {
         )
     }
 
-    @autobind
-    private renderBody(scrollHooks: ScrollHooks) {
+    private renderBody = (scrollHooks: ScrollHooks) => {
         const {loading} = this.props
 
         if (loading) {
@@ -135,8 +132,7 @@ class HomeScreen extends React.Component<ComponentProps> {
             )
     }
 
-    @autobind
-    private onRefresh() {
+    private onRefresh = () => {
         this.props.loadData(true)
     }
 

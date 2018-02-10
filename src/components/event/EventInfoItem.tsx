@@ -1,13 +1,13 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {View, ViewStyle} from "react-native";
-import EventScoreItem from "components/EventScoreItem";
-import EventDetailsItem from "components/EventDetailsItem";
+import EventScoreItem from "components/event/EventScoreItem";
+import EventDetailsItem from "components/event/EventDetailsItem";
 import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {LiveData} from "api/typings";
-import EventTimeItem from "components/EventTimeItem";
+import EventTimeItem from "components/event/EventTimeItem";
 import {Theme} from "lib/device";
 
 

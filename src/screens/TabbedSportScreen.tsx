@@ -1,6 +1,5 @@
 import * as React from "react"
 import {NavigationScreenProp} from "react-navigation";
-import autobind from "autobind-decorator";
 import {NavigationState, RouteBase, Scene, SceneRendererProps, TabBar, TabViewAnimated} from "react-native-tab-view";
 import {Animated, Dimensions, StyleSheet, ViewStyle} from "react-native";
 import {SportScreen} from "screens/SportScreen";
@@ -57,9 +56,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         )
     }
 
-
-    @autobind
-    private handleIndexChange(index: number) {
+    private handleIndexChange = (index: number) => {
         this.setState(prevState => (
             {
                 navState: {
@@ -70,8 +67,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         ));
     }
 
-    @autobind
-    private renderLabel(props: SceneRendererProps<PageRoute>) {
+    private renderLabel = (props: SceneRendererProps<PageRoute>) => {
         return (scene: Scene<PageRoute>) => {
             const inputRange = props.navigationState.routes.map((x, i) => i);
             const outputRange = inputRange.map(
@@ -90,8 +86,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         }
     }
 
-    @autobind
-    private renderFooter(props: SceneRendererProps<PageRoute>) {
+    private renderFooter = (props: SceneRendererProps<PageRoute>) => {
         return (
             <TabBar
                 {...props}
@@ -104,8 +99,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         )
     }
 
-    @autobind
-    private renderScene(props: SceneRendererProps<PageRoute> & Scene<PageRoute>) {
+    private renderScene = (props: SceneRendererProps<PageRoute> & Scene<PageRoute>) => {
         const {navigation, navigation: {state: {params}}} = this.props;
 
         const {navState} = this.state

@@ -2,11 +2,10 @@ import * as React from "react"
 import {Image, StatusBar, StyleSheet, View} from "react-native";
 import {Toolbar} from "react-native-material-ui";
 import {NavigationScreenProp} from "react-navigation";
-import autobind from "autobind-decorator";
 import banner from "images/banner";
 import {Orientation, orientation} from "lib/device";
-import absoluteFill = StyleSheet.absoluteFill;
 import {navigateBack, navigateDrawerOpen} from "lib/navigate";
+import absoluteFill = StyleSheet.absoluteFill;
 
 interface Props {
     title: string | JSX.Element
@@ -55,8 +54,7 @@ export default class Screen extends React.Component<Props, State> {
         )
     }
 
-    @autobind
-    private onLeftClick() {
+    private onLeftClick = () => {
         const {navigation, rootScreen} = this.props;
         if (rootScreen) {
             navigateDrawerOpen(navigation)
@@ -65,8 +63,7 @@ export default class Screen extends React.Component<Props, State> {
         }
     }
 
-    @autobind
-    private leftMenuIcon() {
+    private leftMenuIcon = () => {
         const {rootScreen} = this.props;
         if (rootScreen) {
             return "menu"

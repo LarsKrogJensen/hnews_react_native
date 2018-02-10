@@ -1,7 +1,6 @@
 import * as React from "react"
 import {Text, TextStyle, View} from "react-native";
 import {MatchClock} from "api/typings";
-import autobind from "autobind-decorator";
 import {padTime} from "lib/dates";
 
 interface Props {

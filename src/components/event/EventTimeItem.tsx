@@ -3,9 +3,9 @@ import {Text, TextStyle, View, ViewStyle} from "react-native";
 import {EventEntity} from "model/EventEntity";
 import * as moment from "moment";
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import autobind from "autobind-decorator";
 import CountDown from "components/CountDown";
 import {Theme} from "lib/device";
+import {padTime} from "lib/dates";
 
 interface Props {
     style: ViewStyle,
@@ -59,8 +59,7 @@ export default class EventTimeItem extends React.PureComponent<Props> {
 
     }
 
-    @autobind
-    private renderDateTime() {
+    private renderDateTime = () => {
 
         const date = new Date(this.props.event.start);
         const isToday = date.toDateString === new Date().toDateString
@@ -68,23 +67,17 @@ export default class EventTimeItem extends React.PureComponent<Props> {
             [
                 !isToday && this.renderDate(date),
                 <Text key="time"
-                      style={timeStyle}>{this.padTime(date.getHours())}:{this.padTime(date.getMinutes())}</Text>
+                      style={timeStyle}>{padTime(date.getHours())}:{padTime(date.getMinutes())}</Text>
             ]
         )
     }
 
-    private renderDate(date: Date) {
+    private renderDate = (date: Date) => {
         return (
             <Text key="date" style={dateStyle}>{date.getDay()}/{date.getMonth()}</Text>
         )
     }
 
-    @autobind
-    private padTime(hours: number): string {
-        if (hours < 10) return "0" + hours
-
-        return hours.toString()
-    }
 }
 
 const timeStyle: TextStyle = {

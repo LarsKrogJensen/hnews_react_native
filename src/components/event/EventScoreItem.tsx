@@ -1,7 +1,6 @@
 import * as React from "react"
 import {EventStats, LiveData, MatchClock, Score, SetStats} from "api/typings";
 import {Text, TextStyle, View, ViewStyle} from "react-native";
-import autobind from "autobind-decorator";
 import {MatchClockItem} from "components/MatchClockItem";
 import {Theme} from "lib/device";
 
@@ -38,8 +37,7 @@ export default class EventScoreItem extends React.PureComponent<Props> {
         return <View style={this.props.style}/>
     }
 
-    @autobind
-    private renderFootball(score: Score, matchClock?: MatchClock) {
+    private renderFootball = (score: Score, matchClock?: MatchClock) => {
         return (
             <View style={{...this.props.style, alignItems: "center"}}>
                 <Text style={setStyle}>{score.home}</Text>
@@ -49,8 +47,7 @@ export default class EventScoreItem extends React.PureComponent<Props> {
         );
     }
 
-    @autobind
-    private renderSetBased(stats: EventStats, score: Score, hasGames: boolean) {
+    private renderSetBased = (stats: EventStats, score: Score, hasGames: boolean) => {
         const summary = this.calculateGameSummary(stats, hasGames)
         return (
             <View style={{...this.props.style, flexDirection: "row", justifyContent: "center"}}>

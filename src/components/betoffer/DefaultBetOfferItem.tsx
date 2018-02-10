@@ -2,15 +2,14 @@ import * as React from "react"
 import {ComponentClass, ReactNode} from "react"
 import {BetOfferEntity} from "model/BetOfferEntity";
 import {StyleSheet, Text, View, ViewStyle} from "react-native";
-import autobind from "autobind-decorator";
 import {Orientation} from "lib/device";
 import OutcomeItem from "../OutcomeItem"
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import Touchable from "components/Touchable";
-import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
+import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
 import {EventEntity} from "model/EventEntity";
-import {WinnerBetOfferItem} from "components/betOffers/WinnerBetOfferItem";
+import {WinnerBetOfferItem} from "components/betoffer/WinnerBetOfferItem";
 import {NavigationScreenProp} from "react-navigation";
 import {navigate} from "lib/navigate";
 
@@ -71,11 +70,10 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
         return null
     }
 
-    @autobind
-    private renderOutcomes(outcomes: ReadonlyArray<number>,
+    private renderOutcomes = (outcomes: ReadonlyArray<number>,
                            betOffer: BetOfferEntity,
                            event: EventEntity,
-                           outcomeStyle: ViewStyle): ReactNode[] {
+                           outcomeStyle: ViewStyle): ReactNode[] => {
 
         const {navigation} = this.props
 

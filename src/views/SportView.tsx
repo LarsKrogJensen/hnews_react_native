@@ -16,13 +16,12 @@ import {
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "model/EventEntity";
 import {loadSport} from "store/sport/actions";
-import connectAppState from "components/AppStateRefresh";
+import connectAppState from "components/hoc/AppStateRefresh";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import autobind from "autobind-decorator";
 import Touchable from "components/Touchable";
-import LiveEventListItem from "components/EventListItem";
+import LiveEventListItem from "components/event/EventListItem";
 import {is, Set} from "immutable";
 import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
@@ -157,7 +156,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
             groupByLeague ? this.sortByLeague : this.sortByDate
         );
 
-        let {expanded, hasInitExpanded } = this.state
+        let {expanded, hasInitExpanded} = this.state
 
         if (!hasInitExpanded && sections.length) {
             // make sure we fill screen with exapnded sections (at least 5 events)
@@ -262,27 +261,25 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         return section
     }
 
-    private sortByDate(a: SportSection, b: SportSection): number {
+    private sortByDate = (a: SportSection, b: SportSection): number => {
         if (a.live) return -1;
         if (b.live) return 1;
 
         return Number(a.date) - Number(b.date)
     }
 
-    private sortByLeague(a: SportSection, b: SportSection): number {
+    private sortByLeague = (a: SportSection, b: SportSection): number => {
         if (a.live) return -1;
         if (b.live) return 1;
 
         return a.league.localeCompare(b.league)
     }
 
-    @autobind
-    private onRefresh() {
+    private onRefresh = () => {
         this.props.loadData(true)
     }
 
-    @autobind
-    private renderItem(info: ListRenderItemInfo<EventEntity>) {
+    private renderItem = (info: ListRenderItemInfo<EventEntity>) => {
         const {navigation, orientation} = this.props
         const event: EventEntity = info.item
 
@@ -291,8 +288,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
                                   orientation={orientation}/>
     }
 
-    @autobind
-    private renderSectionHeader(info: { section: SportSection }) {
+    private renderSectionHeader = (info: { section: SportSection }) => {
         const section = info.section
 
         let title = ""
@@ -314,8 +310,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         )
     }
 
-    @autobind
-    private toggleSection(key: string) {
+    private toggleSection = (key: string) => {
         this.setState(prevState => {
                 let expanded: Set<string> = prevState.expanded
                 expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
@@ -326,16 +321,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         )
     }
 
-    @autobind
-    private padHours(hours: number): string {
-        if (hours === 24)
-            hours = 0;
-        if (hours < 10) return "0" + hours
-
-        return hours.toString()
-    }
-
-    private keyExtractor(event: EventEntity): string {
+    private keyExtractor = (event: EventEntity): string => {
         return event.id.toString()
     }
 }

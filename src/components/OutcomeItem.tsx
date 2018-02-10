@@ -9,8 +9,8 @@ import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import PlatformIcon from "components/PlatformIcon";
 import {BetOfferEntity} from "model/BetOfferEntity";
-import {BetOfferTypes} from "components/betOffers/BetOfferTypes";
-import {OutcomeTypes} from "components/betOffers/OutcomeTypes";
+import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
+import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
 
 
 interface ExternalProps {
