@@ -77,6 +77,8 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
                            event: EventEntity,
                            outcomeStyle: ViewStyle): ReactNode[] {
 
+        const {navigation} = this.props
+
         if (outcomes.length > 3 && event.type === "ET_COMPETITION" || betOffer.betOfferType.id === BetOfferTypes.Position) {
             const items: ReactNode[] = []
             items.push((
@@ -84,7 +86,7 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
             ))
 
             items.push((
-                <Touchable key={123345} onPress={() => navigate(this.props.navigation, "Event",{eventId: event.id})}>
+                <Touchable key={123345} onPress={() => navigate(navigation, "Event",{eventId: event.id})}>
                     <Text style={{textAlign: "center", padding: 8}}>View all {outcomes.length} participants</Text>
                 </Touchable>))
             return items;

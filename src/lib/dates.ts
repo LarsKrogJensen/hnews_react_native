@@ -18,3 +18,9 @@ export function formatDateTime(dateTime: string): { date: string, time: string }
         time: startTime.format("HH:mm")
     }
 }
+
+export function padTime(t: number): string {
+    if (t < 10) return "0" + t
+
+    return t.toString()
+}

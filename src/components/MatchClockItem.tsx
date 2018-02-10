@@ -2,6 +2,7 @@ import * as React from "react"
 import {Text, TextStyle, View} from "react-native";
 import {MatchClock} from "api/typings";
 import autobind from "autobind-decorator";
+import {padTime} from "lib/dates";
 
 interface Props {
     matchClock: MatchClock,
@@ -61,27 +62,21 @@ export class MatchClockItem extends React.Component<Props, State> {
         if (asHeader) {
             return (
                 <View style={[style, {backgroundColor: "black", paddingHorizontal: 4, borderRadius: 2, alignItems: "center", justifyContent: "center"}]}>
-                    <Text style={{color: "white", fontWeight: "bold", fontSize: 16}}>{this.padTime(minute) + ":" + this.padTime(second)}</Text>
+                    <Text style={{color: "white", fontWeight: "bold", fontSize: 16}}>{padTime(minute) + ":" + padTime(second)}</Text>
                 </View>
             )
         }
 
-        return <Text style={style}>{this.padTime(minute) + ":" + this.padTime(second)}</Text>
+        return <Text style={style}>{padTime(minute) + ":" + padTime(second)}</Text>
     }
 
-    @autobind
-    private increment() {
+
+    private increment = () => {
         this.setState((prevState: State): State => ({
                 second: prevState.second === 59 ? 0 : prevState.second + 1,
                 minute: prevState.second === 59 ? prevState.minute + 1 : prevState.minute
             })
         )
     }
-
-    @autobind
-    private padTime(t: number): string {
-        if (t < 10) return "0" + t
-
-        return t.toString()
-    }
+    
 }

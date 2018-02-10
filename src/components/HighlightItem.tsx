@@ -24,12 +24,12 @@ type Props = StateProps & ExternalProps
 class HighlightItemComponent extends React.Component<Props> {
 
     public render() {
-        const {event} = this.props
+        const {event, navigation, eventId} = this.props
 
         const {date, time} = formatDateTime(event.start)
         return (
             <Touchable style={{paddingVertical: 8}}
-                       onPress={() => navigate(this.props.navigation, "Event", {eventId: this.props.eventId})}>
+                       onPress={() => navigate(navigation, "Event", {eventId})}>
                 <View>
                     <View style={{flexDirection: "row"}}>
                         <Text style={{color: "#333333", flex: 1}}>{event.homeName} - {event.awayName}</Text>

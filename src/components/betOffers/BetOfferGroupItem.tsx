@@ -369,6 +369,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
         return this.threeWayLabelToNumber(outcome1.label) - this.threeWayLabelToNumber(outcome2.label)
     }
 
+    @autobind
     private threeWayLabelToNumber(label: string): number {
         return label.toLowerCase() === "x" ? 1.5 : parseInt(label)
     }
