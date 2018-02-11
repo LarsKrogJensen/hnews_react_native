@@ -47,9 +47,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-navigation@^1.0.30":
-  version "1.0.30"
-  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.0.30.tgz#02859ff8052285738d8a85ad564c28078ab23d18"
+"@types/react-navigation@^1.0.31":
+  version "1.0.31"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.0.31.tgz#ae0d58e7cf6f54d82daea9602fe580d9f3597f7e"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -777,10 +777,6 @@ babel-plugin-transform-regenerator@^6.5.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-regenerator/-/babel-plugin-transform-regenerator-6.24.1.tgz#b8da305ad43c3c99b4848e4fe4037b770d23c418"
   dependencies:
     regenerator-transform "0.9.11"
-
-babel-plugin-transform-remove-console@^6.9.0:
-  version "6.9.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-transform-remove-console/-/babel-plugin-transform-remove-console-6.9.0.tgz#a7b671aab050dd30ef7cf2142b61a7d10efb327f"
 
 babel-plugin-transform-strict-mode@^6.24.1:
   version "6.24.1"

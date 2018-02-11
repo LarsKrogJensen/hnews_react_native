@@ -57,7 +57,7 @@ class FootballEventFeedComponent extends React.Component<ComponentProps, Compone
     }
 
     public render() {
-        console.log("render event feed")
+        // console.log("render event feed")
         const {loading, style, occurences} = this.props;
         if (loading) {
             return (

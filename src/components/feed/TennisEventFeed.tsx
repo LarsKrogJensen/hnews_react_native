@@ -57,7 +57,7 @@ class TennisEventFeedComponent extends React.Component<ComponentProps, Component
     }
 
     public render() {
-        console.log("render event feed")
+        // console.log("render event feed")
         const {loading, style, liveFeed} = this.props;
         if (loading) {
             return (

@@ -86,11 +86,18 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         if (nextProps.region !== this.props.region) return true
         if (nextProps.sport !== this.props.sport) return true
         if (nextProps.league !== this.props.league) return true
-        if (nextProps.events.length !== this.props.events.length) return true
-        if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) return true
+        if (nextProps.events.length !== this.props.events.length) {
+            // console.log("length diff: " + nextProps.events.length + " old " + this.props.events.length)
+            return true
+        }
+        if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) {
+            // console.log("Ids diffing")
+            return true
+        }
         if (!is(nextState.expanded, this.state.expanded)) return true
         if (nextProps.orientation !== this.props.orientation) return true;
 
+        //console.log("NO diff")
         return false
     }
 
@@ -117,7 +124,10 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
     }
 
     public render() {
+        // console.log("Render SportView")
+
         const {loading} = this.props;
+
         if (loading) {
 
             return (
@@ -282,7 +292,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
     private renderItem = (info: ListRenderItemInfo<EventEntity>) => {
         const {navigation, orientation} = this.props
         const event: EventEntity = info.item
-
+        // console.log("Render ListItem")
         return <LiveEventListItem eventId={event.id}
                                   navigation={navigation}
                                   orientation={orientation}/>
@@ -290,24 +300,8 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
 
     private renderSectionHeader = (info: { section: SportSection }) => {
         const section = info.section
-
-        let title = ""
-        if (info.section.live) {
-            title = "LIVE"
-        } else if (section.league) {
-            title = section.league
-        } else {
-            title = formatDateTime(section.date.toISOString()).date
-        }
-
-        return (
-            <Touchable onPress={() => this.toggleSection(section.key)}>
-                <View style={styles.header}>
-                    <Text style={section.live ? styles.liveText : styles.sectionTitleText}>{title}</Text>
-                    <Text style={styles.countText}>{section.count}</Text>
-                </View>
-            </Touchable>
-        )
+        // console.log("Render Header: " + section.key)
+        return <SectionHeader key={section.key} section={section} toggleSection={this.toggleSection}/>
     }
 
     private toggleSection = (key: string) => {
@@ -336,6 +330,37 @@ function mapEvents(state: AppStore, key: string): EventEntity[] {
     }
 
     return events
+}
+
+class SectionHeader extends React.Component<{ section: SportSection, toggleSection: (key: string) => void }> {
+
+
+    shouldComponentUpdate(nextProps: Readonly<{ section: SportSection; toggleSection: (key: string) => void }>, nextState: Readonly<{}>, nextContext: any): boolean {
+        return nextProps.section.key !== this.props.section.key
+    }
+
+    public render() {
+        const {section, toggleSection} = this.props
+        // console.log("Section Render Header")
+
+        let title = ""
+        if (section.live) {
+            title = "LIVE"
+        } else if (section.league) {
+            title = section.league
+        } else {
+            title = formatDateTime(section.date.toISOString()).date
+        }
+
+        return (
+            <Touchable onPress={() => toggleSection(section.key)}>
+                <View style={styles.header}>
+                    <Text style={section.live ? styles.liveText : styles.sectionTitleText}>{title}</Text>
+                    <Text style={styles.countText}>{section.count}</Text>
+                </View>
+            </Touchable>
+        )
+    }
 }
 
 // styles
@@ -396,7 +421,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
 }
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(SportViewComponent))
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => {})(withOrientationChange(SportViewComponent))
 
 export const SportView: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)

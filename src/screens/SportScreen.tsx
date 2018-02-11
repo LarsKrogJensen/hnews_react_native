@@ -8,7 +8,8 @@ interface ExternalProps {
     sport: string
     region: string
     league: string
-    filter: "matches" | "competitions"
+    filter: "matches" | "competitions",
+    active: boolean
 }
 
 
@@ -20,6 +21,7 @@ export class SportScreen extends React.Component<ExternalProps> {
         if (nextProps.sport !== this.props.sport) return true
         if (nextProps.league !== this.props.league) return true
         if (nextProps.filter !== this.props.filter) return true
+        if (nextProps.active !== this.props.active) return true
 
         return false
     }
@@ -37,7 +39,10 @@ export class SportScreen extends React.Component<ExternalProps> {
     }
 
     private renderBody = (scrollHooks: ScrollHooks) => {
-        const {navigation, sport, region, league, filter} = this.props
+        const {navigation, sport, region, league, filter, active} = this.props
+
+        if (!active) return null
+
         return (
             <SportView navigation={navigation}
                        scrollHooks={scrollHooks}

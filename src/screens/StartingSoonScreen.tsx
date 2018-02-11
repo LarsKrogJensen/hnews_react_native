@@ -104,7 +104,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     }
 
     private renderBody = (scrollHooks: ScrollHooks) => {
-        console.log("RENDERING STARTING SOON")
+        // console.log("RENDERING STARTING SOON")
         const {loading} = this.props;
         const {expanded, sections} = this.state
 

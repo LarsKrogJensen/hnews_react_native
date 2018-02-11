@@ -20,7 +20,7 @@ export default function sportReducer(state: SportEventsStore = initialState, act
             }
         case SportActions.LOAD_SUCCESS:
             return {
-                events: state.events.set(action.key, action.data.events.map(liveEvent => liveEvent.event.id)),
+                events: state.events.set(action.key, action.data.events.map(liveEvent => liveEvent.event.id).sort((e1,e2) => e1 - e2)),
                 loading: state.loading.remove(action.key)
             }
         case SportActions.LOAD_FAILED:

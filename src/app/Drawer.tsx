@@ -67,7 +67,7 @@ class DrawerComp extends React.Component<Props> {
     }
 
     render() {
-        console.log("Drawer rendering")
+        // console.log("Drawer rendering")
         return (
             <View style={{backgroundColor: "#333333", flex: 1, flexDirection: "column", paddingBottom: 12}}>
                 <View style={{height: 100, justifyContent: "center", alignItems: "center"}}>
