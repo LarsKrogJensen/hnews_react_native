@@ -25,6 +25,7 @@ interface StateProps {
     popular: EventCollection
     shocker: EventCollection
     nextOff: EventCollection
+    highlights: EventCollection
     startingSoon: EventCollection
     loading: boolean
 }
@@ -53,11 +54,13 @@ class HomeScreen extends React.Component<ComponentProps> {
         if (nextProps.shocker.events.length !== this.props.shocker.events.length) return true;
         if (nextProps.nextOff.events.length !== this.props.nextOff.events.length) return true;
         if (nextProps.startingSoon.events.length !== this.props.startingSoon.events.length) return true;
+        if (nextProps.highlights.events.length !== this.props.highlights.events.length) return true;
 
         if (nextProps.popular.events.join() !== this.props.popular.events.join()) return true;
         if (nextProps.shocker.events.join() !== this.props.shocker.events.join()) return true;
         if (nextProps.nextOff.events.join() !== this.props.nextOff.events.join()) return true;
         if (nextProps.startingSoon.events.join() !== this.props.startingSoon.events.join()) return true;
+        if (nextProps.highlights.events.join() !== this.props.highlights.events.join()) return true;
 
         return false
     }
@@ -71,13 +74,13 @@ class HomeScreen extends React.Component<ComponentProps> {
     private renderBody = (scrollHooks: ScrollHooks) => {
         const {loading} = this.props
 
-        if (loading) {
-            return (
-                <View>
-                    <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
-                </View>
-            )
-        }
+        // if (loading) {
+        //     return (
+        //         <View>
+        //             <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
+        //         </View>
+        //     )
+        // }
 
         const cards: ReactNode[] = [
             ...this.renderLiveRightNow(),
@@ -90,7 +93,7 @@ class HomeScreen extends React.Component<ComponentProps> {
                 {...scrollHooks}
                 style={{paddingBottom: 50}}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
-
+                {loading && <ActivityIndicator style={{marginTop: 8}}/>}
                     {this.props.orientation === Orientation.Portrait
                         ? cards
                         : this.divideIntoColumns(cards)
@@ -100,6 +103,10 @@ class HomeScreen extends React.Component<ComponentProps> {
     }
 
     private renderHighlights(): ReactNode {
+        if (!this.props.highlights.events.length) {
+            return null
+        }
+        
         return (
             <HighlightsCard key="highlight"
                             navigation={this.props.navigation}/>
@@ -156,6 +163,7 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     popular: state.landingStore.popular,
     shocker: state.landingStore.shocker,
     nextOff: state.landingStore.nextOff,
+    highlights: state.landingStore.highlights,
     startingSoon: state.landingStore.startingSoon
 })
 

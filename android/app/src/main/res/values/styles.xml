@@ -7,6 +7,7 @@
         <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
         <!--<item name="android:statusBarColor">#1e000000</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <item name="colorAccent">#00ADC9</item>
     </style>
 
 </resources>

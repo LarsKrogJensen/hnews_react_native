@@ -33,13 +33,14 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         }
     }
 
-    shouldComponentUpdate(nextProps: Readonly<ExternalProps>, nextState: Readonly<{}>, nextContext: any): boolean {
+    shouldComponentUpdate(nextProps: Readonly<ExternalProps>, nextState: Readonly<State>, nextContext: any): boolean {
         const {navigation: {state: {params}}} = this.props;
         const {navigation: {state: {params: nextParams}}} = nextProps;
 
         if (nextParams.region !== params.region) return true
         if (nextParams.sport !== params.sport) return true
         if (nextParams.league !== params.league) return true
+        if (nextState.navState.index !== this.state.navState.index) return true
 
         return false
     }
@@ -51,7 +52,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
                              renderScene={this.renderScene}
                              renderFooter={this.renderFooter}
                              onIndexChange={this.handleIndexChange}
-                // useNativeDriver
+                             useNativeDriver
                              initialLayout={initialLayout}/>
         )
     }
@@ -64,7 +65,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
                     routes: prevState.navState.routes
                 }
             }
-        ));
+        ))
     }
 
     private renderLabel = (props: SceneRendererProps<PageRoute>) => {

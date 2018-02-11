@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Text, TextStyle, View, ViewStyle} from "react-native";
+import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {Orientation} from "lib/device";
 import Touchable from "components/Touchable";
 import {OutcomeEntity} from "model/OutcomeEntity";
@@ -19,6 +19,7 @@ interface ExternalProps {
     betOfferId: number
     orientation?: Orientation,
     style?: ViewStyle
+    overrideShowLabel?: boolean
 }
 
 interface StateProps {
@@ -80,61 +81,53 @@ class OutcomeItem extends React.Component<Props, State> {
     }
 
     public render() {
-        const {outcome, event, orientation, betOffer, style} = this.props;
+        const {outcome, event, orientation, betOffer, style, overrideShowLabel} = this.props;
         const {oddsChange} = this.state
         // console.log("OutcomeItem.render: " + outcome.id)
 
         if (!outcome || !betOffer) return null;
 
-        const outcomeLabel = this.formatOutcomeLabel(outcome, betOffer, event);
+        const outcomeLabel = this.formatOutcomeLabel(outcome, betOffer, event, overrideShowLabel);
 
         const height = orientation === Orientation.Portrait ? 38 : 48
-        const viewStyle = orientation === Orientation.Portrait ? portraitViewStyle : landscapeViewStyle
-        // console.log("Style: " + JSON.stringify(style))
-        const touchStyle: ViewStyle = {
-            ...touchBaseStyle,
-            height,
-            ...style
-        }
+        const viewStyle = orientation === Orientation.Portrait ? styles.portrait : styles.landscape
+        const touchStyle = [styles.touchBase, {height}, style || {}]
+
 
         if (betOffer.suspended || outcome.odds === 1000) {
             return (
                 <View style={touchStyle}>
-                    <View style={[viewStyle, {backgroundColor: "#BBBBBB"}]}>
+                    <View style={[styles.viewBase, viewStyle, {backgroundColor: "#BBBBBB"}]}>
                         <Text numberOfLines={1} ellipsizeMode="tail"
-                              style={[labelStyle, {color: "#959595"}]}>{outcomeLabel}</Text>
+                              style={[styles.label, {color: "#959595"}]}>{outcomeLabel}</Text>
                     </View>
-                </View>
+                </View>                                                                            
             )
         }
 
-        // if (outcome.odds === 1000) {
-        //     return <View style={[touchStyle, this.props.style, {backgroundColor: "transparent"}]}/>
-        // }
-
         return (
             <Touchable key={outcome.id} style={touchStyle} onPress={() => console.log("Pressed")}>
-                <View style={[viewStyle, !outcomeLabel ? {justifyContent: "center"} : {}]}>
+                <View style={[styles.viewBase, viewStyle, !outcomeLabel ? {justifyContent: "center"} : {}]}>
                     {outcomeLabel &&
-                    <Text numberOfLines={1} ellipsizeMode="tail" style={labelStyle}>{outcomeLabel}</Text>}
+                    <Text numberOfLines={1} ellipsizeMode="tail" style={styles.label}>{outcomeLabel}</Text>}
                     {this.renderOddsChange(oddsChange)}
                     <Text
-                        style={[oddsStyle, !outcomeLabel ? {marginLeft: 0} : {}]}>{(outcome.odds / 1000).toFixed(2)}</Text>
+                        style={[styles.odds, !outcomeLabel ? {marginLeft: 0} : {}]}>{(outcome.odds / 1000).toFixed(2)}</Text>
                 </View>
             </Touchable>
         )
     }
 
-    private formatOutcomeLabel(outcome: OutcomeEntity, betoffer: BetOfferEntity, event: EventEntity): string | undefined {
+    private formatOutcomeLabel(outcome: OutcomeEntity, betoffer: BetOfferEntity, event: EventEntity, overrideShowLabel?: boolean): string | undefined {
         if ((betoffer.betOfferType.id === BetOfferTypes.OverUnder ||
                 betoffer.betOfferType.id === BetOfferTypes.Handicap ||
                 betoffer.betOfferType.id === BetOfferTypes.AsianOverUnder) && outcome.line) {
             return outcome.label + " " + outcome.line / 1000
         }
-        if (betoffer.betOfferType.id === BetOfferTypes.HeadToHead ||
+        if (!overrideShowLabel && (betoffer.betOfferType.id === BetOfferTypes.HeadToHead ||
             betoffer.betOfferType.id === BetOfferTypes.Winner ||
             betoffer.betOfferType.id === BetOfferTypes.Position ||
-            betoffer.betOfferType.id === BetOfferTypes.GoalScorer) {
+            betoffer.betOfferType.id === BetOfferTypes.GoalScorer)) {
             return undefined
         }
         if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance) {
@@ -170,48 +163,48 @@ class OutcomeItem extends React.Component<Props, State> {
     }
 }
 
-const touchBaseStyle: ViewStyle = {
-    marginRight: 4,
-    flex: 1,
-    borderRadius: 3
-}
+const styles = StyleSheet.create({
+    touchBase: {
+        marginRight: 4,
+        flex: 1,
+        borderRadius: 3
+    } as ViewStyle,
+    viewBase: {
+        height: 38,
+        flex: 1,
+        flexDirection: 'row',
+        padding: 8,
+        alignItems: 'center',
+        backgroundColor: '#00ADC9',
+        borderRadius: 3
+    } as ViewStyle,
+    portrait: {
+        //...viewBaseStyle,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    }  as ViewStyle,
+    landscape: {
+        //...viewBaseStyle,
+        flex: 1,
+        flexDirection: "column-reverse",
+        alignItems: 'center'
+    } as ViewStyle,
+    label: {
+        color: "#DEF5FA",
+        flex: 1,
+        fontSize: 12
+    } as TextStyle,
+    odds: {
+        color: "white",
+        marginLeft: 8,
+        fontSize: 12,
+        fontWeight: "bold"
+    } as TextStyle
 
-const viewBaseStyle: ViewStyle = {
-    height: 38,
-    flex: 1,
-    flexDirection: 'row',
-    padding: 8,
-    alignItems: 'center',
-    backgroundColor: '#00ADC9',
-    borderRadius: 3
-}
 
-const portraitViewStyle: ViewStyle = {
-    ...viewBaseStyle,
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center'
-}
+})
 
-const landscapeViewStyle: ViewStyle = {
-    ...viewBaseStyle,
-    flex: 1,
-    flexDirection: "column-reverse",
-    alignItems: 'center'
-}
-
-const labelStyle: TextStyle = {
-    color: "#DEF5FA",
-    flex: 1,
-    fontSize: 12
-}
-
-const oddsStyle: TextStyle = {
-    color: "white",
-    marginLeft: 8,
-    fontSize: 12,
-    fontWeight: "bold"
-}
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     outcome: state.entityStore.outcomes.get(inputProps.outcomeId),
