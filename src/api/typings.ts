@@ -358,6 +358,7 @@ export interface PushMessage {
     mcu?: MatchClockUpdated
     mcr?: MatchClockRemoved
     er?: EventRemoved
+    mo?: Occurence
 }
 
 export interface OutcomeUpdate {

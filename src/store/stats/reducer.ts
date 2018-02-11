@@ -102,6 +102,11 @@ export default function statsReducer(state: StatsStore = initialState, action: L
                 liveData: state.liveData.remove(action.data.eventId),
                 occurences: state.occurences.remove(action.data.eventId)
             }
+        case PushActions.MATCH_OCCURENCE:
+            return {
+                ...state,
+                occurences: mergeMatchOccurence(state.occurences, action.data)
+            }
         case LeagueTableActions.START_LOADING:
             return {
                 ...state,
@@ -233,4 +238,11 @@ function mergeMatchClockRemoved(state: Map<number, LiveData>, update: MatchClock
     }
 
     return state
+}
+
+function mergeMatchOccurence(state: Map<number, Occurence[]>, occurence: Occurence): Map<number, Occurence[]> {
+
+    let occurences = state.get(occurence.eventId) || []
+    occurences = [...occurences, occurence]
+    return state.set(occurence.eventId, occurences)
 }

@@ -8,11 +8,12 @@ import {
     AllBetOffersSuspendedAction,
     BetOfferAddedAction,
     BetOfferRemovedAction,
-    BetOfferStatusUpdateAction, EventRemovedAction,
+    BetOfferStatusUpdateAction,
+    EventRemovedAction,
     EventScoreUpdateAction,
     EventStatsUpdateAction,
     MatchClockRemovedAction,
-    MatchClockUpdatedAction,
+    MatchClockUpdatedAction, MatchOccurenceAction,
     OddsUpdateAction,
     PushActions
 } from "store/push/actions";
@@ -201,10 +202,16 @@ function handleData(data: string, store: Store<AppStore>) {
                 }
                 break;
             case 25: {
-                console.log("Match occurence: " + JSON.stringify(msg))
+                if (msg.mo) {
+                    store.dispatch({
+                        type: PushActions.MATCH_OCCURENCE,
+                        data: msg.mo
+                    } as MatchOccurenceAction)
+                }
+                break;
             }
             default:
-                console.log("Message: " + msg && msg.mt)
+                //console.log("Message: " + msg && msg.mt)
                 break
         }
     }

@@ -2,7 +2,7 @@ import {
     AllBetOffersSuspended,
     BetOfferAdded, BetOfferRemoved, BetOfferStatusUpdate, EventRemoved, EventScoreUpdate, EventStatsUpdate,
     MatchClockRemoved,
-    MatchClockUpdated,
+    MatchClockUpdated, Occurence,
     OddsUpdated
 } from "api/typings";
 
@@ -17,6 +17,7 @@ export enum PushActions {
     MATCH_CLOCK_UPDATED = "MATCH_CLOCK_UPDATED",
     MATCH_CLOCK_REMOVED = "MATCH_CLOCK_REMOVED",
     EVENT_REMOVED = "EVENT_REMOVED",
+    MATCH_OCCURENCE = "MATCH_OCCURENCE",
 }
 
 export interface PushActionBase<T, D> {
@@ -34,8 +35,9 @@ export type AllBetOffersSuspendedAction = PushActionBase<PushActions.ALL_BETOFFE
 export type MatchClockUpdatedAction = PushActionBase<PushActions.MATCH_CLOCK_UPDATED, MatchClockUpdated>
 export type MatchClockRemovedAction = PushActionBase<PushActions.MATCH_CLOCK_REMOVED, MatchClockRemoved>
 export type EventRemovedAction = PushActionBase<PushActions.EVENT_REMOVED, EventRemoved>
+export type MatchOccurenceAction = PushActionBase<PushActions.MATCH_OCCURENCE, Occurence>
 
 
 export type PushAction = OddsUpdateAction | BetOfferRemovedAction | BetOfferAddedAction |
     BetOfferStatusUpdateAction | EventScoreUpdateAction | EventStatsUpdateAction | AllBetOffersSuspendedAction |
-    MatchClockRemovedAction | MatchClockUpdatedAction | EventRemovedAction
+    MatchClockRemovedAction | MatchClockUpdatedAction | EventRemovedAction | MatchOccurenceAction
