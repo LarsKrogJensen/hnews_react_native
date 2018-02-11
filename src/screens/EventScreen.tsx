@@ -147,7 +147,7 @@ class EventScreenComponent extends React.Component<Props, State> {
         const {event, navigation} = this.props
 
         const {tabIndex} = this.state
-        console.log("Route: " + props.route.key + ", current tab index: " + tabIndex)
+        // console.log("Route: " + props.route.key + ", current tab index: " + tabIndex)
         switch (props.route.key) {
             case 'events':
                 // if (this.state.tabIndex !== 0) return null

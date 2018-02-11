@@ -26,6 +26,8 @@ import {is, Set} from "immutable";
 import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {formatDateTime} from "lib/dates";
+import {createSelector} from "reselect"
+import {Map} from "immutable"
 
 
 interface ExternalProps {
@@ -33,7 +35,7 @@ interface ExternalProps {
     sport: string,
     region: string,
     league: string,
-    scrollHooks: ScrollHooks,
+    scrollHooks?: ScrollHooks,
     filter: "matches" | "competitions"
 }
 
@@ -132,7 +134,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
 
             return (
                 <View>
-                    <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
+                    <ActivityIndicator style={{marginTop: 8}}/>
                 </View>
             )
         }
@@ -146,8 +148,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
 
 
         return (
-            <AnimatedSectionList
-                {...this.props.scrollHooks}
+            <SectionList
                 ListEmptyComponent={<Text> Empty </Text>}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh}/>}
@@ -320,18 +321,6 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
     }
 }
 
-function mapEvents(state: AppStore, key: string): EventEntity[] {
-    const events: EventEntity[] = []
-    for (let eventId of state.sportStore.events.get(key, [])) {
-        let eventEntity = state.entityStore.events.get(eventId);
-        if (eventEntity) {
-            events.push(eventEntity)
-        }
-    }
-
-    return events
-}
-
 class SectionHeader extends React.Component<{ section: SportSection, toggleSection: (key: string) => void }> {
 
 
@@ -396,6 +385,39 @@ const styles = StyleSheet.create({
 
 
 // Redux connect
+
+
+function mapEvents(state: AppStore, key: string): EventEntity[] {
+    const events: EventEntity[] = []
+    for (let eventId of state.sportStore.events.get(key, [])) {
+        let eventEntity = state.entityStore.events.get(eventId);
+        if (eventEntity) {
+            events.push(eventEntity)
+        }
+    }
+
+    return events
+}
+
+const getEventIds = (state: AppStore, props: ExternalProps): number[] => {
+    let {sport, region, league, filter} = props
+
+    const key = `${sport}.${region}.${league}.${filter}`
+
+    return state.sportStore.events.get(key, [])
+}
+
+const getEventStore = (state: AppStore): Map<number, EventEntity> => {
+    return state.entityStore.events
+}
+
+const getEvents = createSelector(
+    [getEventIds, getEventStore],
+    (eventIds: number[], eventStore: Map<number, EventEntity>) => {
+       return eventIds.map(id => eventStore.get(id)).filter(event => event)
+    }
+)
+
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => {
     let {sport, region, league, filter} = inputProps
 

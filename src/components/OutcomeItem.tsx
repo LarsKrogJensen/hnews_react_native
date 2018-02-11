@@ -11,6 +11,7 @@ import PlatformIcon from "components/PlatformIcon";
 import {BetOfferEntity} from "model/BetOfferEntity";
 import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
 import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
+import Snackbar from "react-native-snackbar";
 
 
 interface ExternalProps {
@@ -97,16 +98,17 @@ class OutcomeItem extends React.Component<Props, State> {
         if (betOffer.suspended || outcome.odds === 1000) {
             return (
                 <View style={touchStyle}>
-                    <View style={[styles.viewBase, viewStyle, {backgroundColor: "#BBBBBB"}]}>
+                    <View
+                        style={[styles.viewBase, viewStyle, {backgroundColor: outcome.odds === 1000 ? "transparent" : "#BBBBBB"}]}>
                         <Text numberOfLines={1} ellipsizeMode="tail"
                               style={[styles.label, {color: "#959595"}]}>{outcomeLabel}</Text>
                     </View>
-                </View>                                                                            
+                </View>
             )
         }
 
         return (
-            <Touchable key={outcome.id} style={touchStyle} onPress={() => console.log("Pressed")}>
+            <Touchable key={outcome.id} style={touchStyle} onPress={this.placeBet}>
                 <View style={[styles.viewBase, viewStyle, !outcomeLabel ? {justifyContent: "center"} : {}]}>
                     {outcomeLabel &&
                     <Text numberOfLines={1} ellipsizeMode="tail" style={styles.label}>{outcomeLabel}</Text>}
@@ -125,9 +127,9 @@ class OutcomeItem extends React.Component<Props, State> {
             return outcome.label + " " + outcome.line / 1000
         }
         if (!overrideShowLabel && (betoffer.betOfferType.id === BetOfferTypes.HeadToHead ||
-            betoffer.betOfferType.id === BetOfferTypes.Winner ||
-            betoffer.betOfferType.id === BetOfferTypes.Position ||
-            betoffer.betOfferType.id === BetOfferTypes.GoalScorer)) {
+                betoffer.betOfferType.id === BetOfferTypes.Winner ||
+                betoffer.betOfferType.id === BetOfferTypes.Position ||
+                betoffer.betOfferType.id === BetOfferTypes.GoalScorer)) {
             return undefined
         }
         if (betoffer.betOfferType.id === BetOfferTypes.DoubleChance) {
@@ -160,6 +162,13 @@ class OutcomeItem extends React.Component<Props, State> {
         }
 
         return null
+    }
+
+    private placeBet = () => {
+        Snackbar.show({
+            title: 'Placing bets is not implemented yet.',
+            duration: Snackbar.LENGTH_SHORT,
+        })
     }
 }
 

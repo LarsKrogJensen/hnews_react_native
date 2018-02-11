@@ -1,7 +1,7 @@
 import * as React from "react"
 import {NavigationScreenProp} from "react-navigation";
 import {SportView} from "views/SportView";
-import {CollapsableHeaderScreen, ScrollHooks} from "screens/CollapsableHeaderScreen";
+import Screen from "screens/Screen";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: any }, {}>
@@ -30,22 +30,21 @@ export class SportScreen extends React.Component<ExternalProps> {
         const {navigation, navigation: {state: {params}}} = this.props;
 
         return (
-            <CollapsableHeaderScreen title={params.group.name}
-                                     rootScreen={true}
-                                     navigation={navigation}
-                                     renderBody={this.renderBody}
-            />
+            <Screen title={params.group.name}
+                    rootScreen={true}
+                    navigation={navigation}>
+                {this.renderBody()}
+            </Screen>
         )
     }
 
-    private renderBody = (scrollHooks: ScrollHooks) => {
+    private renderBody = () => {
         const {navigation, sport, region, league, filter, active} = this.props
 
         if (!active) return null
 
         return (
             <SportView navigation={navigation}
-                       scrollHooks={scrollHooks}
                        sport={sport}
                        region={region}
                        league={league}
