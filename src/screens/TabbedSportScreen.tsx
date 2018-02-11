@@ -104,7 +104,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         const {navigation, navigation: {state: {params}}} = this.props;
 
         const {navState} = this.state
-        // console.log("Route: " + props.route.key + ", current tab index: " + navState.index)
+        console.log("Route: " + props.route.key + ", current tab index: " + navState.index)
 
         return (
             <SportScreen navigation={navigation}

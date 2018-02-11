@@ -48,8 +48,8 @@ class EventScreenComponent extends React.Component<Props, State> {
         if (this.props.eventId !== nextProps.eventId) return true
         if (this.props.event && !nextProps.event) return true
         if (!this.props.event && nextProps.event) return true
-        if (this.props.event.state && nextProps.event.state) return true
-        if (this.props.event.openForLiveBetting && nextProps.event.openForLiveBetting) return true
+        if (this.props.event.state !== nextProps.event.state) return true
+        if (this.props.event.openForLiveBetting !== nextProps.event.openForLiveBetting) return true
         if (this.state.tabIndex !== nextState.tabIndex) return true
 
         return false
@@ -147,7 +147,7 @@ class EventScreenComponent extends React.Component<Props, State> {
         const {event, navigation} = this.props
 
         const {tabIndex} = this.state
-        // console.log("Route: " + props.route.key + ", current tab index: " + tabIndex)
+        console.log("Route: " + props.route.key + ", current tab index: " + tabIndex)
         switch (props.route.key) {
             case 'events':
                 // if (this.state.tabIndex !== 0) return null
