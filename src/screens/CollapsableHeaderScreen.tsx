@@ -17,10 +17,9 @@ import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
 import {NavigationScreenProp} from "react-navigation";
 import {navigateBack, navigateDrawerOpen} from "lib/navigate";
+import {SearchView} from "components/search/SearchView";
 import AnimatedDiffClamp = Animated.AnimatedDiffClamp;
 import absoluteFill = StyleSheet.absoluteFill;
-import {SearchComponent} from "components/search/SearchComponent";
-import {SearchView} from "components/search/SearchView";
 
 export const NAVBAR_HEIGHT = 64;
 export const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
@@ -140,7 +139,6 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
                 {useNativeDriver: true},
             )
         }
-        console.log("Search text: " + searchText)
         return (
             <View style={styles.fill}>
                 {!searchOpen && this.props.renderBody(scrollHooks)}
@@ -170,17 +168,14 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
     }
 
     private handleSearchClose = () => {
-        console.log("Search closed")
         this.setState({searchOpen: false, searchText: ""})
     }
 
     private handleSearchOpen = () => {
-        console.log("Search open")
         this.setState({searchOpen: true})
     }
 
     private handleSearchTextChange = (text: string) => {
-        console.log("Search text changed: " + text)
         this.setState(prevState => ({
             searchText: text
         }))

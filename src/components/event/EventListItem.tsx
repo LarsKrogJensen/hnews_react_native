@@ -4,7 +4,7 @@ import {EventInfoItem} from "components/event/EventInfoItem";
 import Touchable from "components/Touchable";
 import {Orientation, Theme} from "lib/device";
 import {NavigationScreenProp} from "react-navigation";
-import {View, ViewStyle} from "react-native";
+import {StyleSheet, View, ViewStyle} from "react-native";
 import {EventEntity} from "model/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
@@ -37,16 +37,17 @@ class EventListItem extends React.Component<Props> {
 
     public render() {
         const {event, orientation, navigation} = this.props
-        const viewStyle = orientation === Orientation.Portrait ? portraitStyle : landscapeStyle;
+        const viewStyle = orientation === Orientation.Portrait ? styles.portrait : styles.landscape;
 
         console.log("Rendering EventListItem")
         return (
             <Touchable onPress={this.handleItemClick}>
-                <View style={viewStyle}>
+                <View style={[styles.item, viewStyle]}>
                     <EventInfoItem eventId={event.id} viewStyle={{flex: 1, height: 68}} theme={Theme.Light}
                                    showFavorites/>
                     {event.mainBetOfferId &&
-                    <DefaultBetOfferItem orientation={orientation} betofferId={event.mainBetOfferId} navigation={navigation}/>}
+                    <DefaultBetOfferItem orientation={orientation} betofferId={event.mainBetOfferId}
+                                         navigation={navigation}/>}
                 </View>
             </Touchable>
         );
@@ -58,21 +59,20 @@ class EventListItem extends React.Component<Props> {
     }
 }
 
-const itemStyle: ViewStyle = {
-    padding: 8,
-    backgroundColor: "#F6F6F6",
-    borderBottomColor: "#D1D1D1",
-    borderBottomWidth: 1
-}
-const portraitStyle: ViewStyle = {
-    ...itemStyle,
-    flexDirection: "column"
-}
-
-const landscapeStyle: ViewStyle = {
-    ...itemStyle,
-    flexDirection: "row"
-}
+const styles = StyleSheet.create({
+    item: {
+        padding: 8,
+        backgroundColor: "#F6F6F6",
+        borderBottomColor: "#D1D1D1",
+        borderBottomWidth: 1
+    } as ViewStyle,
+    portrait: {
+        flexDirection: "column"
+    } as ViewStyle,
+    landscape: {
+        flexDirection: "row"
+    }
+})
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     event: state.entityStore.events.get(inputProps.eventId)

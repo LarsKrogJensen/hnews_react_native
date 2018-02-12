@@ -7,6 +7,7 @@ import {
     RefreshControl,
     SectionList,
     SectionListData,
+    StyleSheet,
     Text,
     TextStyle,
     View,
@@ -167,10 +168,10 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
 
         return (
             <Touchable onPress={() => this.toggleSection(info.section.key)}>
-                <View style={headerStyle}>
-                    <Text style={liveTextStyle}>{hour}</Text>
-                    <Text style={sportTextStyle}>{datum}</Text>
-                    <Text style={countTextStyle}>{info.section.count}</Text>
+                <View style={styles.header}>
+                    <Text style={styles.live}>{hour}</Text>
+                    <Text style={styles.headerText}>{datum}</Text>
+                    <Text style={styles.count}>{info.section.count}</Text>
                 </View>
             </Touchable>
         )
@@ -238,39 +239,36 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     }
 }
 
-const headerStyle: ViewStyle = {
-    padding: 8,
-    height: 44,
-    backgroundColor: "white",
-    borderBottomColor: "#D1D1D1",
-    borderBottomWidth: 1,
-    flexDirection: "row",
-    alignItems: "center"
-}
-
-const liveTextStyle: TextStyle = {
-    color: "red",
-    fontSize: 16,
-    fontWeight: "bold"
-}
-
-const sportTextStyle: TextStyle = {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 8,
-    flex: 1
-}
-
-const countTextStyle: TextStyle = {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginRight: 8
-}
-
-
-// Connect compoentn to store and appstate
+const styles = StyleSheet.create({
+    header: {
+        padding: 8,
+        height: 44,
+        backgroundColor: "white",
+        borderBottomColor: "#D1D1D1",
+        borderBottomWidth: 1,
+        flexDirection: "row",
+        alignItems: "center"
+    } as ViewStyle,
+    live: {
+        color: "red",
+        fontSize: 16,
+        fontWeight: "bold"
+    } as TextStyle,
+    headerText:  {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginLeft: 8,
+        flex: 1
+    } as TextStyle,
+    count: {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginRight: 8
+    } as TextStyle
+})
 
 
+// Connect compoent to store and appstate
 function mapEvents(state: AppStore): EventEntity[] {
     const events: EventEntity[] = []
     for (let eventId of state.soonStore.soonEvents) {

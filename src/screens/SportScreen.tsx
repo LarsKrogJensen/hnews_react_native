@@ -17,7 +17,7 @@ export class SportScreen extends React.Component<ExternalProps> {
 
     shouldComponentUpdate(nextProps: Readonly<ExternalProps>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (nextProps.region !== this.props.region) return true
-        if (nextProps.sport !== this.props.sport) return true
+        if (nextProps.headerText !== this.props.headerText) return true
         if (nextProps.league !== this.props.league) return true
         if (nextProps.filter !== this.props.filter) return true
         if (nextProps.active !== this.props.active) return true

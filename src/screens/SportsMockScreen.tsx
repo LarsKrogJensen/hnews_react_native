@@ -29,7 +29,7 @@ export class SportsMockScreen extends React.Component<Props> {
     format(props: Props): string {
         let params = props.navigation.state.params;
         if (params) {
-            return params.sport + "/" + params.region + "/" + params.league
+            return params.headerText + "/" + params.region + "/" + params.league
         }
 
         return "unknown"

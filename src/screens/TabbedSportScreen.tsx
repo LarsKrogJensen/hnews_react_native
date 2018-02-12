@@ -38,7 +38,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         const {navigation: {state: {params: nextParams}}} = nextProps;
 
         if (nextParams.region !== params.region) return true
-        if (nextParams.sport !== params.sport) return true
+        if (nextParams.headerText !== params.headerText) return true
         if (nextParams.league !== params.league) return true
         if (nextState.navState.index !== this.state.navState.index) return true
 
@@ -108,7 +108,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         
         return (
             <SportScreen navigation={navigation}
-                         sport={params.sport}
+                         sport={params.headerText}
                          region={params.region}
                          league={params.league}
                          filter={props.route.key === "matches" ? "matches" : "competitions"}

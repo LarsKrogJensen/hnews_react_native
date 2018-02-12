@@ -85,7 +85,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         if (nextProps.loading !== this.props.loading) return true
         if (nextProps.filter !== this.props.filter) return true
         if (nextProps.region !== this.props.region) return true
-        if (nextProps.sport !== this.props.sport) return true
+        if (nextProps.headerText !== this.props.headerText) return true
         if (nextProps.league !== this.props.league) return true
         if (nextProps.events.length !== this.props.events.length) {
             // console.log("length diff: " + nextProps.events.length + " old " + this.props.events.length)
@@ -111,7 +111,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
         if (nextProps.region !== this.props.region ||
-            nextProps.sport !== this.props.sport ||
+            nextProps.headerText !== this.props.headerText ||
             nextProps.league !== this.props.league) {
             nextProps.loadData(true)
         }
