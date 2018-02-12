@@ -1,7 +1,7 @@
 import * as React from "react"
 import {NavigationScreenProp} from "react-navigation";
 import {SportView} from "views/SportView";
-import Screen from "screens/Screen";
+import {CollapsableHeaderScreen, ScrollHooks} from "screens/CollapsableHeaderScreen";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{ params: any }, {}>
@@ -16,7 +16,6 @@ interface ExternalProps {
 export class SportScreen extends React.Component<ExternalProps> {
 
     shouldComponentUpdate(nextProps: Readonly<ExternalProps>, nextState: Readonly<{}>, nextContext: any): boolean {
-
         if (nextProps.region !== this.props.region) return true
         if (nextProps.sport !== this.props.sport) return true
         if (nextProps.league !== this.props.league) return true
@@ -30,21 +29,22 @@ export class SportScreen extends React.Component<ExternalProps> {
         const {navigation, navigation: {state: {params}}} = this.props;
 
         return (
-            <Screen title={params.group.name}
-                    rootScreen={true}
-                    navigation={navigation}>
-                {this.renderBody()}
-            </Screen>
+            <CollapsableHeaderScreen title={params.group.name}
+                                     rootScreen={true}
+                                     navigation={navigation}
+                                     renderBody={this.renderBody}
+            />
         )
     }
 
-    private renderBody = () => {
+    private renderBody = (scrollHooks: ScrollHooks) => {
         const {navigation, sport, region, league, filter, active} = this.props
 
         if (!active) return null
 
         return (
             <SportView navigation={navigation}
+                       scrollHooks={scrollHooks}
                        sport={sport}
                        region={region}
                        league={league}

@@ -81,7 +81,6 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         }
     }
 
-
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<ComponentState>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
         if (nextProps.filter !== this.props.filter) return true
@@ -148,7 +147,8 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
 
 
         return (
-            <SectionList
+            <AnimatedSectionList
+                {...this.props.scrollHooks}
                 ListEmptyComponent={<Text> Empty </Text>}
                 stickySectionHeadersEnabled={true}
                 refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh}/>}
@@ -293,7 +293,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
     private renderItem = (info: ListRenderItemInfo<EventEntity>) => {
         const {navigation, orientation} = this.props
         const event: EventEntity = info.item
-        // console.log("Render ListItem")
+        console.log("Render ListItem")
         return <LiveEventListItem eventId={event.id}
                                   navigation={navigation}
                                   orientation={orientation}/>
@@ -301,7 +301,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
 
     private renderSectionHeader = (info: { section: SportSection }) => {
         const section = info.section
-        // console.log("Render Header: " + section.key)
+        console.log("Render Header: " + section.key)
         return <SectionHeader key={section.key} section={section} toggleSection={this.toggleSection}/>
     }
 
@@ -443,7 +443,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
 }
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => {})(withOrientationChange(SportViewComponent))
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(SportViewComponent))
 
 export const SportView: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)

@@ -453,3 +453,19 @@ export interface TPIResponse {
     homeParticipant: TeamParticipantWithEvents,
     awayParticipant: TeamParticipantWithEvents,
 }
+
+export interface ResultTerm {
+    type: string
+    id: string
+    termKey: string
+    localizedName: string
+    parentId: string
+    englishName: string
+    value: string
+}
+
+export interface SearchResult {
+    term: string
+    resultTerms: ResultTerm[]
+    searchHitsId: string[]
+}

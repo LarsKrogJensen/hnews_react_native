@@ -19,6 +19,8 @@ import {NavigationScreenProp} from "react-navigation";
 import {navigateBack, navigateDrawerOpen} from "lib/navigate";
 import AnimatedDiffClamp = Animated.AnimatedDiffClamp;
 import absoluteFill = StyleSheet.absoluteFill;
+import {SearchComponent} from "components/search/SearchComponent";
+import {SearchView} from "components/search/SearchView";
 
 export const NAVBAR_HEIGHT = 64;
 export const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
@@ -27,6 +29,8 @@ interface State {
     scrollAnim: Animated.Value
     offsetAnim: Animated.Value
     clampedScroll: AnimatedDiffClamp
+    searchOpen: boolean
+    searchText: string
 }
 
 interface Props {
@@ -78,6 +82,8 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
                 0,
                 NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
             ),
+            searchOpen: false,
+            searchText: ""
         };
     }
 
@@ -90,20 +96,16 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
                 NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
             );
 
-            // console.log("Clamped: " + this.clampedScrollValue + ", Scroll value: " + this.scrollValue + ", Offset: " + this.offsetValue)
             if (this.clampedScrollValue > 5 && !this.statusBarHidden && this.scrollValue > STATUS_BAR_HEIGHT) {
                 StatusBar.setHidden(true, "slide")
                 this.statusBarHidden = true
-                // console.log("HIDING at clampValue: " + this.clampedScrollValue)
             } else if (this.clampedScrollValue < 5 && this.statusBarHidden) {
                 StatusBar.setHidden(false, "slide")
                 this.statusBarHidden = false
-                // console.log("SHOWING at clampValue: " + this.clampedScrollValue)
             }
         });
         this.state.offsetAnim.addListener(({value}) => {
             this.offsetValue = value;
-            // console.log("Offet anim value: " + value)
         });
     }
 
@@ -114,7 +116,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
 
     render() {
 
-        const {clampedScroll, scrollAnim} = this.state;
+        const {clampedScroll, scrollAnim, searchOpen, searchText} = this.state;
 
         const navbarTranslate = clampedScroll.interpolate({
             inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
@@ -138,9 +140,11 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
                 {useNativeDriver: true},
             )
         }
+        console.log("Search text: " + searchText)
         return (
             <View style={styles.fill}>
-                {this.props.renderBody(scrollHooks)}
+                {!searchOpen && this.props.renderBody(scrollHooks)}
+                {searchOpen && <SearchView searchText={searchText} style={styles.contentContainer}/>}
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarHidden}/>
 
@@ -153,7 +157,10 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
                                  centerElement={this.props.title}
                                  searchable={{
                                      autoFocus: true,
-                                     placeholder: 'Search'
+                                     placeholder: 'Search',
+                                     onSearchClosed: this.handleSearchClose,
+                                     onSearchPressed: this.handleSearchOpen,
+                                     onChangeText: this.handleSearchTextChange
                                  }}
                         />
                     </Animated.View>
@@ -162,9 +169,26 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         );
     }
 
+    private handleSearchClose = () => {
+        console.log("Search closed")
+        this.setState({searchOpen: false, searchText: ""})
+    }
+
+    private handleSearchOpen = () => {
+        console.log("Search open")
+        this.setState({searchOpen: true})
+    }
+
+    private handleSearchTextChange = (text: string) => {
+        console.log("Search text changed: " + text)
+        this.setState(prevState => ({
+            searchText: text
+        }))
+    }
+
     private onScrollEndDrag = () => {
         this.scrollEndTimer = setTimeout(this.onMomentumScrollEnd, 250);
-    };
+    }
 
     private onMomentumScrollBegin = () => {
         clearTimeout(this.scrollEndTimer);

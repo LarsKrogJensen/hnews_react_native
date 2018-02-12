@@ -103,7 +103,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
     private renderScene = (props: SceneRendererProps<PageRoute> & Scene<PageRoute>) => {
         const {navigation, navigation: {state: {params}}} = this.props;
 
-        // const {navState} = this.state
+        const {navState} = this.state
         // console.log("Route: " + props.route.key + ", current tab index: " + navState.index)
         
         return (
@@ -112,7 +112,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
                          region={params.region}
                          league={params.league}
                          filter={props.route.key === "matches" ? "matches" : "competitions"}
-                         active
+                         active={(props.route.key === "matches" && navState.index === 0) || (props.route.key === "competitions" && navState.index === 1)}
             />
         )
     }
