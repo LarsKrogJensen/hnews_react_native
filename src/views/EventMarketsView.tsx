@@ -212,13 +212,13 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         return betOffers
             .filter(bo => category.mappings.find(mapping => mapping.criterionId === bo.criterion.id))
             .reduceRight<BetOfferGroup[]>((groups, betoffer) => {
-                let group = groups.find(g => g.criterion.id === betoffer.criterion.id) // || {betoffers: [], criterion: betoffer.criterion}
+                let group = groups.find(g => g.criterion.id === betoffer.criterion.id && g.type.id === betoffer.betOfferType.id) // || {betoffers: [], criterion: betoffer.criterion}
                 if (!group) {
                     group = {
                         betoffers: [],
                         criterion: betoffer.criterion,
                         type: betoffer.betOfferType,
-                        key: betoffer.criterion.id.toString()
+                        key: betoffer.criterion.id.toString() + "-" + betoffer.betOfferType.id
                     }
                     groups.push(group)
                 }
@@ -306,9 +306,9 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
                 <Text style={{fontSize: 18, marginVertical: 4}}>
                     {group.criterion.label}
                 </Text>
-                {/*<Text>*/}
-                    {/*(Criterion: {group.criterion.id}) Ty: {group.key} ({group.type.name})*/}
-                {/*</Text>*/}
+                <Text>
+                    (Criterion: {group.criterion.id}) Ty: {group.type.id} ({group.type.name})
+                </Text>
 
                 {this.renderBetOfferGroup(group)}
             </View>

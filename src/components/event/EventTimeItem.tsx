@@ -5,7 +5,6 @@ import * as moment from "moment";
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import CountDown from "components/CountDown";
 import {Theme} from "lib/device";
-import {formatDateTime} from "lib/dates";
 
 interface Props {
     style: ViewStyle,

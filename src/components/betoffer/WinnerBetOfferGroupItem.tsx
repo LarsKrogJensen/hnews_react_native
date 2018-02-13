@@ -13,7 +13,6 @@ interface Props {
 }
 
 interface Player {
-    id: number
     name: string
     outcomes: OutcomeEntity[]
 }
@@ -25,10 +24,9 @@ export class WinnerBetOfferGroupItem extends React.Component<Props> {
 
         const players: Player[] = outcomes.sort((o1, o2) => o2.odds - o1.odds)
             .reduceRight((reduced, outcome) => {
-                let player = reduced.find(p => p.id === outcome.participantId)
-                if (!player && outcome.participantId) {
+                let player = reduced.find(p => p.name === outcome.label)
+                if (!player && outcome.label) {
                     player = {
-                        id: outcome.participantId,
                         name: outcome.label,
                         outcomes: []
                     }
@@ -56,7 +54,7 @@ export class WinnerBetOfferGroupItem extends React.Component<Props> {
 
     private renderPlayer = (player: Player, eventId: number, betoffers: BetOfferEntity[]) => {
         return (
-            <View key={player.id} style={[styles.rowLayout, {marginVertical: 2, alignItems: "center"}]}>
+            <View key={player.name} style={[styles.rowLayout, {marginVertical: 2, alignItems: "center"}]}>
                 <Text style={{flex: 1}}>{player.name}</Text>
                 {betoffers.map(bo => {
                     const outcome = player.outcomes.find(o => o.betOfferId == bo.id)

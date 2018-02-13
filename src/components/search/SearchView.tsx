@@ -62,8 +62,8 @@ export class SearchView extends React.Component<Props, State> {
             )
         }
         return (
-            <View style={[style, {padding: 8}]}>
-                <Text style={{fontSize: 14}}>Recent searches</Text>
+            <View style={style}>
+                <Text style={{fontSize: 14, margin: 8}}>Start search</Text>
             </View>
         )
     }
