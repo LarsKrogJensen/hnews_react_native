@@ -188,7 +188,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         // console.log("Prepare live data")
         const sections: LiveSection[] = groups.map(group => ({
             title: group.name,
-            headerText: group.sport,
+            sport: group.sport,
             sortOrder: group.sortOrder && parseInt(group.sortOrder) || 100,
             events: events.filter(event => event.sport === group.sport),
             data: [],

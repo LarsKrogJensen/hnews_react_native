@@ -8,6 +8,7 @@ interface ExternalProps {
     sport: string
     region: string
     league: string
+    participant: string,
     filter: "matches" | "competitions",
     active: boolean
 }
@@ -17,8 +18,9 @@ export class SportScreen extends React.Component<ExternalProps> {
 
     shouldComponentUpdate(nextProps: Readonly<ExternalProps>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (nextProps.region !== this.props.region) return true
-        if (nextProps.headerText !== this.props.headerText) return true
+        if (nextProps.sport !== this.props.sport) return true
         if (nextProps.league !== this.props.league) return true
+        if (nextProps.participant !== this.props.participant) return true
         if (nextProps.filter !== this.props.filter) return true
         if (nextProps.active !== this.props.active) return true
 
@@ -29,7 +31,7 @@ export class SportScreen extends React.Component<ExternalProps> {
         const {navigation, navigation: {state: {params}}} = this.props;
 
         return (
-            <CollapsableHeaderScreen title={params.group.name}
+            <CollapsableHeaderScreen title={params.title}
                                      rootScreen={true}
                                      navigation={navigation}
                                      renderBody={this.renderBody}
@@ -38,7 +40,7 @@ export class SportScreen extends React.Component<ExternalProps> {
     }
 
     private renderBody = (scrollHooks: ScrollHooks) => {
-        const {navigation, sport, region, league, filter, active} = this.props
+        const {navigation, sport, region, league, participant, filter, active} = this.props
 
         if (!active) return null
 
@@ -48,6 +50,7 @@ export class SportScreen extends React.Component<ExternalProps> {
                        sport={sport}
                        region={region}
                        league={league}
+                       participant={participant}
                        filter={filter}
             />
         )

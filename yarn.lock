@@ -14,23 +14,23 @@
   version "4.14.102"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.102.tgz#586a3e22385fc79b07cef9c5a1c8a5387986fbc8"
 
-"@types/react-native-material-ui@^1.19.0":
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/@types/react-native-material-ui/-/react-native-material-ui-1.19.0.tgz#b84f51a580df8a7494e3162de0035d62b58235da"
+"@types/react-native-material-ui@^1.19.1":
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/@types/react-native-material-ui/-/react-native-material-ui-1.19.1.tgz#95f4a7815ac34487c328facbb1d215dcf0a9e389"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native-tab-view@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@types/react-native-tab-view/-/react-native-tab-view-0.0.2.tgz#aa58095ce253cd645e5e8102fb8fc6ef1ba515f1"
+"@types/react-native-tab-view@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@types/react-native-tab-view/-/react-native-tab-view-0.0.3.tgz#0f98e94aab60c9c53b5db84c2eea7d7814a17f13"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native-vector-icons@^4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-4.4.2.tgz#dd6b6a4d9dee7c85e3246f6c67905dbc1faee3d5"
+"@types/react-native-vector-icons@^4.4.3":
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-4.4.3.tgz#37f6d5dd06418a144c7c082dbca9ce37c14f033f"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -41,22 +41,22 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.52.8":
-  version "0.52.8"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.8.tgz#dd5aa7c4eb944d7c0b2b249a2bb811aa119f49c6"
+"@types/react-native@0.52.9":
+  version "0.52.9"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.9.tgz#01b166d9972dbee73582f9b60f6e126ed4d426ba"
   dependencies:
     "@types/react" "*"
 
-"@types/react-navigation@^1.0.31":
-  version "1.0.31"
-  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.0.31.tgz#ae0d58e7cf6f54d82daea9602fe580d9f3597f7e"
+"@types/react-navigation@^1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.0.32.tgz#5cd0ccd6aec2223ce140421624231c9741c2a276"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-redux@^5.0.14":
-  version "5.0.14"
-  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-5.0.14.tgz#f3fc30dcbb2d20455a714f591cc27f77b4df09bb"
+"@types/react-redux@^5.0.15":
+  version "5.0.15"
+  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-5.0.15.tgz#420af2c702ac7aab321cf45bb7d3cb2503dd24d5"
   dependencies:
     "@types/react" "*"
     redux "^3.6.0"

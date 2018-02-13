@@ -3,8 +3,10 @@ import {ActivityIndicator, Text, View, ViewStyle} from "react-native";
 import {SearchComponent} from "components/search/SearchComponent";
 import {SearchResult} from "api/typings";
 import {API} from "store/API";
+import {NavigationScreenProp} from "react-navigation";
 
 interface Props {
+    navigation: NavigationScreenProp<{}, {}>
     searchText: string
     style: ViewStyle
 }
@@ -31,19 +33,22 @@ export class SearchView extends React.Component<Props, State> {
     }
 
     public render() {
-        const {searchText, style} = this.props
+        const {searchText, style, navigation} = this.props
         const {loading, result} = this.state
         if (loading) {
             return (
-                <View>
-                    <ActivityIndicator style={style}/>
+                <View style={style}>
+                    <ActivityIndicator style={{marginTop: 8}}/>
                 </View>
             )
         }
 
         if (result && result.resultTerms.length) {
             return (
-                <SearchComponent style={style} searchText={searchText} result={result}>
+                <SearchComponent style={style}
+                                 navigation={navigation}
+                                 searchText={searchText}
+                                 result={result}>
                     <Text>{searchText}</Text>
                 </SearchComponent>
             )

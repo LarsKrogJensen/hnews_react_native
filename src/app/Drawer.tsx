@@ -170,6 +170,7 @@ class DrawerComp extends React.Component<Props> {
         let sport = "all"
         let region = "all"
         let league = "all"
+        let participant = "all"
 
         if (group.parentGroup) {
             if (group.parentGroup.parentGroup) {
@@ -186,7 +187,7 @@ class DrawerComp extends React.Component<Props> {
 
         return NavigationActions.navigate({
             routeName: 'Spring',
-            params: {sport, region, league, group}
+            params: {sport, region, league, participant, title: group.name}
         })
     }
 
@@ -231,7 +232,6 @@ class DrawerComp extends React.Component<Props> {
     private onItemClick = (navigation: NavigationScreenProp<any, any>, item: Item) => {
         if (navigation && item.path) {
             if (item.action) {
-                // navigation.navigate(item.path, {}, item.action)
                 let action = NavigationActions.reset({
                         index: 0,
                         key: null,
@@ -240,9 +240,7 @@ class DrawerComp extends React.Component<Props> {
                         ]
                     }
                 );
-                // navigate(navigation, {}, action)
                 navigation.navigate(item.path, {}, action)
-                // navigation.dispatch(action)
             } else {
                 navigate(navigation, item.path)
             }

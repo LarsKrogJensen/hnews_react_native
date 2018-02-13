@@ -25,14 +25,22 @@ export interface SportFailedAction extends DispatchAction<SportActions.LOAD_FAIL
 
 export type SportAction = SportStartAction | SportSuccessAction | SportFailedAction
 
-export function loadSport(sport: string, region: string, league: string, filter: "matches" | "competitions", fireStartLoad: boolean = true): ThunkAction<void, AppStore, any> {
+export function loadSport(
+    sport: string,
+    region: string,
+    league: string,
+    participant: string,
+    filter: "matches" | "competitions",
+    fireStartLoad: boolean = true
+): ThunkAction<void, AppStore, any> {
+
     return async dispatch => {
-        const key = `${sport}.${region}.${league}.${filter}`
+        const key = `${sport}.${region}.${league}.${participant}.${filter}`
         fireStartLoad && dispatch<SportAction>({type: SportActions.START_LOADING, key})
 
         try {
-            console.time(`Fetching sport (${sport}/${region}/${league}/${filter})`)
-            let url = `${API.host}/offering/api/v3/${API.offering}/listView/${sport}/${region}/${league}/all/${filter}.json?lang=${API.lang}&market=${API.market}&categoryGroup=COMBINED&displayDefault=true`;
+            console.time(`Fetching sport (${sport}/${region}/${league}/${participant}/${filter})`)
+            let url = `${API.host}/offering/api/v3/${API.offering}/listView/${sport}/${region}/${league}/${participant}/${filter}.json?lang=${API.lang}&market=${API.market}&categoryGroup=COMBINED&displayDefault=true`;
             const response = await fetch(url);
             const responseJson = await response.json();
             if (response.status === 200) {
@@ -45,7 +53,7 @@ export function loadSport(sport: string, region: string, league: string, filter:
                 console.warn("Bad status code on sports load: " + response.status + " url: " + url);
                 dispatch<SportFailedAction>({type: SportActions.LOAD_FAILED, key})
             }
-            console.timeEnd(`Fetching sport (${sport}/${region}/${league}/${filter})`)
+            console.timeEnd(`Fetching sport (${sport}/${region}/${league}/${participant}/${filter})`)
         } catch (error) {
             console.error(error);
             dispatch<SportFailedAction>({type: SportActions.LOAD_FAILED, key})

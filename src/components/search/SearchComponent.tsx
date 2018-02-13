@@ -10,8 +10,11 @@ import {
     ViewStyle
 } from "react-native";
 import {ResultTerm, SearchResult} from "api/typings";
+import {NavigationActions, NavigationScreenProp} from "react-navigation";
+import Touchable from "components/Touchable";
 
 interface Props {
+    navigation: NavigationScreenProp<{}, {}>
     result: SearchResult
     searchText: string
     style: ViewStyle
@@ -25,7 +28,7 @@ interface SearchSection extends SectionListData<ResultTerm> {
 export class SearchComponent extends React.Component<Props> {
 
     public render() {
-        const {searchText, style, result} = this.props
+        const {style, result} = this.props
 
         const teamSection: SearchSection = {
             title: "Teams & Players",
@@ -66,10 +69,12 @@ export class SearchComponent extends React.Component<Props> {
     private renderItem = (info: ListRenderItemInfo<ResultTerm>) => {
         let term = info.item;
         return (
-            <View style={styles.item}>
-                <Text style={styles.itemTitle}>{term.localizedName}</Text>
-                <Text style={styles.itemSubtitle}>{this.unwindPath(term.parentId)}</Text>
-            </View>
+            <Touchable onPress={() => this.handleItemClick(term)}>
+                <View style={styles.item}>
+                    <Text style={styles.itemTitle}>{term.localizedName}</Text>
+                    <Text style={styles.itemSubtitle}>{this.unwindPath(term.parentId)}</Text>
+                </View>
+            </Touchable>
         )
     }
 
@@ -81,12 +86,34 @@ export class SearchComponent extends React.Component<Props> {
         )
     }
 
+    private handleItemClick = (term: ResultTerm) => {
+        let termKeys = term.id.split("/").filter(key => key)
+
+        const sport = termKeys[0]
+        const region = termKeys.length > 1 ? termKeys[1] : "all"
+        const league = termKeys.length > 2 ? termKeys[2] : "all"
+        const participant = termKeys.length > 3 ? termKeys[3] : "all"
+
+        let action = NavigationActions.reset({
+                index: 0,
+                key: null,
+                actions: [
+                    NavigationActions.navigate({
+                        routeName: 'Spring',
+                        params: {sport, region, league, participant, title: term.localizedName}
+                    })
+                ]
+            }
+        );
+        this.props.navigation.navigate("Sport", {}, action)
+    }
+
     private unwindPath = (id: string, path: string = ""): string => {
         if (id) {
             if (id.endsWith("/all")) {
-              return this.unwindPath(id.replace("/all", ""), path)
+                return this.unwindPath(id.replace("/all", ""), path)
             }
-             
+
             let term = this.props.result.resultTerms.find(t => t.id === id);
             if (term) {
                 path = path ? term.localizedName + ", " + path : term.localizedName
@@ -96,6 +123,8 @@ export class SearchComponent extends React.Component<Props> {
 
         return path
     }
+
+
 }
 
 const styles = StyleSheet.create({

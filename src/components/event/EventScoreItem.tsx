@@ -23,7 +23,7 @@ export default class EventScoreItem extends React.PureComponent<Props> {
     public render() {
         if (this.props.liveData) {
             const {statistics: stats, score, matchClock} = this.props.liveData
-            const sport = this.props.headerText
+            const sport = this.props.sport
 
             if (stats && stats.football && score) {
                 return this.renderFootball(score, matchClock)

@@ -38,8 +38,9 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
         const {navigation: {state: {params: nextParams}}} = nextProps;
 
         if (nextParams.region !== params.region) return true
-        if (nextParams.headerText !== params.headerText) return true
+        if (nextParams.sport !== params.sport) return true
         if (nextParams.league !== params.league) return true
+        if (nextParams.participant !== params.participant) return true
         if (nextState.navState.index !== this.state.navState.index) return true
 
         return false
@@ -52,7 +53,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
                              renderScene={this.renderScene}
                              renderFooter={this.renderFooter}
                              onIndexChange={this.handleIndexChange}
-                             useNativeDriver
+                             // useNativeDriver
                              initialLayout={initialLayout}/>
         )
     }
@@ -105,14 +106,15 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
 
         const {navState} = this.state
         // console.log("Route: " + props.route.key + ", current tab index: " + navState.index)
-        
+
         return (
             <SportScreen navigation={navigation}
-                         sport={params.headerText}
+                         sport={params.sport}
                          region={params.region}
                          league={params.league}
+                         participant={params.participant}
                          filter={props.route.key === "matches" ? "matches" : "competitions"}
-                         active={(props.route.key === "matches" && navState.index === 0) || (props.route.key === "competitions" && navState.index === 1)}
+                         active
             />
         )
     }

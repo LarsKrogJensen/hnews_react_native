@@ -142,7 +142,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         return (
             <View style={styles.fill}>
                 {!searchOpen && this.props.renderBody(scrollHooks)}
-                {searchOpen && <SearchView searchText={searchText} style={styles.contentContainer}/>}
+                {searchOpen && <SearchView navigation={this.props.navigation} searchText={searchText} style={styles.contentContainer}/>}
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarHidden}/>
 

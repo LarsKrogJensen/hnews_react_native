@@ -22,12 +22,11 @@ import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import Touchable from "components/Touchable";
 import LiveEventListItem from "components/event/EventListItem";
-import {is, Set} from "immutable";
-import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
+import {is, Map, Set} from "immutable";
+import {ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {formatDateTime} from "lib/dates";
 import {createSelector} from "reselect"
-import {Map} from "immutable"
 
 
 interface ExternalProps {
@@ -35,6 +34,7 @@ interface ExternalProps {
     sport: string,
     region: string,
     league: string,
+    participant: string,
     scrollHooks?: ScrollHooks,
     filter: "matches" | "competitions"
 }
@@ -85,8 +85,9 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         if (nextProps.loading !== this.props.loading) return true
         if (nextProps.filter !== this.props.filter) return true
         if (nextProps.region !== this.props.region) return true
-        if (nextProps.headerText !== this.props.headerText) return true
+        if (nextProps.sport !== this.props.sport) return true
         if (nextProps.league !== this.props.league) return true
+        if (nextProps.participant !== this.props.participant) return true
         if (nextProps.events.length !== this.props.events.length) {
             // console.log("length diff: " + nextProps.events.length + " old " + this.props.events.length)
             return true
@@ -98,7 +99,6 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         if (!is(nextState.expanded, this.state.expanded)) return true
         if (nextProps.orientation !== this.props.orientation) return true;
 
-        //console.log("NO diff")
         return false
     }
 
@@ -111,8 +111,9 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
         if (nextProps.region !== this.props.region ||
-            nextProps.headerText !== this.props.headerText ||
-            nextProps.league !== this.props.league) {
+            nextProps.sport !== this.props.sport ||
+            nextProps.league !== this.props.league ||
+            nextProps.filter !== this.props.filter) {
             nextProps.loadData(true)
         }
         if (!nextProps.loading &&
@@ -385,8 +386,6 @@ const styles = StyleSheet.create({
 
 
 // Redux connect
-
-
 function mapEvents(state: AppStore, key: string): EventEntity[] {
     const events: EventEntity[] = []
     for (let eventId of state.sportStore.events.get(key, [])) {
@@ -414,14 +413,14 @@ const getEventStore = (state: AppStore): Map<number, EventEntity> => {
 const getEvents = createSelector(
     [getEventIds, getEventStore],
     (eventIds: number[], eventStore: Map<number, EventEntity>) => {
-       return eventIds.map(id => eventStore.get(id)).filter(event => event)
+        return eventIds.map(id => eventStore.get(id)).filter(event => event)
     }
 )
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => {
-    let {sport, region, league, filter} = inputProps
+    let {sport, region, league, participant, filter} = inputProps
 
-    const key = `${sport}.${region}.${league}.${filter}`
+    const key = `${sport}.${region}.${league}.${participant}.${filter}`
 
     return {
         loading: state.sportStore.loading.contains(key),
@@ -430,13 +429,12 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => {
-    let {sport, region, league, filter} = inputProps
+    let {sport, region, league, participant, filter} = inputProps
 
     return {
         loadData: (fireStartLoad: boolean) => {
-            if (sport && region && league) {
-                dispatch(loadSport(sport, region, league, filter, fireStartLoad))
-                // dispatch(loadOpenForLive(fireStartLoad))
+            if (sport && region && league && participant) {
+                dispatch(loadSport(sport, region, league, participant, filter, fireStartLoad))
             }
         }
     }
