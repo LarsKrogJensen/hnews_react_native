@@ -52,6 +52,7 @@ export class SearchComponent extends React.Component<Props> {
 
         return (
             <SectionList
+                keyboardShouldPersistTaps='always'
                 style={style}
                 stickySectionHeadersEnabled={true}
                 sections={sections}

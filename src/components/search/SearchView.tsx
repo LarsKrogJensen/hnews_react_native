@@ -54,9 +54,16 @@ export class SearchView extends React.Component<Props, State> {
             )
         }
 
+        if (result && !result.resultTerms.length && searchText) {
+            return (
+                <View style={style}>
+                    <Text style={{fontSize: 14, margin: 8}}>No matches</Text>
+                </View>
+            )
+        }
         return (
-            <View style={style}>
-                <Text>No matches</Text>
+            <View style={[style, {padding: 8}]}>
+                <Text style={{fontSize: 14}}>Recent searches</Text>
             </View>
         )
     }

@@ -1,11 +1,11 @@
 import * as React from "react"
-import {Text, TextStyle, View, ViewStyle} from "react-native";
+import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {EventEntity} from "model/EventEntity";
 import * as moment from "moment";
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import CountDown from "components/CountDown";
 import {Theme} from "lib/device";
-import {padTime} from "lib/dates";
+import {formatDateTime} from "lib/dates";
 
 interface Props {
     style: ViewStyle,
@@ -61,33 +61,39 @@ export default class EventTimeItem extends React.PureComponent<Props> {
 
     private renderDateTime = () => {
 
-        const date = new Date(this.props.event.start);
-        const isToday = date.toDateString === new Date().toDateString
+        const start = moment.utc(this.props.event.start)
+        const now = moment.utc(moment.now())
+
+
+        const isToday = start.diff(now, 'days') === 0
+        let date = ""
+        if (!isToday) {
+            if (start.week() === now.weeks()) {
+                date = start.format("ddd")
+            } else {
+                date = start.format("DD MMM")
+            }
+        }
+
         return (
-            [
-                !isToday && this.renderDate(date),
-                <Text key="time"
-                      style={timeStyle}>{padTime(date.getHours())}:{padTime(date.getMinutes())}</Text>
-            ]
+            <React.Fragment>
+                {!isToday && <Text key="date" style={styles.date}>{date}</Text>}
+                <Text key="time" style={styles.time}>{start.format("HH:mm")}</Text>
+            </React.Fragment>
         )
     }
 
-    private renderDate = (date: Date) => {
-        return (
-            <Text key="date" style={dateStyle}>{date.getDay()}/{date.getMonth()}</Text>
-        )
-    }
-
 }
 
-const timeStyle: TextStyle = {
-    fontSize: 16,
-    fontWeight: "400",
-    color: "#717171"
-}
-
-const dateStyle: TextStyle = {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#333333"
-}
+const styles = StyleSheet.create({
+    time: {
+        fontSize: 16,
+        fontWeight: "400",
+        color: "#717171"
+    } as TextStyle,
+    date: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: "#717171"
+    } as TextStyle
+})
