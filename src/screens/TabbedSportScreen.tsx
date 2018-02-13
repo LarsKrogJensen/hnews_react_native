@@ -23,14 +23,17 @@ interface PageRoute extends RouteBase {
 
 export class TabbedSportScreen extends React.Component<ExternalProps, State> {
 
-    state = {
-        navState: {
-            index: 0,
-            routes: [
-                {key: 'matches', title: 'In-play & Upcoming'},
-                {key: 'competitions', title: 'Outrights'},
-            ]
-        }
+    constructor(props: ExternalProps) {
+        super(props);
+        this.state = {
+                navState: {
+                    index: props.navigation.state.params.participant === "all" ? 0 : 1,
+                    routes: [
+                        {key: 'matches', title: 'In-play & Upcoming'},
+                        {key: 'competitions', title: 'Outrights'},
+                    ]
+                }
+            }
     }
 
     shouldComponentUpdate(nextProps: Readonly<ExternalProps>, nextState: Readonly<State>, nextContext: any): boolean {
@@ -104,7 +107,7 @@ export class TabbedSportScreen extends React.Component<ExternalProps, State> {
     private renderScene = (props: SceneRendererProps<PageRoute> & Scene<PageRoute>) => {
         const {navigation, navigation: {state: {params}}} = this.props;
 
-        const {navState} = this.state
+        // const {navState} = this.state
         // console.log("Route: " + props.route.key + ", current tab index: " + navState.index)
 
         return (
