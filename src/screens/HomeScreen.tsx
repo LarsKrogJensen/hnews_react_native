@@ -12,7 +12,7 @@ import StartingSoonCard from "components/card/StartingSoonCard";
 import TrendingCard from "components/TrendingCard";
 import LiveCard from "components/card/LiveCard";
 import {HighlightsCard} from "components/card/HighlightsCard";
-import {CollapsableHeaderScreen, ScrollHooks} from "screens/CollapsableHeaderScreen"
+import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen"
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {Orientation} from "lib/device";
 
@@ -74,13 +74,13 @@ class HomeScreen extends React.Component<ComponentProps> {
     private renderBody = (scrollHooks: ScrollHooks) => {
         const {loading} = this.props
 
-        // if (loading) {
-        //     return (
-        //         <View>
-        //             <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
-        //         </View>
-        //     )
-        // }
+        if (loading) {
+            return (
+                <View>
+                    <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
+                </View>
+            )
+        }
 
         const cards: ReactNode[] = [
             ...this.renderLiveRightNow(),
@@ -93,7 +93,7 @@ class HomeScreen extends React.Component<ComponentProps> {
                 {...scrollHooks}
                 style={{paddingBottom: 50}}
                 refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
-                {loading && <ActivityIndicator style={{marginTop: 8}}/>}
+                {/*{loading && <ActivityIndicator style={{marginTop: 8}}/>}*/}
                 {this.props.orientation === Orientation.Portrait
                     ? cards
                     : this.divideIntoColumns(cards)
