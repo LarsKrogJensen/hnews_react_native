@@ -79,8 +79,8 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
     }
 
     private renderFormSummary(tpi: TPIResponse) {
-        const homeResults: number[] = tpi.homeParticipant.lastEvents.map(hist => this.scoreToResult(hist.scores))
-        const awayResults: number[] = tpi.awayParticipant.lastEvents.map(hist => this.scoreToResult(hist.scores))
+        const homeResults: number[] = tpi.homeParticipant.lastEvents.map(hist => this.histEventToResult(hist, tpi.homeParticipant.participantId))
+        const awayResults: number[] = tpi.awayParticipant.lastEvents.map(hist => this.histEventToResult(hist, tpi.awayParticipant.participantId))
 
         return (
             <View style={{flexDirection: "row", justifyContent: "center", marginVertical: 4}}>
@@ -98,20 +98,19 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
         return (
             <View style={{marginHorizontal: 8}}>
                 <Text style={styles.teamTitle}>{team.participantName}</Text>
-                {team.lastEvents.map((hist, index) => this.renderHistoricalEvent(hist, team.participantId + "-" + index))}
+                {team.lastEvents.map((hist, index) => this.renderHistoricalEvent(hist, team.participantId, team.participantId + "-" + index))}
             </View>
         )
     }
 
-    private renderHistoricalEvent(hist: HistoricalEvent, key: string) {
-
+    private renderHistoricalEvent(hist: HistoricalEvent, participanId: number, key: string) {
         const score = hist.scores && hist.scores.length ? hist.scores[0] : undefined;
 
         if (!score) {
             return null
         }
 
-        let result = this.scoreToResult(hist.scores);
+        let result = this.histEventToResult(hist, participanId);
         return (
             <View key={key}
                   style={styles.row}>
@@ -147,6 +146,16 @@ class TeamPerformanceViewComponent extends React.Component<ComponentProps, Compo
         }
 
         return <Text key={key} style={[styles.resultCommon, styles.resultDraw, style]}>D</Text>
+    }
+
+    private histEventToResult = (event: HistoricalEvent, participantId: number): number => {
+        let result = this.scoreToResult(event.scores);
+
+        if (event.awayParticipant.participantId === participantId) {
+            result *= -1
+        }
+
+        return result
     }
 
     private scoreToResult = (scores: HistoricalEventScore[]): number => {
