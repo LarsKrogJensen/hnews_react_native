@@ -13,6 +13,10 @@ import {GoalScorerItem} from "components/betoffer/GoalScorerItem";
 import {WinnerBetOfferGroupItem} from "components/betoffer/WinnerBetOfferGroupItem";
 import {BetOfferEntity} from "model/BetOfferEntity";
 import {PositionBetOfferGroupItem} from "components/betoffer/PositionBetOfferGroupItem";
+import {OverUnderBetOfferGroupItem} from "components/betoffer/OverUnderBetOfferGroupItem";
+import {CorrectScoreOfferGroupItem} from "components/betoffer/CorrectScoreBetOfferGroupItem";
+import {HalfTimeFullTimeBetOfferGroupItem} from "components/betoffer/HalfTimeFullTimeBetOfferGroupItem";
+import {ThreeWayHandicapBetOfferGroupItem} from "components/betoffer/ThreeWayHandicapBetOfferGroupItem";
 
 interface ExternalProps {
     outcomes: number[]
@@ -47,13 +51,13 @@ class BetOfferGroupComponent extends React.Component<Props> {
                 return <PositionBetOfferGroupItem outcomes={outcomes} event={event} betoffers={betOffers}/>
             case BetOfferTypes.OverUnder:
             case BetOfferTypes.AsianOverUnder:
-                return this.renderOverUnder(outcomes, eventId)
+                return <OverUnderBetOfferGroupItem outcomes={outcomes} event={event}/>
             case BetOfferTypes.CorrectScore:
-                return this.renderCorrectScore(outcomes, eventId)
+                return <CorrectScoreOfferGroupItem outcomes={outcomes} event={event}/>
             case BetOfferTypes.HalfTimeFullTime:
-                return this.renderHalfTimeFullTime(outcomes, eventId)
+                return <HalfTimeFullTimeBetOfferGroupItem outcomes={outcomes} event={event}/>
             case BetOfferTypes.ThreeWayHandicap:
-                return this.renderThreeWayHandicap(outcomes, eventId)
+                return <ThreeWayHandicapBetOfferGroupItem outcomes={outcomes} event={event}/>
             case BetOfferTypes.GoalScorer:
                 return <GoalScorerItem outcomes={outcomes} event={event}/>
             case BetOfferTypes.AsianHandicap:
@@ -64,37 +68,6 @@ class BetOfferGroupComponent extends React.Component<Props> {
             default:
                 return <Text>BetOffer type '{type.name}' seems not implemented yet</Text>
         }
-    }
-
-    private renderOverUnder(outcomes: OutcomeEntity[], eventId: number) {
-        // render 2 columns first with over and second under
-        const over = outcomes.filter(o => o.type === OutcomeTypes.Over && o.line).sort((o1, o2) => o1.line!! - o2.line!!)
-        const under = outcomes.filter(o => o.type === OutcomeTypes.Under && o.line).sort((o1, o2) => o1.line!! - o2.line!!)
-
-        return (
-            <View style={styles.rowLayout}>
-                <View style={styles.columnLayout}>
-                    {over.map(outcome => (
-                        <OutcomeItem
-                            key={outcome.id}
-                            style={{marginVertical: 2}}
-                            outcomeId={outcome.id}
-                            eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
-                    ))}
-                </View>
-                <View style={styles.columnLayout}>
-                    {under.map(outcome => (
-                        <OutcomeItem
-                            key={outcome.id}
-                            style={{marginVertical: 2}}
-                            outcomeId={outcome.id}
-                            eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
-                    ))}
-                </View>
-            </View>
-        )
     }
 
     private renderHeadToHead(outcomes: OutcomeEntity[], eventId: number) {
@@ -184,153 +157,6 @@ class BetOfferGroupComponent extends React.Component<Props> {
         )
     }
 
-    private renderHalfTimeFullTime(outcomes: OutcomeEntity[], eventId: number) {
-        // render 3 columns first with home win, second draw and third away win
-        type OutcomeWithHtFt = OutcomeEntity & { halfTime: number, fullTime: number }
-        const outcomesWithHtFt: OutcomeWithHtFt[] = outcomes.map(outcome => ({...outcome, ...this.parseHtFt(outcome.label)}))
-
-        const home = outcomesWithHtFt.filter(o => o.fullTime === 1).sort((o1, o2) => o1.halfTime - o2.halfTime)
-        const draw = outcomesWithHtFt.filter(o => o.fullTime === 1.5).sort((o1, o2) => o1.halfTime - o2.halfTime)
-        const away = outcomesWithHtFt.filter(o => o.fullTime === 2).sort((o1, o2) => o1.halfTime - o2.halfTime)
-
-        const itemStyle: ViewStyle = {marginVertical: 2, flex: 0}
-        return (
-            <View style={styles.rowLayout}>
-                <View style={styles.columnLayout}>
-                    {home.map(outcome => (
-                        <OutcomeItem
-                            key={outcome.id}
-                            style={itemStyle}
-                            outcomeId={outcome.id}
-                            eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
-                    ))}
-                </View>
-                <View style={styles.columnLayout}>
-                    {draw.map(outcome => (
-                        <OutcomeItem
-                            key={outcome.id}
-                            style={itemStyle}
-                            outcomeId={outcome.id}
-                            eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
-                    ))}
-                </View>
-                <View style={styles.columnLayout}>
-                    {away.map(outcome => (
-                        <OutcomeItem
-                            key={outcome.id}
-                            style={itemStyle}
-                            outcomeId={outcome.id}
-                            eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
-                    ))}
-                </View>
-            </View>
-        )
-    }
-
-    private parseHtFt(scoreLabel: string): { halfTime: number, fullTime: number } {
-        let scoreParts: string[] = scoreLabel.split("/");
-
-        if (scoreParts.length !== 2) {
-            return {halfTime: 1, fullTime: 1}
-        }
-
-        return {
-            halfTime: scoreParts[0].trim() === "X" ? 1.5 : parseInt(scoreParts[0].trim()),
-            fullTime: scoreParts[1].trim() === "X" ? 1.5 : parseInt(scoreParts[1].trim())
-        }
-    }
-
-    private renderCorrectScore(outcomes: OutcomeEntity[], eventId: number) {
-        // render 3 columns first with home win, second draw and third away win
-        type OutcomeWithScore = OutcomeEntity & { homeScore: number, awayScore: number }
-        const outcomesWithScore: OutcomeWithScore[] = outcomes.map(outcome => ({...outcome, ...this.parseScore(outcome.label)}))
-
-        const home = outcomesWithScore.filter(o => o.homeScore > o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
-        const draw = outcomesWithScore.filter(o => o.homeScore === o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
-        const away = outcomesWithScore.filter(o => o.homeScore < o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
-
-        const itemStyle: ViewStyle = {marginVertical: 2, flex: 0}
-        return (
-            <View style={styles.rowLayout}>
-                <View style={styles.columnLayout}>
-                    {home.map(outcome => (
-                        <OutcomeItem
-                            key={outcome.id}
-                            style={itemStyle}
-                            outcomeId={outcome.id}
-                            eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
-                    ))}
-                </View>
-                {!!draw.length && <View style={styles.columnLayout}>
-                    {draw.map(outcome => (
-                        <OutcomeItem
-                            key={outcome.id}
-                            style={itemStyle}
-                            outcomeId={outcome.id}
-                            eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
-                    ))}
-                </View>
-                }
-                <View style={styles.columnLayout}>
-                    {away.map(outcome => (
-                        <OutcomeItem
-                            key={outcome.id}
-                            style={itemStyle}
-                            outcomeId={outcome.id}
-                            eventId={eventId}
-                            betOfferId={outcome.betOfferId}/>
-                    ))}
-                </View>
-            </View>
-        )
-    }
-
-    private renderThreeWayHandicap(outcomes: OutcomeEntity[], eventId: number) {
-        type HandicapGroup = {
-            handicap: number,
-            outcomes: OutcomeEntity[]
-        }
-
-        const groups: HandicapGroup[] = outcomes.reduceRight((reduced, outcome) => {
-            let group = reduced.find(g => g.handicap === outcome.line)
-            if (!group) {
-                group = {handicap: outcome.line!, outcomes: []}
-                reduced.push(group)
-            }
-            group.outcomes.push(outcome)
-            return reduced
-        }, [] as HandicapGroup[])
-            .sort((g1, g2) => g2.handicap - g1.handicap)
-
-        const itemStyle: ViewStyle = {marginVertical: 2, flex: 1}
-        return (
-            <View style={styles.columnLayout}>
-                {groups.map(group => (
-                    <View key={"handicap-" + group.handicap} style={styles.columnLayout}>
-                        <Text style={{
-                            fontSize: 16,
-                            marginVertical: 4
-                        }}>Starts {this.formatHandicapTitle(group.handicap)}</Text>
-                        <View style={styles.rowLayout}>
-                            {group.outcomes.sort(this.sortThreeWay).map(outcome => (
-                                <OutcomeItem
-                                    key={outcome.id}
-                                    style={itemStyle}
-                                    outcomeId={outcome.id}
-                                    eventId={eventId}
-                                    betOfferId={outcome.betOfferId}/>
-                            ))}
-                        </View>
-                    </View>
-                ))}
-            </View>
-        )
-    }
 
     private renderHandicap(outcomes: OutcomeEntity[], event: EventEntity) {
         // render 2 columns first with over and second under
@@ -362,14 +188,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
             </View>
         )
     }
-
-    private sortThreeWay = (outcome1: OutcomeEntity, outcome2: OutcomeEntity): number => {
-        return this.threeWayLabelToNumber(outcome1.label) - this.threeWayLabelToNumber(outcome2.label)
-    }
-
-    private threeWayLabelToNumber = (label: string): number => {
-        return label.toLowerCase() === "x" ? 1.5 : parseInt(label)
-    }
+    
     
     private formatHandicapTitle = (handicap: number): string => {
         if (handicap > 0) {
@@ -378,19 +197,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
 
         return `0${handicap / 1000}`
     }
-    
-    private parseScore = (scoreLabel: string): { homeScore: number, awayScore: number } => {
-        let scoreParts: string[] = scoreLabel.split("-");
 
-        if (scoreParts.length !== 2) {
-            return {homeScore: 0, awayScore: 0}
-        }
-
-        return {
-            homeScore: parseInt(scoreParts[0].trim()),
-            awayScore: parseInt(scoreParts[1].trim())
-        }
-    }
 }
 
 const styles = StyleSheet.create({
@@ -403,9 +210,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: "stretch",
         justifyContent: "flex-start"
-
     } as ViewStyle,
-
 })
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({

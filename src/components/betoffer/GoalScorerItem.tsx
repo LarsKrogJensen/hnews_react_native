@@ -62,7 +62,7 @@ export class GoalScorerItem extends React.Component<Props> {
             <View key={team.name + "-header"} style={[styles.rowLayout, {height: 35, alignItems: "center", paddingHorizontal: 8}]}>
                 {
                     criterions.map(criterion => (
-                            <Text key={criterion.type} style={[styles.itemStyle, styles.labelStyle]}>{criterion.name}</Text>
+                            <Text key={criterion.type} style={[styles.item, styles.label]}>{criterion.name}</Text>
                         )
                     )
                 }
@@ -92,7 +92,7 @@ export class GoalScorerItem extends React.Component<Props> {
                                                     betOfferId={outcome.betOfferId}/>
                                 // return <Text key={criterion.type} style={styles.itemStyle}>OUTCOME</Text>
                             } else {
-                                return <View key={criterion.type} style={styles.itemStyle}/>
+                                return <View key={criterion.type} style={styles.item}/>
                             }
                         })
                     }
@@ -125,13 +125,13 @@ const styles = StyleSheet.create({
         alignItems: "stretch",
         justifyContent: "flex-start"
     } as ViewStyle,
-    labelStyle: {
+    label: {
         textAlign: "center",
         marginRight: 4,
         fontSize: 14,
         fontWeight: "bold"
     } as TextStyle,
-    itemStyle: {
+    item: {
         flex: 1
     } as ViewStyle,
     teamStyle: {

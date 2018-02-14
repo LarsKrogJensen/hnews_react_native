@@ -26,9 +26,9 @@ export class PositionBetOfferGroupItem extends React.Component<Props> {
         return (
             <View style={styles.columnLayout}>
                 <View style={[styles.rowLayout, {height: 35, alignItems: "center"}]}>
-                    <Text style={[styles.labelStyle, {flex: 1, textAlign: "left"}]}>Each Way
+                    <Text style={[styles.label, {flex: 1, textAlign: "left"}]}>Each Way
                         terms: {betoffer.eachWay && betoffer.eachWay.terms}</Text>
-                    <Text style={[styles.itemStyle, styles.labelStyle]}>{betoffer.betOfferType.name}</Text>
+                    <Text style={[styles.item, styles.label]}>{betoffer.betOfferType.name}</Text>
                 </View>
                 {sorted.map(outcome => this.renderPlayer(outcome, event.id))}
             </View>
@@ -64,11 +64,11 @@ const styles = StyleSheet.create({
         alignItems: "stretch",
         justifyContent: "flex-start"
     } as ViewStyle,
-    itemStyle: {
+    item: {
         width: "20%",
         flex: 0
     } as ViewStyle,
-    labelStyle: {
+    label: {
         textAlign: "center",
         marginRight: 4,
         fontSize: 14,

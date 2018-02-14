@@ -44,7 +44,7 @@ export class WinnerBetOfferGroupItem extends React.Component<Props> {
                 <View style={[styles.rowLayout, {height: 35, alignItems: "center"}]}>
                     <View style={{flex: 1}}/>
                     {betoffers.map(bo => (
-                        <Text key={bo.id} style={[styles.itemStyle, styles.labelStyle]}>{bo.betOfferType.name}</Text>
+                        <Text key={bo.id} style={[styles.item, styles.label]}>{bo.betOfferType.name}</Text>
                     ))}
                 </View>
                 {players.map(player => this.renderPlayer(player, event.id, betoffers))}
@@ -72,7 +72,7 @@ export class WinnerBetOfferGroupItem extends React.Component<Props> {
                         )
                     }
 
-                    return <View style={styles.itemStyle}/>
+                    return <View style={styles.item}/>
                 })}
             </View>
         )
@@ -90,11 +90,11 @@ const styles = StyleSheet.create({
         alignItems: "stretch",
         justifyContent: "flex-start"
     } as ViewStyle,
-    itemStyle: {
+    item: {
         width: "20%",
         flex: 0
     } as ViewStyle,
-    labelStyle: {
+    label: {
         textAlign: "center",
         marginRight: 4,
         fontSize: 14,
