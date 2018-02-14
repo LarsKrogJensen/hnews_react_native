@@ -22,14 +22,13 @@ export class CorrectScoreOfferGroupItem extends React.Component<Props> {
         const draw = outcomesWithScore.filter(o => o.homeScore === o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
         const away = outcomesWithScore.filter(o => o.homeScore < o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
 
-        const itemStyle: ViewStyle = {marginVertical: 2, flex: 0}
         return (
             <View style={styles.rowLayout}>
                 <View style={styles.columnLayout}>
                     {home.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
-                            style={itemStyle}
+                            style={styles.outcome}
                             outcomeId={outcome.id}
                             eventId={event.id}
                             betOfferId={outcome.betOfferId}/>
@@ -39,7 +38,7 @@ export class CorrectScoreOfferGroupItem extends React.Component<Props> {
                     {draw.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
-                            style={itemStyle}
+                            style={styles.outcome}
                             outcomeId={outcome.id}
                             eventId={event.id}
                             betOfferId={outcome.betOfferId}/>
@@ -50,7 +49,7 @@ export class CorrectScoreOfferGroupItem extends React.Component<Props> {
                     {away.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
-                            style={itemStyle}
+                            style={styles.outcome}
                             outcomeId={outcome.id}
                             eventId={event.id}
                             betOfferId={outcome.betOfferId}/>
@@ -85,8 +84,8 @@ const styles = StyleSheet.create({
         alignItems: "stretch",
         justifyContent: "flex-start"
     } as ViewStyle,
-    item: {
-        width: "20%",
+    outcome: {
+        marginVertical: 2,
         flex: 0
     } as ViewStyle,
     label: {

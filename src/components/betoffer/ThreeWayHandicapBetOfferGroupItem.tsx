@@ -15,7 +15,6 @@ type HandicapGroup = {
     outcomes: OutcomeEntity[]
 }
 
-
 export class ThreeWayHandicapBetOfferGroupItem extends React.Component<Props> {
 
     render(): React.ReactNode {
@@ -32,7 +31,6 @@ export class ThreeWayHandicapBetOfferGroupItem extends React.Component<Props> {
         }, [] as HandicapGroup[])
             .sort((g1, g2) => g2.handicap - g1.handicap)
 
-        const itemStyle: ViewStyle = {marginVertical: 2, flex: 1}
         return (
             <View style={styles.columnLayout}>
                 {groups.map(group => (
@@ -45,7 +43,7 @@ export class ThreeWayHandicapBetOfferGroupItem extends React.Component<Props> {
                             {group.outcomes.sort(this.sortThreeWay).map(outcome => (
                                 <OutcomeItem
                                     key={outcome.id}
-                                    style={itemStyle}
+                                    style={styles.outcome}
                                     outcomeId={outcome.id}
                                     eventId={event.id}
                                     betOfferId={outcome.betOfferId}/>
@@ -72,8 +70,6 @@ export class ThreeWayHandicapBetOfferGroupItem extends React.Component<Props> {
 
         return `0${handicap / 1000}`
     }
-
-
 }
 
 const styles = StyleSheet.create({
@@ -87,9 +83,9 @@ const styles = StyleSheet.create({
         alignItems: "stretch",
         justifyContent: "flex-start"
     } as ViewStyle,
-    item: {
-        width: "20%",
-        flex: 0
+    outcome: {
+        marginVertical: 2,
+        flex: 1
     } as ViewStyle,
     label: {
         textAlign: "center",

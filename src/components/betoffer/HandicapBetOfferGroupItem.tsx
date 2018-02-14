@@ -3,7 +3,6 @@ import {OutcomeEntity} from "model/OutcomeEntity";
 import {EventEntity} from "model/EventEntity";
 import {StyleSheet, View, ViewStyle} from "react-native";
 import OutcomeItem from "components/OutcomeItem";
-import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
 
 
 interface Props {
@@ -11,29 +10,29 @@ interface Props {
     event: EventEntity
 }
 
-export class OverUnderBetOfferGroupItem extends React.Component<Props> {
+export class HandicapBetOfferGroupItem extends React.Component<Props> {
 
     render(): React.ReactNode {
         const {outcomes, event} = this.props
 
         // render 2 columns first with over and second under
-        const over = outcomes.filter(o => o.type === OutcomeTypes.Over && o.line).sort((o1, o2) => o1.line!! - o2.line!!)
-        const under = outcomes.filter(o => o.type === OutcomeTypes.Under && o.line).sort((o1, o2) => o1.line!! - o2.line!!)
+        const home = outcomes.filter(o => o.label === event.homeName && o.line).sort((o1, o2) => o1.line!! - o2.line!!)
+        const away = outcomes.filter(o => o.label === event.awayName && o.line).sort((o1, o2) => o2.line!! - o1.line!!)
 
         return (
             <View style={styles.rowLayout}>
                 <View style={styles.columnLayout}>
-                    {over.map(outcome => (
+                    {home.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
-                            style={styles.outcome}
+                            style={{marginVertical: 2}}
                             outcomeId={outcome.id}
                             eventId={event.id}
                             betOfferId={outcome.betOfferId}/>
                     ))}
                 </View>
                 <View style={styles.columnLayout}>
-                    {under.map(outcome => (
+                    {away.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
                             style={{marginVertical: 2}}
@@ -59,7 +58,8 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     } as ViewStyle,
     outcome: {
-        marginVertical: 2
+        width: "20%",
+        flex: 0
     } as ViewStyle,
     label: {
         textAlign: "center",

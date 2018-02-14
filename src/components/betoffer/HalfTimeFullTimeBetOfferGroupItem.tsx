@@ -10,27 +10,28 @@ interface Props {
     event: EventEntity
 }
 
+type OutcomeWithHtFt = OutcomeEntity & { halfTime: number, fullTime: number }
+
 export class HalfTimeFullTimeBetOfferGroupItem extends React.Component<Props> {
 
     render(): React.ReactNode {
         const {outcomes, event} = this.props
 
         // render 3 columns first with home win, second draw and third away win
-        type OutcomeWithHtFt = OutcomeEntity & { halfTime: number, fullTime: number }
+
         const outcomesWithHtFt: OutcomeWithHtFt[] = outcomes.map(outcome => ({...outcome, ...this.parseHtFt(outcome.label)}))
 
         const home = outcomesWithHtFt.filter(o => o.fullTime === 1).sort((o1, o2) => o1.halfTime - o2.halfTime)
         const draw = outcomesWithHtFt.filter(o => o.fullTime === 1.5).sort((o1, o2) => o1.halfTime - o2.halfTime)
         const away = outcomesWithHtFt.filter(o => o.fullTime === 2).sort((o1, o2) => o1.halfTime - o2.halfTime)
 
-        const itemStyle: ViewStyle = {marginVertical: 2, flex: 0}
         return (
             <View style={styles.rowLayout}>
                 <View style={styles.columnLayout}>
                     {home.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
-                            style={itemStyle}
+                            style={styles.outcome}
                             outcomeId={outcome.id}
                             eventId={event.id}
                             betOfferId={outcome.betOfferId}/>
@@ -40,7 +41,7 @@ export class HalfTimeFullTimeBetOfferGroupItem extends React.Component<Props> {
                     {draw.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
-                            style={itemStyle}
+                            style={styles.outcome}
                             outcomeId={outcome.id}
                             eventId={event.id}
                             betOfferId={outcome.betOfferId}/>
@@ -50,7 +51,7 @@ export class HalfTimeFullTimeBetOfferGroupItem extends React.Component<Props> {
                     {away.map(outcome => (
                         <OutcomeItem
                             key={outcome.id}
-                            style={itemStyle}
+                            style={styles.outcome}
                             outcomeId={outcome.id}
                             eventId={event.id}
                             betOfferId={outcome.betOfferId}/>
@@ -85,8 +86,8 @@ const styles = StyleSheet.create({
         alignItems: "stretch",
         justifyContent: "flex-start"
     } as ViewStyle,
-    item: {
-        width: "20%",
+    outcome: {
+        marginVertical: 2,
         flex: 0
     } as ViewStyle,
     label: {

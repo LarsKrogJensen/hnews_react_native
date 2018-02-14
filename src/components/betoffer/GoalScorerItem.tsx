@@ -57,17 +57,20 @@ export class GoalScorerItem extends React.Component<Props> {
     }
 
     private renderTeamHeader(team: Team, criterions: OutcomeCriterion[]) {
-        return [
-            <Text key={team.name + "-title"} style={styles.teamStyle}>{team.name}</Text>,
-            <View key={team.name + "-header"} style={[styles.rowLayout, {height: 35, alignItems: "center", paddingHorizontal: 8}]}>
-                {
-                    criterions.map(criterion => (
-                            <Text key={criterion.type} style={[styles.item, styles.label]}>{criterion.name}</Text>
+        return (
+            <React.Fragment>
+                <Text key={team.name + "-title"} style={styles.team}>{team.name}</Text>,
+                <View key={team.name + "-header"}
+                      style={[styles.rowLayout, styles.teamHeader]}>
+                    {
+                        criterions.map(criterion => (
+                                <Text key={criterion.type} style={[styles.outcome, styles.label]}>{criterion.name}</Text>
+                            )
                         )
-                    )
-                }
-            </View>
-        ]
+                    }
+                </View>
+            </React.Fragment>
+        )
     }
 
     private renderTeamPlayers = (players: Player[], criterions: OutcomeCriterion[]) => {
@@ -79,7 +82,7 @@ export class GoalScorerItem extends React.Component<Props> {
     private renderPlayer = (player: Player, criterions: OutcomeCriterion[]): React.ReactNode => {
         return (
             <View key={player.name} style={[styles.columnLayout, styles.playerBox]}>
-                <Text style={styles.playerNameStyle}>{player.name}</Text>
+                <Text style={styles.playerName}>{player.name}</Text>
                 <View style={styles.rowLayout}>
                     {
                         criterions.map(criterion => {
@@ -90,9 +93,8 @@ export class GoalScorerItem extends React.Component<Props> {
                                                     outcomeId={outcome.id}
                                                     eventId={this.props.event.id}
                                                     betOfferId={outcome.betOfferId}/>
-                                // return <Text key={criterion.type} style={styles.itemStyle}>OUTCOME</Text>
                             } else {
-                                return <View key={criterion.type} style={styles.item}/>
+                                return <View key={criterion.type} style={styles.outcome}/>
                             }
                         })
                     }
@@ -131,16 +133,21 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "bold"
     } as TextStyle,
-    item: {
+    outcome: {
         flex: 1
     } as ViewStyle,
-    teamStyle: {
+    team: {
         fontSize: 18,
         fontWeight: "bold",
         marginVertical: 8,
         alignSelf: "center"
     } as TextStyle,
-    playerNameStyle: {
+    teamHeader: {
+        height: 35,
+        alignItems: "center",
+        paddingHorizontal: 8
+    } as ViewStyle,
+    playerName: {
         fontSize: 16,
         marginBottom: 8
     } as TextStyle,

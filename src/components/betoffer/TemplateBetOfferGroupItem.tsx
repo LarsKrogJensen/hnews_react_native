@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         alignItems: "stretch",
         justifyContent: "flex-start"
     } as ViewStyle,
-    item: {
+    outcome: {
         width: "20%",
         flex: 0
     } as ViewStyle,
