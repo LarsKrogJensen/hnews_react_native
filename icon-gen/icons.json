@@ -1,88 +1,100 @@
 {
-    "files": [
-        {
-            "directory": "android/mipmap-hdpi",
-            "nameSuffix": "",
-            "height": 72,
-            "width": 72
-        },
-        {
-            "directory": "android/mipmap-mdpi",
-            "nameSuffix": "",
-            "height": 48,
-            "width": 48
-        },
-        {
-            "directory": "android/mipmap-xhdpi",
-            "nameSuffix": "",
-            "height": 96,
-            "width": 96
-        },
-        {
-            "directory": "android/mipmap-xxhdpi",
-            "nameSuffix": "",
-            "height": 144,
-            "width": 144
-        },
-        {
-            "directory": "android/mipmap-xxxhdpi",
-            "nameSuffix": "",
-            "height": 192,
-            "width": 192
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_29",
-            "height": 29,
-            "width": 29
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_29x2",
-            "height": 58,
-            "width": 58
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_29x3",
-            "height": 87,
-            "width": 87
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_40x2",
-            "height": 80,
-            "width": 80
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_40x3",
-            "height": 120,
-            "width": 120
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_57",
-            "height": 57,
-            "width": 57
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_57x2",
-            "height": 114,
-            "width": 114
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_60",
-            "height": 60,
-            "width": 60
-        },
-        {
-            "directory": "ios",
-            "nameSuffix": "_60x3",
-            "height": 180,
-            "width": 180
-        }
-    ]
+  "files": [
+    {
+      "directory": "android/mipmap-hdpi",
+      "nameSuffix": "",
+      "height": 72,
+      "width": 72
+    },
+    {
+      "directory": "android/mipmap-mdpi",
+      "nameSuffix": "",
+      "height": 48,
+      "width": 48
+    },
+    {
+      "directory": "android/mipmap-xhdpi",
+      "nameSuffix": "",
+      "height": 96,
+      "width": 96
+    },
+    {
+      "directory": "android/mipmap-xxhdpi",
+      "nameSuffix": "",
+      "height": 144,
+      "width": 144
+    },
+    {
+      "directory": "android/mipmap-xxxhdpi",
+      "nameSuffix": "",
+      "height": 192,
+      "width": 192
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_29",
+      "height": 29,
+      "width": 29
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_29x2",
+      "height": 58,
+      "width": 58
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_29x3",
+      "height": 87,
+      "width": 87
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_20x2",
+      "height": 40,
+      "width": 40
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_20x3",
+      "height": 60,
+      "width": 60
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_40x2",
+      "height": 80,
+      "width": 80
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_40x3",
+      "height": 120,
+      "width": 120
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_57",
+      "height": 57,
+      "width": 57
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_57x2",
+      "height": 114,
+      "width": 114
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_60x2",
+      "height": 120,
+      "width": 120
+    },
+    {
+      "directory": "ios",
+      "nameSuffix": "_60x3",
+      "height": 180,
+      "width": 180
+    }
+  ]
 }
