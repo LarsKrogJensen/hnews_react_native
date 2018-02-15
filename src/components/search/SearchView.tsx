@@ -69,6 +69,7 @@ export class SearchView extends React.Component<Props, State> {
     }
 
     private search = async (text: string) => {
+        console.log("Searching: " + text)
         if (text.length > 2) {
             try {
                 this.setState(prevState => ({loading: true}))

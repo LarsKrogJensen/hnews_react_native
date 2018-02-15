@@ -98,7 +98,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     public render() {
         return (
             <CollapsableHeaderScreen {...this.props}
-                                     title="Starting Soon"
+                                     title={`Starting Soon ${this.props.loading}`}
                                      rootScreen
                                      renderBody={this.renderBody}/>
         )
@@ -109,7 +109,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         const {loading} = this.props;
         const {expanded, sections} = this.state
 
-        if (loading) {
+        if (loading && !sections) {
             return (
                 <View>
                     <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>

@@ -306,9 +306,9 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
                 <Text style={{fontSize: 18, marginVertical: 4}}>
                     {group.criterion.label}
                 </Text>
-                <Text>
-                    (Criterion: {group.criterion.id}) Ty: {group.type.id} ({group.type.name})
-                </Text>
+                {/*<Text>*/}
+                    {/*(Criterion: {group.criterion.id}) Ty: {group.type.id} ({group.type.name})*/}
+                {/*</Text>*/}
 
                 {this.renderBetOfferGroup(group)}
             </View>

@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ReactNode} from "react"
-
+import * as _ from  "lodash"
 import {
     Animated,
     ImageStyle,
@@ -176,10 +176,13 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
     }
 
     private handleSearchTextChange = (text: string) => {
-        this.setState(prevState => ({
-            searchText: text
-        }))
+        this.debounceSearch(text)
     }
+
+    private debounceSearch = _.debounce(
+        (searchText) => this.setState({ searchText}),
+        200
+    )
 
     private onScrollEndDrag = () => {
         this.scrollEndTimer = setTimeout(this.onMomentumScrollEnd, 250);

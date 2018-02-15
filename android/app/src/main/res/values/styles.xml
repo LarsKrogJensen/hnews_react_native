@@ -5,9 +5,12 @@
         <!-- Customize your theme here. -->
         <!-- Customize your theme here. -->
         <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
-        <!--<item name="android:statusBarColor">#1e000000</item>-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
-        <item name="colorAccent">#00ADC9</item>
+        <item name="colorAccent">@color/kambiBlue</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
 </resources>
