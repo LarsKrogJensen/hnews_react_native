@@ -18,7 +18,8 @@ import {CorrectScoreOfferGroupItem} from "components/betoffer/CorrectScoreBetOff
 import {HalfTimeFullTimeBetOfferGroupItem} from "components/betoffer/HalfTimeFullTimeBetOfferGroupItem";
 import {ThreeWayHandicapBetOfferGroupItem} from "components/betoffer/ThreeWayHandicapBetOfferGroupItem";
 import {HandicapBetOfferGroupItem} from "components/betoffer/HandicapBetOfferGroupItem";
-import {HeadToHeadBetOfferGroupItem} from "components/betoffer/HeadToHeadBetOfferGroupItem";
+import {YesNoBetOfferGroupItem} from "components/betoffer/YesNoBetOfferGroupItem";
+import {HeadToHeadBetOfferGroupItem} from "components/betoffer/HeadToHeadOfferGroupItem";
 
 interface ExternalProps {
     outcomes: number[]
@@ -66,7 +67,12 @@ class BetOfferGroupComponent extends React.Component<Props> {
             case BetOfferTypes.Handicap:
                 return <HandicapBetOfferGroupItem outcomes={outcomes} event={event}/>
             case BetOfferTypes.HeadToHead:
-                return <HeadToHeadBetOfferGroupItem outcomes={outcomes} event={event}/>
+                const isYesNoFlavor = outcomes.find(ot => ot.type === OutcomeTypes.Yes)
+                if (isYesNoFlavor) {
+                    return <YesNoBetOfferGroupItem outcomes={outcomes} event={event}/>
+                } else {
+                    return <HeadToHeadBetOfferGroupItem outcomes={outcomes} event={event}/>
+                }
             default:
                 return <Text>BetOffer type '{type.name}' seems not implemented yet</Text>
         }

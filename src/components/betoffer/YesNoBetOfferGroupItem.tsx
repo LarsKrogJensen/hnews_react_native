@@ -11,38 +11,38 @@ interface Props {
     event: EventEntity
 }
 
-type HeadToHead = {
+type YesNo = {
     paricipant: string,
     yes?: OutcomeEntity,
     no?: OutcomeEntity,
     betOfferId: number
 }
 
-export class HeadToHeadBetOfferGroupItem extends React.Component<Props> {
+export class YesNoBetOfferGroupItem extends React.Component<Props> {
 
     render(): React.ReactNode {
         const {outcomes, event} = this.props
 
-        const rows: HeadToHead[] = outcomes.reduceRight((reduced, outcome) => {
-            let h2h = reduced.find(o => o.betOfferId === outcome.betOfferId)
-            if (!h2h) {
-                h2h = {
+        const rows: YesNo[] = outcomes.reduceRight((reduced, outcome) => {
+            let yesNo = reduced.find(o => o.betOfferId === outcome.betOfferId)
+            if (!yesNo) {
+                yesNo = {
                     betOfferId: outcome.betOfferId,
                     paricipant: ""
                 }
-                reduced.push(h2h)
+                reduced.push(yesNo)
             }
 
             if (outcome.type === OutcomeTypes.Yes) {
-                h2h.paricipant = outcome.participant || h2h.paricipant
-                h2h.yes = outcome
+                yesNo.paricipant = outcome.participant || yesNo.paricipant
+                yesNo.yes = outcome
             } else {
-                h2h.paricipant = outcome.participant || h2h.paricipant
-                h2h.no = outcome
+                yesNo.paricipant = outcome.participant || yesNo.paricipant
+                yesNo.no = outcome
             }
 
             return reduced
-        }, [] as HeadToHead[]).sort((h1, h2) => h1.paricipant.localeCompare(h2.paricipant))
+        }, [] as YesNo[]).sort((h1, h2) => h1.paricipant.localeCompare(h2.paricipant))
 
         const yesOut = rows.find(r => r.yes !== undefined)
         const yesLabel = yesOut ? yesOut.yes!.label : "Yes"
