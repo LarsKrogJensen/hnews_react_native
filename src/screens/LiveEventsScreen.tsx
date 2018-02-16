@@ -114,10 +114,12 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
         let {expanded, sections} = this.state
 
 
-        if (loading) {
-            return <View>
-                <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
-            </View>
+        if (loading && !sections.length) {
+            return (
+                <View>
+                    <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
+                </View>
+            )
         }
 
         const sectionsView = sections.map(section => ({
@@ -130,7 +132,6 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             <AnimatedSectionList
                 {...scrollHooks}
                 stickySectionHeadersEnabled={true}
-                refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}
                 renderSectionHeader={this.renderSectionHeader}
                 keyExtractor={this.keyExtractor}

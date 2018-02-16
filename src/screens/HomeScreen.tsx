@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass, ReactNode} from "react"
-import {ActivityIndicator, Animated, RefreshControl, ScrollView, View} from "react-native"
+import {ActivityIndicator, Animated, ScrollView, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
@@ -74,7 +74,14 @@ class HomeScreen extends React.Component<ComponentProps> {
     private renderBody = (scrollHooks: ScrollHooks) => {
         const {loading} = this.props
 
-        if (loading) {
+        const cards: ReactNode[] = [
+            ...this.renderLiveRightNow(),
+            ...this.renderTrending(),
+            ...this.renderHighlights(),
+            ...this.renderStartingSoon()
+        ]
+
+        if (loading && !cards.length) {
             return (
                 <View>
                     <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
@@ -82,17 +89,11 @@ class HomeScreen extends React.Component<ComponentProps> {
             )
         }
 
-        const cards: ReactNode[] = [
-            ...this.renderLiveRightNow(),
-            ...this.renderTrending(),
-            this.renderHighlights(),
-            ...this.renderStartingSoon()
-        ]
+
         return (
             <AnimatedScrollView
                 {...scrollHooks}
-                style={{paddingBottom: 50}}
-                refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}>
+                style={{paddingBottom: 50}}>
                 {/*{loading && <ActivityIndicator style={{marginTop: 8}}/>}*/}
                 {this.props.orientation === Orientation.Portrait
                     ? cards
@@ -102,14 +103,16 @@ class HomeScreen extends React.Component<ComponentProps> {
         )
     }
 
-    private renderHighlights(): ReactNode {
+    private renderHighlights(): ReactNode[] {
         if (!this.props.highlights.events.length) {
-            return null
+            return []
         }
 
         return (
-            <HighlightsCard key="highlight"
-                            navigation={this.props.navigation}/>
+            [
+                <HighlightsCard key="highlight"
+                                navigation={this.props.navigation}/>
+            ]
         )
     }
 

@@ -4,7 +4,6 @@ import {
     ActivityIndicator,
     Animated,
     ListRenderItemInfo,
-    RefreshControl,
     SectionList,
     SectionListData,
     StyleSheet,
@@ -131,16 +130,15 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
 
     public render() {
         const {loading} = this.props;
-        if (loading) {
+        const {sections, expanded} = this.state
 
+        if (loading && !sections.length) {
             return (
                 <View>
                     <ActivityIndicator style={{marginTop: 8}}/>
                 </View>
             )
         }
-
-        const {sections, expanded} = this.state
 
         const sectionsView: BetOfferSection[] = sections.map(section => ({
             ...section,
@@ -152,7 +150,6 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
             <AnimatedSectionList
                 {...this.props.scrollHooks}
                 stickySectionHeadersEnabled={true}
-                refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}
                 renderSectionHeader={this.renderSectionHeader}
                 keyExtractor={this.keyExtractor}
@@ -292,10 +289,6 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
         }
 
         return 0;
-    }
-
-    private onRefresh = () => {
-        this.props.loadData(true)
     }
 
     private renderItem = (info: ListRenderItemInfo<BetOfferGroup>) => {

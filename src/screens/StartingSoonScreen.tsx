@@ -98,7 +98,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     public render() {
         return (
             <CollapsableHeaderScreen {...this.props}
-                                     title={`Starting Soon ${this.props.loading}`}
+                                     title={`Starting Soon`}
                                      rootScreen
                                      renderBody={this.renderBody}/>
         )
@@ -109,7 +109,7 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
         const {loading} = this.props;
         const {expanded, sections} = this.state
 
-        if (loading && !sections) {
+        if (loading && !sections.length) {
             return (
                 <View>
                     <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
@@ -126,7 +126,6 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
             <AnimatedSectionList
                 {...scrollHooks}
                 stickySectionHeadersEnabled={true}
-                refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}
                 renderSectionHeader={this.renderSectionHeader}
                 keyExtractor={this.keyExtractor}

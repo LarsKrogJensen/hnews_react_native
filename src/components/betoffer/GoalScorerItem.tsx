@@ -56,10 +56,10 @@ export class GoalScorerItem extends React.Component<Props> {
         )
     }
 
-    private renderTeamHeader(team: Team, criterions: OutcomeCriterion[]) {
+    private renderTeamHeader = (team: Team, criterions: OutcomeCriterion[]) => {
         return (
             <React.Fragment>
-                <Text key={team.name + "-title"} style={styles.team}>{team.name}</Text>,
+                <Text key={team.name + "-title"} style={styles.team}>{team.name}</Text>
                 <View key={team.name + "-header"}
                       style={[styles.rowLayout, styles.teamHeader]}>
                     {

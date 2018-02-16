@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ReactNode} from "react"
-import * as _ from  "lodash"
+import {debounce} from  "lodash"
 import {
     Animated,
     ImageStyle,
@@ -179,7 +179,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         this.debounceSearch(text)
     }
 
-    private debounceSearch = _.debounce(
+    private debounceSearch: (text: string) => void = debounce(
         (searchText) => this.setState({ searchText}),
         200
     )

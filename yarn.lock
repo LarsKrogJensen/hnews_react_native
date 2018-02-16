@@ -10,9 +10,9 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@types/lodash@^4.14.102":
-  version "4.14.102"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.102.tgz#586a3e22385fc79b07cef9c5a1c8a5387986fbc8"
+"@types/lodash@^4.14.103":
+  version "4.14.103"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.103.tgz#56ac640f029f67655f0721f479f1faa982bd8122"
 
 "@types/react-native-material-ui@^1.19.1":
   version "1.19.1"
@@ -41,9 +41,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.52.9":
-  version "0.52.9"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.9.tgz#01b166d9972dbee73582f9b60f6e126ed4d426ba"
+"@types/react-native@0.52.12":
+  version "0.52.12"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.12.tgz#5dc8d406f295b916e63d1dd7ae1cbc4d8c67d5c6"
   dependencies:
     "@types/react" "*"
 
@@ -3985,9 +3985,9 @@ react-native-snackbar@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/react-native-snackbar/-/react-native-snackbar-0.4.4.tgz#46d35c171dd28189c60eab0998b88d1c37e9f14e"
 
-react-native-svg@6.1.3:
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-6.1.3.tgz#cd69a554105d49b1071ddae5509e56ce8aaf5034"
+react-native-svg@6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-6.2.1.tgz#4cdd71577814fb4d60496afc75e660c482f41c84"
   dependencies:
     color "^2.0.1"
     lodash "^4.16.6"
@@ -4988,9 +4988,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.6.2.tgz#3c5b6fd7f6de0914269027f03c0946758f7673a4"
+typescript@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"
