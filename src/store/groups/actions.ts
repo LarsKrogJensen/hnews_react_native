@@ -87,9 +87,7 @@ export function loadGroups(fireStartLoad: boolean = true): ThunkAction<void, App
 
 export function loadHighlights(fireStartLoad: boolean = false): ThunkAction<void, AppStore, any> {
     return async dispatch => {
-        if (fireStartLoad) {
-            dispatch<HighlightsStartAction>({type: HighlightActions.START_LOADING})
-        }
+        fireStartLoad && dispatch<HighlightsStartAction>({type: HighlightActions.START_LOADING})
 
         try {
             console.time("Fetching highlights")
@@ -115,7 +113,6 @@ export function loadHighlights(fireStartLoad: boolean = false): ThunkAction<void
 
 export function loadBetOfferCategories(eventGroupId: number, categoryName: string, fireStartLoad: boolean = false): ThunkAction<void, AppStore, any> {
     return async (dispatch, getState) => {
-
         const key = `${categoryName}-${eventGroupId}`
         if (getState().groupStore.betOfferCategories.has(key)) {
             return

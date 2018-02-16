@@ -1,17 +1,17 @@
 import {applyMiddleware, combineReducers, createStore, Reducer, Store} from "redux"
-import favoriteReducer, {FavoriteStore} from "./favorite/reducer"
-import liveReducer, {LiveEventsStore} from "./live/reducer"
-import entityReducer, {EntityStore} from "./entity/reducer";
+import {favoriteReducer, FavoriteStore} from "./favorite/reducer"
+import {liveReducer, LiveEventsStore} from "./live/reducer"
+import {entityReducer,EntityStore} from "./entity/reducer";
 import thunk from "redux-thunk";
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {default as statsReducer, StatsStore} from "store/stats/reducer";
-import {default as landingReducer, LandingStore} from "store/landing/reducer";
-import {default as groupsReducer, GroupStore} from "store/groups/reducer";
-import {SoonEventsStore, default as soonReducer} from "store/soon/reducer";
-import {SportEventsStore, default as sportReducer} from "store/sport/reducer";
-import {AppState} from "react-native";
+import {statsReducer, StatsStore} from "store/stats/reducer";
+import {landingReducer, LandingStore} from "store/landing/reducer";
+import {groupsReducer, GroupStore} from "store/groups/reducer";
+import {soonReducer, SoonEventsStore} from "store/soon/reducer";
+import {sportReducer, SportEventsStore} from "store/sport/reducer";
 import {pushInitialize} from "store/push/push-hub";
 import {API} from "store/API";
+import {searchReducer, SearchStore} from "store/search/reducer";
 
 export interface AppStore {
     favoriteStore: FavoriteStore,
@@ -21,7 +21,8 @@ export interface AppStore {
     landingStore: LandingStore,
     groupStore: GroupStore,
     soonStore: SoonEventsStore,
-    sportStore: SportEventsStore
+    sportStore: SportEventsStore,
+    searchStore: SearchStore
 }
 
 const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
@@ -32,7 +33,8 @@ const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
     landingStore: landingReducer,
     groupStore: groupsReducer,
     soonStore: soonReducer,
-    sportStore: sportReducer
+    sportStore: sportReducer,
+    searchStore: searchReducer
 })
 
 // const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

@@ -26,8 +26,7 @@ const initialState: GroupStore = {
     loadingBetOfferCategories: Set()
 }
 
-
-export default function groupsReducer(state: GroupStore = initialState, action: GroupsLoadAction | HighlightsLoadAction | PrematchCategoryLoadAction): GroupStore {
+export function groupsReducer(state: GroupStore = initialState, action: GroupsLoadAction | HighlightsLoadAction | PrematchCategoryLoadAction): GroupStore {
     switch (action.type) {
         case GroupActions.START_LOADING:
             return {

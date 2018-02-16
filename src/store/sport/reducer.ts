@@ -11,7 +11,7 @@ const initialState: SportEventsStore = {
     loading: Set()
 }
 
-export default function sportReducer(state: SportEventsStore = initialState, action: SportAction): SportEventsStore {
+export function sportReducer(state: SportEventsStore = initialState, action: SportAction): SportEventsStore {
     switch (action.type) {
         case SportActions.START_LOADING:
             return {

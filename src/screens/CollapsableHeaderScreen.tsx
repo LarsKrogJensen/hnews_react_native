@@ -17,7 +17,7 @@ import banner from "images/banner";
 import {Toolbar} from "react-native-material-ui";
 import {NavigationScreenProp} from "react-navigation";
 import {navigateBack, navigateDrawerOpen} from "lib/navigate";
-import {SearchView} from "components/search/SearchView";
+import {SearchView} from "components/search/SearchComponent";
 import AnimatedDiffClamp = Animated.AnimatedDiffClamp;
 import absoluteFill = StyleSheet.absoluteFill;
 

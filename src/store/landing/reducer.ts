@@ -27,7 +27,7 @@ const initialState: LandingStore = {
     startingSoon: {events: [], range: {}}
 }
 
-export default function landingReducer(state: LandingStore = initialState, action: LandingAction | PushAction): LandingStore {
+export function landingReducer(state: LandingStore = initialState, action: LandingAction | PushAction): LandingStore {
     switch (action.type) {
         case LandingActions.START_LOADING:
             return {

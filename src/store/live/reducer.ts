@@ -14,7 +14,7 @@ const initialState: LiveEventsStore = {
     groups: []
 }
 
-export default function liveReducer(state: LiveEventsStore = initialState, action: LiveAction | PushAction): LiveEventsStore {
+export function liveReducer(state: LiveEventsStore = initialState, action: LiveAction | PushAction): LiveEventsStore {
     switch (action.type) {
         case LiveActions.START_LOADING:
             return {

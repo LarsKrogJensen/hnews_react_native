@@ -1,5 +1,7 @@
 import * as React from "react"
+import {ComponentClass} from "react"
 import {
+    ActivityIndicator,
     ListRenderItemInfo,
     SectionList,
     SectionListData,
@@ -12,23 +14,74 @@ import {
 import {ResultTerm, SearchResult} from "api/typings";
 import {NavigationActions, NavigationScreenProp} from "react-navigation";
 import Touchable from "components/Touchable";
+import {AppStore} from "store/store";
+import {connect} from "react-redux";
+import {Dispatch} from "redux";
+import {search} from "store/search/actions";
 
-interface Props {
+interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
-    result: SearchResult
     searchText: string
     style: ViewStyle
 }
+
+interface StateProps {
+    loading: boolean
+    result?: SearchResult
+}
+
+interface DispatchProps {
+    search: () => void
+}
+
+type Props = StateProps & ExternalProps & DispatchProps
 
 interface SearchSection extends SectionListData<ResultTerm> {
     key: string
     title
 }
 
-export class SearchComponent extends React.Component<Props> {
+class SearchComponent extends React.Component<Props> {
+
+    componentDidMount(): void {
+        if (this.props.searchText.length > 2) {
+            this.props.search()
+        }
+    }
+
+
+    componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
+        if (nextProps.searchText !== this.props.searchText && nextProps.searchText.length > 2) {
+            nextProps.search()
+        }
+    }
 
     public render() {
-        const {style, result} = this.props
+        const {style, result, loading, searchText} = this.props
+
+        if (loading) {
+            return (
+                <View style={style}>
+                    <ActivityIndicator style={{marginTop: 8}}/>
+                </View>
+            )
+        }
+
+        if (!result) {
+            return (
+                <View style={style}>
+                    <Text style={{fontSize: 14, margin: 8}}>Start search</Text>
+                </View>
+            )
+        }
+
+        if (result && !result.resultTerms.length && searchText) {
+            return (
+                <View style={style}>
+                    <Text style={{fontSize: 14, margin: 8}}>No matches</Text>
+                </View>
+            )
+        }
 
         const teamSection: SearchSection = {
             title: "Teams & Players",
@@ -110,12 +163,14 @@ export class SearchComponent extends React.Component<Props> {
     }
 
     private unwindPath = (id: string, path: string = ""): string => {
-        if (id) {
+        const result = this.props.result;
+        if (id && result) {
             if (id.endsWith("/all")) {
                 return this.unwindPath(id.replace("/all", ""), path)
-            }
 
-            let term = this.props.result.resultTerms.find(t => t.id === id);
+
+            }
+            let term = result.resultTerms.find(t => t.id === id);
             if (term) {
                 path = path ? term.localizedName + ", " + path : term.localizedName
                 return this.unwindPath(term.parentId, path)
@@ -165,3 +220,16 @@ const styles = StyleSheet.create({
         color: "#717171",
     } as TextStyle
 })
+
+// Connect redux
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+    loading: state.searchStore.loading.has(inputProps.searchText),
+    result: state.searchStore.searchResult.get(inputProps.searchText)
+})
+const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => ({
+    search: () => dispatch(search(inputProps.searchText))
+})
+
+export const SearchView: ComponentClass<ExternalProps> =
+    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(SearchComponent)
+

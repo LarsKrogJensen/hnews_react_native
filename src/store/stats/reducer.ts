@@ -44,7 +44,7 @@ const initialState: StatsStore = {
     tpiLoading: Set(),
 }
 
-export default function statsReducer(state: StatsStore = initialState, action: LiveAction | LandingAction | PushAction | StatsAction): StatsStore {
+export function statsReducer(state: StatsStore = initialState, action: LiveAction | LandingAction | PushAction | StatsAction): StatsStore {
     switch (action.type) {
         case LiveActions.LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;

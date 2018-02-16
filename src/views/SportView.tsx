@@ -129,17 +129,15 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         // console.log("Render SportView")
 
         const {loading} = this.props;
+        const {sections, expanded} = this.state
 
-        if (loading) {
-
+        if (loading && !sections.length) {
             return (
                 <View>
                     <ActivityIndicator style={{marginTop: NAVBAR_HEIGHT + 8}}/>
                 </View>
             )
         }
-
-        const {sections, expanded} = this.state
 
         const sectionsView = sections.map(section => ({
             ...section,
@@ -152,7 +150,6 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
                 {...this.props.scrollHooks}
                 ListEmptyComponent={<Text> Empty </Text>}
                 stickySectionHeadersEnabled={true}
-                refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh}/>}
                 sections={sectionsView}
                 renderSectionHeader={this.renderSectionHeader}
                 keyExtractor={this.keyExtractor}

@@ -8,7 +8,7 @@ const initialState: FavoriteStore = {
     favorites: Set<number>()
 }
 
-export default function favoriteReducer(state: FavoriteStore = initialState, action: FavoriteAction): FavoriteStore {
+export function favoriteReducer(state: FavoriteStore = initialState, action: FavoriteAction): FavoriteStore {
     switch (action.type) {
         case FavoriteActions.ADD:
             return {

@@ -10,7 +10,7 @@ const initialState: SoonEventsStore = {
     soonEvents: []
 }
 
-export default function soonReducer(state: SoonEventsStore = initialState, action: SoonAction): SoonEventsStore {
+export function soonReducer(state: SoonEventsStore = initialState, action: SoonAction): SoonEventsStore {
     switch (action.type) {
         case SoonActions.START_LOADING:
             return {

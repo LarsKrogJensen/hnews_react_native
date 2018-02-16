@@ -42,7 +42,8 @@ const initialState: EntityStore = {
 }
 
 type Actions = LiveAction | LandingAction | SoonAction | SportAction | BetOffersAction | PushAction
-export default function entityReducer(state: EntityStore = initialState, action: Actions): EntityStore {
+
+export function entityReducer(state: EntityStore = initialState, action: Actions): EntityStore {
     switch (action.type) {
         case LiveActions.LOAD_SUCCESS:
             const liveEvents = action.data.liveEvents;
