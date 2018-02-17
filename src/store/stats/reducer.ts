@@ -1,15 +1,14 @@
 import {LiveAction, LiveActions} from "store/live/actions"
 import {
-    EventScoreUpdate,
-    EventStatsUpdate,
+    EventScoreUpdate, EventStats,
     EventWithBetOffers,
     H2HResponse,
     LeagueTable,
     LiveData,
     LiveFeedEvent,
-    MatchClockRemoved,
-    MatchClockUpdated,
+    MatchClock,
     Occurence,
+    Score,
     TPIResponse
 } from "api/typings";
 import {Map, Set} from "immutable"
@@ -19,29 +18,33 @@ import {PushAction, PushActions} from "store/push/actions";
 import {H2HActions, LeagueTableActions, LiveDataActions, StatsAction, TPIActions} from "store/stats/actions";
 
 export interface StatsStore {
-    liveData: Map<number, LiveData>
     liveDataLoading: Set<number>
     occurences: Map<number, Occurence[]>
-    liveFeed: Map<number, LiveFeedEvent[]>
+    statistics: Map<number, EventStats>,
+    scores: Map<number, Score>,
+    liveFeeds: Map<number, LiveFeedEvent[]>
     leagueTable: Map<number, LeagueTable>
     leagueTableLoading: Set<number>
     h2h: Map<number, H2HResponse>
     h2hLoading: Set<number>
     tpi: Map<number, TPIResponse>
     tpiLoading: Set<number>
+    matchClocks: Map<number, MatchClock>
 }
 
 const initialState: StatsStore = {
-    liveData: Map(),
+    statistics: Map(),
+    scores: Map(),
     liveDataLoading: Set(),
     occurences: Map(),
-    liveFeed: Map(),
+    liveFeeds: Map(),
     leagueTable: Map(),
     leagueTableLoading: Set(),
     h2h: Map(),
     h2hLoading: Set(),
     tpi: Map(),
     tpiLoading: Set(),
+    matchClocks: Map()
 }
 
 export function statsReducer(state: StatsStore = initialState, action: LiveAction | LandingAction | PushAction | StatsAction): StatsStore {
@@ -53,8 +56,8 @@ export function statsReducer(state: StatsStore = initialState, action: LiveActio
                 ...mergeLiveData(state, liveEvents.map(evt => evt.liveData))
             }
         case LandingActions.LOAD_SUCCESS:
-            let landingEvents: EventWithBetOffers[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
-            let liveData = landingEvents.map(evt => evt.liveData).filter(ld => ld != undefined)
+            const landingEvents: EventWithBetOffers[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
+            const liveData = landingEvents.map(evt => evt.liveData).filter(ld => ld != undefined)
 
             return {
                 ...state,
@@ -79,28 +82,34 @@ export function statsReducer(state: StatsStore = initialState, action: LiveActio
         case PushActions.EVENT_SCORE_UPDATE:
             return {
                 ...state,
-                ...mergeScore(state, action.data),
+                ...mergeScore(state, action.data)
             }
         case PushActions.EVENT_STATS_UPDATE:
             return {
                 ...state,
-                liveData: mergeEventStats(state.liveData, action.data),
+                statistics: state.statistics.set(action.data.eventId, action.data.statistics),
             }
         case PushActions.MATCH_CLOCK_UPDATED:
             return {
                 ...state,
-                liveData: mergeMatchClockUpdate(state.liveData, action.data),
+                matchClocks: state.matchClocks.set(action.data.eventId, action.data.matchClock)
             }
         case PushActions.MATCH_CLOCK_REMOVED:
             return {
                 ...state,
-                liveData: mergeMatchClockRemoved(state.liveData, action.data),
+                matchClocks: state.matchClocks.remove(action.data.eventId),
             }
         case PushActions.EVENT_REMOVED:
             return {
                 ...state,
-                liveData: state.liveData.remove(action.data.eventId),
-                occurences: state.occurences.remove(action.data.eventId)
+                matchClocks: state.matchClocks.remove(action.data.eventId),
+                liveFeeds: state.liveFeeds.remove(action.data.eventId),
+                leagueTable: state.leagueTable.remove(action.data.eventId),
+                h2h: state.h2h.remove(action.data.eventId),
+                tpi: state.tpi.remove(action.data.eventId),
+                occurences: state.occurences.remove(action.data.eventId),
+                statistics: state.statistics.remove(action.data.eventId),
+                scores: state.scores.remove(action.data.eventId)
             }
         case PushActions.MATCH_OCCURENCE:
             return {
@@ -161,84 +170,47 @@ export function statsReducer(state: StatsStore = initialState, action: LiveActio
 }
 
 function mergeLiveData(state: StatsStore, items: (LiveData | undefined)[]): Partial<StatsStore> {
-    let liveData = state.liveData
-    let occurences = state.occurences
-    let liveFeed = state.liveFeed
+    let {occurences, scores, matchClocks, statistics, liveFeeds} = state
     for (let item of items) {
         if (!item) continue
-        liveData = liveData.set(item.eventId, item);
         if (item.occurrences) {
             occurences = occurences.set(item.eventId, item.occurrences)
         }
         if (item.liveFeedUpdates) {
-            liveFeed = liveFeed.set(item.eventId, item.liveFeedUpdates)
+            liveFeeds = liveFeeds.set(item.eventId, item.liveFeedUpdates)
+        }
+        if (item.matchClock) {
+            matchClocks = matchClocks.set(item.eventId, item.matchClock)
+        }
+        if (item.statistics) {
+            statistics = statistics.set(item.eventId, item.statistics)
+        }
+        if (item.score) {
+            scores = scores.set(item.eventId, item.score)
         }
     }
 
     return {
-        liveData,
+        matchClocks,
+        statistics,
+        scores,
         occurences,
-        liveFeed
+        liveFeeds
     }
 }
 
 function mergeScore(state: StatsStore, update: EventScoreUpdate): Partial<StatsStore> {
+    let {scores, liveFeeds} = state
 
-    let liveData: Map<number, LiveData> = state.liveData
-    let liveFeed: Map<number, LiveFeedEvent[]> = state.liveFeed
+    scores = scores.set(update.eventId, update.score)
 
-    const ld = liveData.get(update.eventId)
-    if (liveData) {
-        liveData = liveData.set(update.eventId, {
-            ...ld,
-            score: update.score
-        })
-    }
+    const feed = liveFeeds.get(update.eventId) || []
+    // Todo: check for duplicates, removal and updates?
+    liveFeeds = liveFeeds.set(update.eventId, feed.concat({score: update.score, type: "SCORE"}))
 
-    const feed = liveFeed.get(update.eventId) || []
-    liveFeed = liveFeed.set(update.eventId, feed.concat({score: update.score, type: "SCORE"}))
-
-    return {liveData, liveFeed}
+    return {scores, liveFeeds}
 }
 
-function mergeEventStats(state: Map<number, LiveData>, update: EventStatsUpdate): Map<number, LiveData> {
-
-    const liveData: LiveData = state.get(update.eventId)
-    if (liveData) {
-        return state.set(update.eventId, {
-            ...liveData,
-            statistics: update.statistics
-        })
-    }
-
-    return state
-}
-
-function mergeMatchClockUpdate(state: Map<number, LiveData>, update: MatchClockUpdated): Map<number, LiveData> {
-
-    const liveData: LiveData = state.get(update.eventId)
-    if (liveData) {
-        return state.set(update.eventId, {
-            ...liveData,
-            matchClock: update.matchClock
-        })
-    }
-
-    return state
-}
-
-function mergeMatchClockRemoved(state: Map<number, LiveData>, update: MatchClockRemoved): Map<number, LiveData> {
-
-    const liveData: LiveData = state.get(update.eventId)
-    if (liveData) {
-        return state.set(update.eventId, {
-            ...liveData,
-            matchClock: undefined
-        })
-    }
-
-    return state
-}
 
 function mergeMatchOccurence(state: Map<number, Occurence[]>, occurence: Occurence): Map<number, Occurence[]> {
 

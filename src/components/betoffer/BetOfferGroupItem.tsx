@@ -1,17 +1,16 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
-import OutcomeItem from "../OutcomeItem"
+import {Text} from "react-native";
 import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
-import {OutcomeEntity} from "model/OutcomeEntity";
+import {OutcomeEntity} from "entity/OutcomeEntity";
 import {BetOfferType} from "api/typings";
 import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {GoalScorerItem} from "components/betoffer/GoalScorerItem";
 import {WinnerBetOfferGroupItem} from "components/betoffer/WinnerBetOfferGroupItem";
-import {BetOfferEntity} from "model/BetOfferEntity";
+import {BetOfferEntity} from "entity/BetOfferEntity";
 import {PositionBetOfferGroupItem} from "components/betoffer/PositionBetOfferGroupItem";
 import {OverUnderBetOfferGroupItem} from "components/betoffer/OverUnderBetOfferGroupItem";
 import {CorrectScoreOfferGroupItem} from "components/betoffer/CorrectScoreBetOfferGroupItem";

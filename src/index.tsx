@@ -1,12 +1,17 @@
 import React from "react"
 import {Provider} from "react-redux"
-import store from "store/store";
-import NavApp from "app/NavApp";
+import {store} from "store/store";
+import {NavApp} from "app/NavApp";
 import {ThemeProvider} from 'react-native-material-ui';
 
 import "lib/console-time-polyfill"
+import {NativeModules} from "react-native";
 
-// you can set your style right here, it'll be propagated to application
+const {UIManager} = NativeModules;
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+
+// theme for material ui component stuff
+// TODO: remove third party component set, build components that is needed -> better control
 const uiTheme = {
     palette: {
         primaryColor: "#333333",
@@ -18,14 +23,12 @@ const uiTheme = {
             backgroundColor: "transparent"
         }
     }
-};
+}
 
 console.ignoredYellowBox = [
     'Setting a timer',
     'Remote debugger'
-];
-// __DEV__ = false
-
+]
 
 export default function AppContainer() {
     return (

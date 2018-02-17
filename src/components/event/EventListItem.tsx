@@ -2,10 +2,10 @@ import * as React from "react"
 import {ComponentClass} from "react"
 import {EventInfoItem} from "components/event/EventInfoItem";
 import Touchable from "components/Touchable";
-import {Orientation, Theme} from "lib/device";
+import {Orientation} from "lib/device";
 import {NavigationScreenProp} from "react-navigation";
 import {StyleSheet, View, ViewStyle} from "react-native";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
@@ -43,7 +43,7 @@ class EventListItem extends React.Component<Props> {
         return (
             <Touchable onPress={this.handleItemClick}>
                 <View style={[styles.item, viewStyle]}>
-                    <EventInfoItem eventId={event.id} viewStyle={{flex: 1, height: 68}} theme={Theme.Light}
+                    <EventInfoItem eventId={event.id} viewStyle={{flex: 1, height: 68}}
                                    showFavorites/>
                     {event.mainBetOfferId &&
                     <DefaultBetOfferItem orientation={orientation} betofferId={event.mainBetOfferId}

@@ -1,36 +1,29 @@
 import * as React from "react"
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import * as moment from "moment";
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import CountDown from "components/CountDown";
-import {Theme} from "lib/device";
 
 interface Props {
     style: ViewStyle,
-    event: EventEntity,
-    theme?: Theme
+    event?: EventEntity,
 }
 
 export default class EventTimeItem extends React.PureComponent<Props> {
 
     public render() {
-
-        const style: ViewStyle = {
-            ...this.props.style,
-            justifyContent: "center",
-            alignItems: "center"
-        }
-
+        const {event, style} = this.props
+        
         return (
-            <View style={style}>
-                {this.renderBody()}
+            <View style={[styles.body, style]}>
+                {event && this.renderBody(event)}
             </View>
         )
     }
 
-    private renderBody() {
-        const start = moment.utc(this.props.event.start)
+    private renderBody(event: EventEntity) {
+        const start = moment.utc(event.start)
         const now = moment.utc(moment.now())
         const secondsToGo = start.diff(now, "s");
         const total = 15 * 60;
@@ -48,21 +41,18 @@ export default class EventTimeItem extends React.PureComponent<Props> {
                         tintColor="#00ADC9"
                         backgroundColor="#ddd"/>
                     <CountDown style={{marginTop: 4}}
-                               start={this.props.event.start}
+                               start={event.start}
                                format="mm:ss"/>
                 </View>
             )
         }
 
-        return this.renderDateTime()
-
+        return this.renderDateTime(event)
     }
 
-    private renderDateTime = () => {
-
-        const start = moment.utc(this.props.event.start)
+    private renderDateTime = event => {
+        const start = moment.utc(event.start)
         const now = moment.utc(moment.now())
-
 
         const isToday = start.diff(now, 'days') === 0
         let date = ""
@@ -81,10 +71,13 @@ export default class EventTimeItem extends React.PureComponent<Props> {
             </React.Fragment>
         )
     }
-
 }
 
 const styles = StyleSheet.create({
+    body: {
+        justifyContent: "center",
+        alignItems: "center"
+    } as ViewStyle,
     time: {
         fontSize: 16,
         fontWeight: "400",

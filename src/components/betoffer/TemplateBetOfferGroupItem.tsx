@@ -1,9 +1,7 @@
 import * as React from "react"
-import {OutcomeEntity} from "model/OutcomeEntity";
-import {EventEntity} from "model/EventEntity";
-import {StyleSheet, Text, View, ViewStyle} from "react-native";
-import OutcomeItem from "components/OutcomeItem";
-import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
+import {OutcomeEntity} from "entity/OutcomeEntity";
+import {EventEntity} from "entity/EventEntity";
+import {StyleSheet, Text, ViewStyle} from "react-native";
 
 
 interface Props {
@@ -21,8 +19,6 @@ export class TemplateBetOfferGroupItem extends React.Component<Props> {
         )
 
     }
-
-
 }
 
 const styles = StyleSheet.create({

@@ -16,7 +16,7 @@ import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {loadLiveData} from "store/stats/actions";
 import {AppStore} from "store/store";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import connectAppState from "components/hoc/AppStateRefresh";
 
 interface ExternalProps {
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
 // Redux connect
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     loading: state.statsStore.liveDataLoading.has(inputProps.eventId),
-    liveFeed: state.statsStore.liveFeed.get(inputProps.eventId),
+    liveFeed: state.statsStore.liveFeeds.get(inputProps.eventId),
     event: state.entityStore.events.get(inputProps.eventId)
 })
 

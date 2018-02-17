@@ -1,7 +1,7 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {OutcomeEntity} from "model/OutcomeEntity";
-import {EventEntity} from "model/EventEntity";
+import {OutcomeEntity} from "entity/OutcomeEntity";
+import {EventEntity} from "entity/EventEntity";
 import {StyleSheet, View, ViewStyle} from "react-native";
 import OutcomeItem from "components/OutcomeItem";
 import {AppStore} from "store/store";

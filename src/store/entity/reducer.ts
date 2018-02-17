@@ -15,13 +15,13 @@ import {
     Outcome,
     OutcomeUpdate
 } from "api/typings";
-import {OutcomeEntity} from "model/OutcomeEntity";
-import {EventEntity} from "model/EventEntity";
-import {BetOfferEntity} from "model/BetOfferEntity";
+import {OutcomeEntity} from "entity/OutcomeEntity";
+import {EventEntity} from "entity/EventEntity";
+import {BetOfferEntity} from "entity/BetOfferEntity";
 
 
 import {Map, Set} from "immutable"
-import * as _ from "lodash"
+import {flatMap} from "lodash"
 import {BetOfferActions, BetOffersAction} from "store/entity/actions";
 import {PushAction, PushActions} from "store/push/actions";
 
@@ -54,24 +54,24 @@ export function entityReducer(state: EntityStore = initialState, action: Actions
                 betOffersLoading: state.betOffersLoading
             }
         case LandingActions.LOAD_SUCCESS:
-            let landingEvents: EventWithBetOffers[] = _.flatMap(action.data.result.map(section => section.events)).filter(e => e)
-            let betoffers: BetOffer[] = _.flatMap(landingEvents.map(e => e.betOffers).filter(bo => bo));
+            let landingEvents: EventWithBetOffers[] = flatMap(action.data.result.map(section => section.events)).filter(e => e)
+            let betoffers: BetOffer[] = flatMap(landingEvents.map(e => e.betOffers).filter(bo => bo));
 
             return {
                 events: mergeEventWithBetOffers(state.events, landingEvents),
                 betoffers: mergeBetOffers(state.betoffers, betoffers),
-                outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers.map(bo => bo.outcomes))),
+                outcomes: mergeOutcomes(state.outcomes, flatMap(betoffers.map(bo => bo.outcomes))),
                 betOffersLoading: state.betOffersLoading
             }
         case SoonActions.LOAD_SUCCESS:
         case SportActions.LOAD_SUCCESS:
             let events: EventWithBetOffers[] = action.data.events
-            let betoffers2: BetOffer[] = _.flatMap(events.map(e => e.betOffers).filter(bo => bo));
+            let betoffers2: BetOffer[] = flatMap(events.map(e => e.betOffers).filter(bo => bo));
 
             return {
                 events: mergeEventWithBetOffers(state.events, events),
                 betoffers: mergeBetOffers(state.betoffers, betoffers2),
-                outcomes: mergeOutcomes(state.outcomes, _.flatMap(betoffers2.map(bo => bo.outcomes))),
+                outcomes: mergeOutcomes(state.outcomes, flatMap(betoffers2.map(bo => bo.outcomes))),
                 betOffersLoading: state.betOffersLoading
             }
         case BetOfferActions.START_LOADING:

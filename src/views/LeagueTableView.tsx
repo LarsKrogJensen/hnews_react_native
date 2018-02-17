@@ -8,7 +8,6 @@ import {OrientationProps, withOrientationChange} from "components/OrientationCha
 import {EventGroup, LeagueTable, LeagueTableRow} from "api/typings";
 import {loadLeagueTable} from "store/stats/actions";
 
-
 interface ExternalProps {
     eventId: number
     eventGroupId: number

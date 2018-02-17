@@ -1,12 +1,19 @@
 import * as React from "react"
-import {Text, TextStyle, View} from "react-native";
+import {ComponentClass} from "react"
+import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {MatchClock} from "api/typings";
 import {padTime} from "lib/dates";
+import {connect} from "react-redux";
+import {AppStore} from "store/store";
 
-interface Props {
-    matchClock: MatchClock,
+interface ExternalProps {
+    eventId: number,
     style?: TextStyle,
     asHeader?: boolean
+}
+
+interface StateProps {
+    matchClock?: MatchClock,
 }
 
 interface State {
@@ -14,19 +21,21 @@ interface State {
     second: number;
 }
 
-export class MatchClockItem extends React.Component<Props, State> {
+type Props = ExternalProps & StateProps
+
+class MatchClockComponent extends React.Component<Props, State> {
     private timer?: number = undefined
 
     constructor(props: Props) {
         super(props);
         this.state = {
-            minute: this.props.matchClock.minute,
-            second: this.props.matchClock.second
+            minute: this.props.matchClock && this.props.matchClock.minute || 0,
+            second: this.props.matchClock && this.props.matchClock.second || 0
         }
     }
 
     componentWillMount(): void {
-        if (this.props.matchClock.running) {
+        if (this.props.matchClock && this.props.matchClock.running) {
             this.timer = setInterval(this.increment, 1000);
         }
     }
@@ -44,12 +53,14 @@ export class MatchClockItem extends React.Component<Props, State> {
             this.timer = undefined
         }
 
-        this.setState({
-                second: nextProps.matchClock.second,
-                minute: nextProps.matchClock.minute
-            }
-        )
-        if (nextProps.matchClock.running) {
+        if (nextProps.matchClock) {
+            this.setState({
+                    second: nextProps.matchClock.second,
+                    minute: nextProps.matchClock.minute
+                }
+            )
+        }
+        if (nextProps.matchClock && nextProps.matchClock.running) {
             this.timer = setInterval(this.increment, 1000);
         }
     }
@@ -60,15 +71,14 @@ export class MatchClockItem extends React.Component<Props, State> {
 
         if (asHeader) {
             return (
-                <View style={[style, {backgroundColor: "black", paddingHorizontal: 4, borderRadius: 2, alignItems: "center", justifyContent: "center"}]}>
-                    <Text style={{color: "white", fontWeight: "bold", fontSize: 16}}>{padTime(minute) + ":" + padTime(second)}</Text>
+                <View style={[styles.header, style]}>
+                    <Text style={styles.headerText}>{padTime(minute) + ":" + padTime(second)}</Text>
                 </View>
             )
         }
 
         return <Text style={style}>{padTime(minute) + ":" + padTime(second)}</Text>
     }
-
 
     private increment = () => {
         this.setState((prevState: State): State => ({
@@ -77,5 +87,26 @@ export class MatchClockItem extends React.Component<Props, State> {
             })
         )
     }
-    
 }
+
+const styles = StyleSheet.create({
+    header: {
+        backgroundColor: "black",
+        paddingHorizontal: 4,
+        borderRadius: 2,
+        alignItems: "center",
+        justifyContent: "center"
+    } as ViewStyle,
+    headerText: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 16
+    } as TextStyle
+})
+
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+    matchClock: state.statsStore.matchClocks.get(inputProps.eventId)
+})
+
+export const MatchClockItem: ComponentClass<ExternalProps> =
+    connect<StateProps, ExternalProps>(mapStateToProps)(MatchClockComponent)

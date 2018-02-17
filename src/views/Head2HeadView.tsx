@@ -9,13 +9,9 @@ import {H2HResponse, HistoricalEvent} from "api/typings";
 import {loadHead2Head} from "store/stats/actions";
 import {formatDateTime} from "lib/dates";
 
-
 interface ExternalProps {
     eventId: number,
     style?: ViewStyle
-}
-
-interface ComponentState {
 }
 
 interface DispatchProps {
@@ -29,9 +25,9 @@ interface StateProps {
 
 type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
 
-class Head2HeadViewComponent extends React.Component<ComponentProps, ComponentState> {
+class Head2HeadViewComponent extends React.Component<ComponentProps> {
 
-    shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<ComponentState>, nextContext: any): boolean {
+    shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
         if (nextProps.eventId !== this.props.eventId) return true
         if (nextProps.h2h !== this.props.h2h) return true

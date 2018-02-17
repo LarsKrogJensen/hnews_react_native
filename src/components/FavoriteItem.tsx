@@ -57,7 +57,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps):
     }
 )
 
-const WithData: ComponentClass<ExternalProps> = connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(FavoriteItem)
+const WithData: ComponentClass<ExternalProps> = connect<StateProps, DispatchProps, ExternalProps>(
+    mapStateToProps,
+    mapDispatchToProps
+)(FavoriteItem)
 
 export default WithData
 

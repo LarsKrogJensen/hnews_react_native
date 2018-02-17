@@ -1,6 +1,5 @@
 import * as React from "react"
-import {Dimensions} from "react-native";
-import {orientation, Orientation} from "lib/device";
+import {Orientation} from "lib/device";
 import {pushSubscribe, pushUnsubscribe} from "store/push/push-hub";
 
 export interface OrientationProps {

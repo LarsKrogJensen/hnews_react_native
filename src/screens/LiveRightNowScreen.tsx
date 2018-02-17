@@ -4,7 +4,6 @@ import {
     ActivityIndicator,
     Animated,
     ListRenderItemInfo,
-    RefreshControl,
     SectionList,
     SectionListData,
     Text,
@@ -18,20 +17,14 @@ import {NavigationScreenProp} from "react-navigation";
 import {EventGroup} from "api/typings";
 import EventListItem from "components/event/EventListItem";
 import {AppStore} from "store/store";
-import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import {EventEntity} from "model/EventEntity";
-import connectAppState from "components/hoc/AppStateRefresh";
+import {EventEntity} from "entity/EventEntity";
 import Touchable from "components/Touchable";
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
-}
-
-interface DispatchProps {
-    loadData: (fireStartLoading: boolean) => void
 }
 
 interface StateProps {
@@ -41,7 +34,7 @@ interface StateProps {
     favorites: Set<number>
 }
 
-type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationProps
+type ComponentProps = StateProps & ExternalProps & OrientationProps
 
 interface State {
     refreshing: boolean
@@ -60,7 +53,7 @@ interface LiveSection extends SectionListData<EventEntity> {
 
 const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedComponent(SectionList);
 
-class LiveEventsScreen extends React.Component<ComponentProps, State> {
+class LiveRightNowComponent extends React.Component<ComponentProps, State> {
 
     constructor(props: ComponentProps) {
         super(props);
@@ -84,7 +77,6 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
     }
 
     componentDidMount(): void {
-        this.props.loadData(true)
         if (this.props.events.length) {
             this.prepareData(this.props.events, this.props.groups, this.props.favorites)
         }
@@ -139,11 +131,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             />
         )
     }
-
-    private onRefresh = () => {
-        this.props.loadData(true)
-    }
-
+    
     private renderItem = (info: ListRenderItemInfo<EventEntity>) => {
         const event: EventEntity = info.item;
 
@@ -186,7 +174,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
     private prepareData = (events: EventEntity[],
                            groups: EventGroup[],
                            favorites: Set<number>) => {
-        // console.log("Prepare live data")
+        
         const sections: LiveSection[] = groups.map(group => ({
             title: group.name,
             sport: group.sport,
@@ -208,8 +196,7 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
                 data: []
             })
         }
-
-
+        
         for (let sec of sections) {
             sec.count = sec.events.length
         }
@@ -231,7 +218,6 @@ class LiveEventsScreen extends React.Component<ComponentProps, State> {
             }
         )
     }
-
 }
 
 const headerStyle: ViewStyle = {
@@ -263,43 +249,15 @@ const countTextStyle: TextStyle = {
     marginRight: 8
 }
 
-
-// Connect compoentn to store and appstate
-
-
-function mapEvents(state: AppStore): EventEntity[] {
-    const events: EventEntity[] = []
-    for (let eventId of state.liveStore.liveEvents) {
-        let eventEntity = state.entityStore.events.get(eventId);
-        if (eventEntity) {
-            events.push(eventEntity)
-        }
-    }
-
-    return events
-}
-
-const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+// Connect component to store and appstate
+const mapStateToProps = (state: AppStore): StateProps => ({
     loading: state.liveStore.loading,
-    events: mapEvents(state),
+    events: state.liveStore.liveEvents.map(id => state.entityStore.events.get(id)).filter(e => e),
     groups: state.liveStore.groups,
     favorites: state.favoriteStore.favorites
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
-    {
-        loadData: (fireStartLoad: boolean): any => {
-            console.log("live load ignored")
-        }
-    }
-)
-
-const WithOrientationChange = withOrientationChange(LiveEventsScreen)
-
-const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps) => props.loadData(false))(WithOrientationChange)
-
-const LiveEventsWithData: ComponentClass<ExternalProps> =
-    connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
-
-export default LiveEventsWithData
+export const LiveRightNowScreen: ComponentClass<ExternalProps> =
+    connect<StateProps, ExternalProps>(mapStateToProps)(
+        withOrientationChange(LiveRightNowComponent)
+    )

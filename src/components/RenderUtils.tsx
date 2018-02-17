@@ -1,9 +1,9 @@
 import * as React from "react"
-import {LiveData, ShirtColors} from "api/typings";
+import {EventStats, ShirtColors} from "api/typings";
 import {Circle, default as Svg, Path} from "react-native-svg";
 
-export function renderServe(liveData: LiveData, home: boolean) {
-    if (liveData && liveData.statistics && liveData.statistics.sets && liveData.statistics.sets.homeServe === home) {
+export function renderServe(statistics: EventStats, home: boolean) {
+    if (statistics && statistics.sets && statistics.sets.homeServe === home) {
         return (
             <Svg width={16} height={16} style={{flex: 1}}>
                 <Circle cx={8} cy={8} r={4} fill="#F7CE00"/>

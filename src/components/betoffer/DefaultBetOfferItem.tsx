@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass, ReactNode} from "react"
-import {BetOfferEntity} from "model/BetOfferEntity";
+import {BetOfferEntity} from "entity/BetOfferEntity";
 import {StyleSheet, Text, View, ViewStyle} from "react-native";
 import {Orientation} from "lib/device";
 import OutcomeItem from "../OutcomeItem"
@@ -8,7 +8,7 @@ import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import Touchable from "components/Touchable";
 import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {WinnerBetOfferItem} from "components/betoffer/WinnerBetOfferItem";
 import {NavigationScreenProp} from "react-navigation";
 import {navigate} from "lib/navigate";

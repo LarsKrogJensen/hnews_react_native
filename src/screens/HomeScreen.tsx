@@ -8,9 +8,9 @@ import {connect} from "react-redux";
 import {loadLanding} from "store/landing/actions";
 import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/hoc/AppStateRefresh";
-import StartingSoonCard from "components/card/StartingSoonCard";
-import TrendingCard from "components/TrendingCard";
-import LiveCard from "components/card/LiveCard";
+import {StartingSoonCard} from "components/card/StartingSoonCard";
+import {TrendingCard} from "components/TrendingCard";
+import {LiveCard} from "components/card/LiveCard";
 import {HighlightsCard} from "components/card/HighlightsCard";
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen"
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
@@ -39,7 +39,7 @@ type ComponentProps = StateProps & DispatchProps & ExternalProps & OrientationPr
 
 const AnimatedScrollView: ScrollView = Animated.createAnimatedComponent(ScrollView);
 
-class HomeScreen extends React.Component<ComponentProps> {
+class HomeScreenComponent extends React.Component<ComponentProps> {
 
     componentDidMount(): void {
         this.props.loadData(true)
@@ -142,10 +142,6 @@ class HomeScreen extends React.Component<ComponentProps> {
             )
     }
 
-    private onRefresh = () => {
-        this.props.loadData(true)
-    }
-
     private divideIntoColumns(cards: ReactNode[]): ReactNode {
         return (
             <View style={{flexDirection: "row"}}>
@@ -160,7 +156,7 @@ class HomeScreen extends React.Component<ComponentProps> {
     }
 }
 
-const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+const mapStateToProps = (state: AppStore): StateProps => ({
     loading: state.landingStore.loading,
     liveRightNow: state.landingStore.liveRightNow,
     popular: state.landingStore.popular,
@@ -170,19 +166,16 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     startingSoon: state.landingStore.startingSoon
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, inputProps: ExternalProps): DispatchProps => (
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => (
     {
-        loadData: (fireStartLoad: boolean) => {
-            dispatch(loadLanding(fireStartLoad))
-        }
+        loadData: (fireStartLoad: boolean) => dispatch(loadLanding(fireStartLoad))
     }
 )
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(HomeScreen))
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(HomeScreenComponent))
 
-const WithData: ComponentClass<ExternalProps> =
+export const HomeScreen: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 
 
-export default WithData

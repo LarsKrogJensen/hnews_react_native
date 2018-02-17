@@ -2,14 +2,12 @@ import * as React from "react"
 import {ComponentClass} from "react"
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {NavigationScreenProp} from "react-navigation";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import {LiveData} from "api/typings";
 import {MatchClockItem} from "components/MatchClockItem";
-import {CircularProgress} from 'react-native-circular-progress';
 import {Card} from "components/Card";
-import EventPathItem from "components/event/EventPathItem";
+import {EventPathItem} from "components/event/EventPathItem";
 import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {LiveCardScore} from "components/card/LiveCardScore";
 import {navigate} from "lib/navigate";
@@ -22,7 +20,6 @@ interface ExternalProps {
 
 interface StateProps {
     event: EventEntity,
-    liveData: LiveData
 }
 
 type Props = StateProps & ExternalProps
@@ -30,22 +27,22 @@ type Props = StateProps & ExternalProps
 class LiveCardComponent extends React.Component<Props> {
 
     public render() {
-        if (!this.props.event) {
+        const {event} = this.props
+        if (!event) {
             return null
         }
 
         return (
             <Card onPress={() => navigate(this.props.navigation, "Event", {eventId: this.props.eventId})}>
                 <View>
-                    {this.renderHeader()}
+                    {this.renderHeader(event)}
                     {this.renderBody()}
                 </View>
             </Card>
         )
     }
 
-    private renderHeader() {
-        const {event, liveData} = this.props
+    private renderHeader(event: EventEntity) {
         return (
             <View style={styles.header}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={styles.liveText}>Live</Text>
@@ -54,7 +51,7 @@ class LiveCardComponent extends React.Component<Props> {
                     style={{flex: 1}}
                     textStyle={{fontSize: 16, color: "#717171"}}
                 />
-                {liveData && liveData.matchClock && <MatchClockItem matchClock={liveData.matchClock}/>}
+                <MatchClockItem eventId={event.id}/>
             </View>
         )
     }
@@ -95,10 +92,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     event: state.entityStore.events.get(inputProps.eventId),
-    liveData: state.statsStore.liveData.get(inputProps.eventId)
 })
 
-const LiveCard: ComponentClass<ExternalProps> =
+export const LiveCard: ComponentClass<ExternalProps> =
     connect<StateProps, {}, ExternalProps>(mapStateToProps)(LiveCardComponent)
-
-export default LiveCard

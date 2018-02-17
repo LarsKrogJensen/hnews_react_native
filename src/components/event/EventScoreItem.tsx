@@ -1,14 +1,20 @@
 import * as React from "react"
-import {EventStats, LiveData, MatchClock, Score, SetStats} from "api/typings";
-import {Text, TextStyle, View, ViewStyle} from "react-native";
+import {ComponentClass} from "react"
+import {EventStats, Score, SetStats} from "api/typings";
+import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {MatchClockItem} from "components/MatchClockItem";
-import {Theme} from "lib/device";
+import {connect} from "react-redux";
+import {AppStore} from "store/store";
 
-interface Props {
+interface ExternalProps {
+    eventId: number
     style: ViewStyle,
-    liveData?: LiveData,
     sport: string
-    theme?: Theme
+}
+
+interface StateProps {
+    score?: Score
+    eventStats?: EventStats
 }
 
 interface GameSummary {
@@ -18,31 +24,31 @@ interface GameSummary {
     awayGames: number
 }
 
-export default class EventScoreItem extends React.PureComponent<Props> {
+type Props = ExternalProps & StateProps
+
+class EventScoreComponent extends React.PureComponent<Props> {
 
     public render() {
-        if (this.props.liveData) {
-            const {statistics: stats, score, matchClock} = this.props.liveData
-            const sport = this.props.sport
+        const {eventId, score, eventStats: stats} = this.props
+        const sport = this.props.sport
 
-            if (stats && stats.football && score) {
-                return this.renderFootball(score, matchClock)
-            } else if (stats && stats.sets && score) {
-                return this.renderSetBased(stats, score, sport === "TENNIS")
-            } else if (score) {
-                return this.renderFootball(score, matchClock)
-            }
+        if (stats && stats.football && score) {
+            return this.renderFootball(score, eventId)
+        } else if (stats && stats.sets && score) {
+            return this.renderSetBased(stats, score, sport === "TENNIS")
+        } else if (score) {
+            return this.renderFootball(score, eventId)
         }
 
         return <View style={this.props.style}/>
     }
 
-    private renderFootball = (score: Score, matchClock?: MatchClock) => {
+    private renderFootball = (score: Score, eventId: number) => {
         return (
             <View style={{...this.props.style, alignItems: "center"}}>
-                <Text style={setStyle}>{score.home}</Text>
-                <Text style={setStyle}>{score.away}</Text>
-                {matchClock && <MatchClockItem matchClock={matchClock} style={timeStyle}/>}
+                <Text style={styles.sets}>{score.home}</Text>
+                <Text style={styles.sets}>{score.away}</Text>
+                <MatchClockItem eventId={eventId} style={styles.time}/>
             </View>
         );
     }
@@ -52,19 +58,19 @@ export default class EventScoreItem extends React.PureComponent<Props> {
         return (
             <View style={{...this.props.style, flexDirection: "row", justifyContent: "center"}}>
                 <View style={{marginRight: 4, alignItems: "center"}}>
-                    <Text style={setStyle}>{summary.homeSets}</Text>
-                    <Text style={setStyle}>{summary.awaySets}</Text>
+                    <Text style={styles.sets}>{summary.homeSets}</Text>
+                    <Text style={styles.sets}>{summary.awaySets}</Text>
                 </View>
                 {
                     hasGames && (
                         <View style={{marginRight: 4, alignItems: "center"}}>
-                            <Text style={setStyle}>{summary.homeGames}</Text>
-                            <Text style={setStyle}>{summary.awayGames}</Text>
+                            <Text style={styles.sets}>{summary.homeGames}</Text>
+                            <Text style={styles.sets}>{summary.awayGames}</Text>
                         </View>)
                 }
                 <View style={{alignItems: "center"}}>
-                    <Text style={scoreStyle}>{score.home}</Text>
-                    <Text style={scoreStyle}>{score.away}</Text>
+                    <Text style={[styles.sets, styles.score]}>{score.home}</Text>
+                    <Text style={[styles.sets, styles.score]}>{score.away}</Text>
                 </View>
             </View>
         );
@@ -113,17 +119,26 @@ export default class EventScoreItem extends React.PureComponent<Props> {
     }
 }
 
-const setStyle: TextStyle = {
-    color: "#202020",
-    fontSize: 16,
-    fontWeight: "400"
-}
-const scoreStyle: TextStyle = {
-    ...setStyle,
-    color: "#00ADC9"
-}
-const timeStyle: TextStyle = {
-    fontSize: 12,
-    color: "#717171",
-    marginTop: 2
-}
+const styles = StyleSheet.create({
+    sets:  {
+        color: "#202020",
+        fontSize: 16,
+        fontWeight: "400"
+    } as TextStyle,
+    score: {
+        color: "#00ADC9"
+    } as TextStyle,
+    time: {
+        fontSize: 12,
+        color: "#717171",
+        marginTop: 2
+    } as TextStyle
+})
+
+const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+    score: state.statsStore.scores.get(inputProps.eventId),
+    eventStats: state.statsStore.statistics.get(inputProps.eventId)
+})
+
+export const EventScoreItem: ComponentClass<ExternalProps> =
+    connect<StateProps, ExternalProps>(mapStateToProps)(EventScoreComponent)

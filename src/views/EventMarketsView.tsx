@@ -13,7 +13,7 @@ import {
     ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
@@ -21,7 +21,7 @@ import Touchable from "components/Touchable";
 import {is, Set} from "immutable";
 import {ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
-import {BetOfferEntity} from "model/BetOfferEntity";
+import {BetOfferEntity} from "entity/BetOfferEntity";
 import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {loadBetOffers} from "store/entity/actions";
 import {BetOfferCategory, BetOfferType, Criterion} from "api/typings";

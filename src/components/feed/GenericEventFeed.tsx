@@ -1,7 +1,7 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {Text, View, ViewStyle} from "react-native";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";

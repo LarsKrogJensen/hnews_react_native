@@ -3,12 +3,12 @@ import {ComponentClass} from "react"
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {Orientation} from "lib/device";
 import Touchable from "components/Touchable";
-import {OutcomeEntity} from "model/OutcomeEntity";
-import {EventEntity} from "model/EventEntity";
+import {OutcomeEntity} from "entity/OutcomeEntity";
+import {EventEntity} from "entity/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import PlatformIcon from "components/PlatformIcon";
-import {BetOfferEntity} from "model/BetOfferEntity";
+import {BetOfferEntity} from "entity/BetOfferEntity";
 import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
 import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
 import Snackbar from "react-native-snackbar";

@@ -4,7 +4,6 @@ import {
     ActivityIndicator,
     Animated,
     ListRenderItemInfo,
-    RefreshControl,
     SectionList,
     SectionListData,
     StyleSheet,
@@ -14,7 +13,7 @@ import {
     ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {loadSport} from "store/sport/actions";
 import connectAppState from "components/hoc/AppStateRefresh";
 import {AppStore} from "store/store";
@@ -282,10 +281,6 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         if (b.live) return 1;
 
         return a.league.localeCompare(b.league)
-    }
-
-    private onRefresh = () => {
-        this.props.loadData(true)
     }
 
     private renderItem = (info: ListRenderItemInfo<EventEntity>) => {

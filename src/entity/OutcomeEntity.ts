@@ -1,4 +1,4 @@
-import {Criterion, OutcomeCriterion} from "api/typings";
+import {OutcomeCriterion} from "api/typings";
 
 export interface OutcomeEntity {
     readonly id: number;

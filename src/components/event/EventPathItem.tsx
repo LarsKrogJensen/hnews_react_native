@@ -1,16 +1,14 @@
 import * as React from "react"
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {Path} from "api/typings";
-import {Theme} from "lib/device";
 
 interface Props {
     path: ReadonlyArray<Path>
     style?: ViewStyle
     textStyle?: TextStyle
-    theme?: Theme
 }
 
-export default class EventPathItem extends React.Component<Props> {
+export class EventPathItem extends React.Component<Props> {
 
     public render() {
         return (
@@ -23,7 +21,8 @@ export default class EventPathItem extends React.Component<Props> {
 
         path.map((p, index) => {
             if (index > 0) {
-                pathArray.push(<Text key={index + "sep"} style={[styles.entry, styles.divider, this.props.textStyle]}>/</Text>)
+                pathArray.push(<Text key={index + "sep"}
+                                     style={[styles.entry, styles.divider, this.props.textStyle]}>/</Text>)
             }
             pathArray.push(<Text key={index}
                                  numberOfLines={1}

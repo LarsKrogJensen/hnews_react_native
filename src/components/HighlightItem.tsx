@@ -1,11 +1,11 @@
 import * as React from "react"
 import {ComponentClass} from "react"
 import {NavigationScreenProp} from "react-navigation";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {Text, View} from "react-native";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
-import EventPathItem from "components/event/EventPathItem";
+import {EventPathItem} from "components/event/EventPathItem";
 import Touchable from "components/Touchable";
 import {formatDateTime} from "lib/dates";
 import {navigate} from "lib/navigate";

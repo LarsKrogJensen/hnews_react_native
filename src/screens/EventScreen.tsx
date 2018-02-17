@@ -2,12 +2,11 @@ import * as React from "react"
 import {ComponentClass} from "react"
 import {Animated, Dimensions, StyleSheet, Text, ViewStyle} from "react-native"
 import {NavigationParams, NavigationScreenProp} from "react-navigation";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
 import {EventInfoItem} from "components/event/EventInfoItem";
-import {Theme} from "lib/device";
-import Screen from "screens/Screen";
+import {Screen} from "screens/Screen";
 import {LiveCardScore} from "components/card/LiveCardScore";
 import {NavigationState, RouteBase, Scene, SceneRendererProps, TabBar, TabViewAnimated} from "react-native-tab-view";
 import {EventMarketsView} from "views/EventMarketsView";
@@ -74,7 +73,7 @@ class EventScreenComponent extends React.Component<Props, State> {
             return <LiveCardScore eventId={event.id} navigation={navigation} asHeader showMatchClock/>
         }
 
-        return <EventInfoItem eventId={event.id} theme={Theme.Dark} viewStyle={{flex: 1}}/>
+        return <EventInfoItem eventId={event.id} viewStyle={{flex: 1}}/>
     }
 
     private renderBody() {
@@ -108,7 +107,7 @@ class EventScreenComponent extends React.Component<Props, State> {
     private handleIndexChange = (index: number) => {
         this.setState({
             tabIndex: index
-        });
+        })
     }
 
     private renderLabel = (props: SceneRendererProps<PageRoute>) => {
@@ -116,17 +115,17 @@ class EventScreenComponent extends React.Component<Props, State> {
             const inputRange = props.navigationState.routes.map((x, i) => i);
             const outputRange = inputRange.map(
                 inputIndex => (inputIndex === scene.index ? '#00ADC9' : '#222')
-            );
+            )
             const color = props.position.interpolate({
                 inputRange,
                 outputRange,
-            });
+            })
 
             return (
                 <Animated.Text style={[styles.label, {color}]}>
                     {scene.route.title}
                 </Animated.Text>
-            );
+            )
         }
     }
 
@@ -146,33 +145,25 @@ class EventScreenComponent extends React.Component<Props, State> {
     private renderScene = (props: SceneRendererProps<PageRoute> & Scene<PageRoute>) => {
         const {event, navigation} = this.props
 
-        const {tabIndex} = this.state
-        // console.log("Route: " + props.route.key + ", current tab index: " + tabIndex)
         switch (props.route.key) {
             case 'events':
-                // if (this.state.tabIndex !== 0) return null
-
                 return (
                     <EventLiveStatsView eventId={event.id} eventGroupId={event.groupId} sport={event.sport}
                                         style={styles.liveStats}/>
-                );
+                )
 
             case 'markets':
-                // if (this.state.tabIndex !== 1) return null
-
                 return (
                     <EventMarketsView eventId={event.id}
                                       live={event.state === "STARTED"}
                                       eventGroupid={event.groupId}
                                       navigation={navigation}/>
-                );
+                )
 
             case 'stats':
-                // if (this.state.tabIndex !== 2) return null
-
                 return (
                     <EventPrematchStatsView navigation={navigation} eventId={event.id} eventGroupid={event.groupId}/>
-                );
+                )
             default:
                 return null
 
@@ -208,8 +199,7 @@ const styles = StyleSheet.create({
     page: {
         backgroundColor: '#f9f9f9',
     },
-});
-
+})
 
 // Redux connect
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => {

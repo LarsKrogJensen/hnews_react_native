@@ -16,7 +16,7 @@ import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import {loadLiveData} from "store/stats/actions";
 import {AppStore} from "store/store";
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import connectAppState from "components/hoc/AppStateRefresh";
 import {default as Svg, G, Path, Polygon, Rect} from "react-native-svg";
 import {formatDateTime} from "lib/dates";

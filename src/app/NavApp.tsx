@@ -1,43 +1,39 @@
 import * as React from "react"
 import {DrawerNavigator, StackNavigator} from "react-navigation";
-import HomeScreen from "screens/HomeScreen"
-import LiveScreen from "screens/LiveEventsScreen"
-import SoonScreen from "screens/StartingSoonScreen"
-import {NativeModules} from "react-native";
+import {HomeScreen} from "screens/HomeScreen"
+import {LiveRightNowScreen} from "screens/LiveRightNowScreen"
+import {StartingSoonScreen} from "screens/StartingSoonScreen"
 import {EventScreen} from "screens/EventScreen";
 import {Drawer} from "app/Drawer";
-import {CollapsableScreen2} from "screens/CollapsableScreen2";
-import {TopBarDemo2} from "screens/TabBarDemo2";
 import {TabbedSportScreen} from "screens/TabbedSportScreen";
 
 
 const HomeStack = StackNavigator({
         Hemma: {screen: HomeScreen},
         Event: {screen: EventScreen},
-        // Sport: {screen: SportsMockScreen}
     },
     {
         headerMode: "none"
     }
-);
+)
 
 const LiveStack = StackNavigator({
-        Live: {screen: LiveScreen},
+        Live: {screen: LiveRightNowScreen},
         Event: {screen: EventScreen},
-        // Sport: {screen: SportsMockScreen}
     },
     {
         headerMode: "none"
     });
 
 const SoonStack = StackNavigator({
-        Soon: {screen: SoonScreen},
+        Soon: {screen: StartingSoonScreen},
         Event: {screen: EventScreen},
         // Sport: {screen: SportsMockScreen},
     },
     {
         headerMode: "none"
-    });
+    }
+)
 
 const SportStack = StackNavigator({
         Spring: {screen: TabbedSportScreen},
@@ -45,16 +41,11 @@ const SportStack = StackNavigator({
     },
     {
         headerMode: "none"
-    });
+    }
+)
 
-const NavApp = DrawerNavigator(
+export const NavApp = DrawerNavigator(
     {
-        Test: {
-            screen: TopBarDemo2
-        },
-        Test2: {
-            screen: CollapsableScreen2
-        },
         Home: {
             screen: HomeStack
         },
@@ -73,10 +64,4 @@ const NavApp = DrawerNavigator(
         drawerWidth: 300,
         initialRouteName: "Home",
     }
-);
-
-const {UIManager} = NativeModules;
-
-UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-
-export default NavApp;
+)

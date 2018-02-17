@@ -34,7 +34,7 @@ const pendingUnsubscribes: Set<string> = new Set<string>()
 export function pushInitialize(store: Store<AppStore>, ...defaultSubscribe: string[]) {
     defaultSubscribe.forEach(topic => pendingSubscribes.add(topic))
 
-    socket.on("connect", (s) => {
+    socket.on("connect", (_) => {
         console.log("Socket connected");
         connected = true
         dispatchPending()

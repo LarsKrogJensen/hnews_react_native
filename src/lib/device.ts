@@ -1,9 +1,9 @@
 import {Dimensions, Platform} from "react-native";
 
-export enum Theme {
-    Light,
-    Dark
-}
+// export enum Theme {
+//     Light,
+//     Dark
+// }
 export enum Orientation {
     Landscape = "landscape",
     Portrait = "portrait"

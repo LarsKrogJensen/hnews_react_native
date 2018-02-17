@@ -17,7 +17,7 @@ interface State {
     orientation: Orientation
 }
 
-export default class Screen extends React.Component<Props, State> {
+export class Screen extends React.Component<Props, State> {
 
     constructor(props: Props, context: any) {
         super(props, context);
@@ -25,7 +25,6 @@ export default class Screen extends React.Component<Props, State> {
             orientation: orientation()
         }
     }
-
 
     render() {
         return (

@@ -6,7 +6,7 @@ interface Props {
     navigation: NavigationScreenProp<{}, {}>
 }
 
-export default class BetHistoryScreen extends React.Component<Props> {
+export class BetHistoryScreen extends React.Component<Props> {
 
     public render() {
         const {navigation} = this.props

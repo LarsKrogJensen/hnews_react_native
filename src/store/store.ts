@@ -37,13 +37,9 @@ const rootReducer: Reducer<AppStore> = combineReducers<AppStore>({
     searchStore: searchReducer
 })
 
-// const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-const store: Store<AppStore> = createStore(
+export const store: Store<AppStore> = createStore(
     rootReducer,
-    // applyMiddleware(thunk) // , reduxDevTools)
     composeWithDevTools(applyMiddleware(thunk))
 )
 
 pushInitialize(store, "ev", `${API.pushLang}.ev`)
-
-export default store

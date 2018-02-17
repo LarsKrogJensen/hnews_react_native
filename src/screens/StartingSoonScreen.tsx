@@ -4,7 +4,6 @@ import {
     ActivityIndicator,
     Animated,
     ListRenderItemInfo,
-    RefreshControl,
     SectionList,
     SectionListData,
     StyleSheet,
@@ -19,7 +18,7 @@ import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import * as SoonActions from "store/soon/actions"
-import {EventEntity} from "model/EventEntity";
+import {EventEntity} from "entity/EventEntity";
 import connectAppState from "components/hoc/AppStateRefresh";
 import Touchable from "components/Touchable";
 import {is, Set} from "immutable"
@@ -59,7 +58,7 @@ interface DateSection extends SectionListData<EventEntity> {
 
 const AnimatedSectionList: SectionList<EventEntity> = Animated.createAnimatedComponent(SectionList);
 
-class StartingSoonScreen extends React.Component<ComponentProps, State> {
+class StartingSoonComponent extends React.Component<ComponentProps, State> {
 
     constructor(props: ComponentProps) {
         super(props);
@@ -105,7 +104,6 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
     }
 
     private renderBody = (scrollHooks: ScrollHooks) => {
-        // console.log("RENDERING STARTING SOON")
         const {loading} = this.props;
         const {expanded, sections} = this.state
 
@@ -132,10 +130,6 @@ class StartingSoonScreen extends React.Component<ComponentProps, State> {
                 renderItem={this.renderItem}
             />
         )
-    }
-
-    private onRefresh = () => {
-        this.props.loadData(true)
     }
 
     private hasPropsChanges = (nextProps: ComponentProps, props: ComponentProps): boolean => {
@@ -292,9 +286,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => (
 )
 
 const WithAppStateRefresh: ComponentClass<ComponentProps> =
-    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(StartingSoonScreen))
+    connectAppState((props: ComponentProps, incrementalLoad: boolean) => props.loadData(!incrementalLoad))(withOrientationChange(StartingSoonComponent))
 
-export const LiveEventsWithData: ComponentClass<ExternalProps> =
+export const StartingSoonScreen: ComponentClass<ExternalProps> =
     connect<StateProps, DispatchProps, ExternalProps>(mapStateToProps, mapDispatchToProps)(WithAppStateRefresh)
 
-export default LiveEventsWithData

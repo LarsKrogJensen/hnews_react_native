@@ -4,7 +4,6 @@ import {Text, View, ViewStyle} from "react-native";
 import {NavigationScreenProp} from "react-navigation";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import {CircularProgress} from 'react-native-circular-progress';
 import {Card} from "components/Card";
 import {HighlightItem} from "components/HighlightItem";
 
@@ -74,7 +73,7 @@ const bodyStyle: ViewStyle = {
     alignItems: "stretch"
 }
 
-const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
+const mapStateToProps = (state: AppStore): StateProps => ({
     events: state.landingStore.highlights.events
 })
 
