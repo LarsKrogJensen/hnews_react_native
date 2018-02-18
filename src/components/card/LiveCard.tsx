@@ -6,11 +6,13 @@ import {EventEntity} from "entity/EventEntity";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
 import {MatchClockItem} from "components/MatchClockItem";
-import {Card} from "components/Card";
+import {Card} from "components/card/Card";
 import {EventPathItem} from "components/event/EventPathItem";
 import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {LiveCardScore} from "components/card/LiveCardScore";
 import {navigate} from "lib/navigate";
+import deepEqual from "deep-equal";
+import {objectPropEquals} from "lib/compareProp";
 
 
 interface ExternalProps {
@@ -19,30 +21,37 @@ interface ExternalProps {
 }
 
 interface StateProps {
-    event: EventEntity,
+    event?: EventEntity,
 }
 
 type Props = StateProps & ExternalProps
 
 class LiveCardComponent extends React.Component<Props> {
 
+    shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (!objectPropEquals(nextProps.event, this.props.event, e => e!.mainBetOfferId)) return true
+
+        return false
+    }
+
     public render() {
-        const {event} = this.props
+        const {event, navigation} = this.props
         if (!event) {
             return null
         }
 
         return (
-            <Card onPress={() => navigate(this.props.navigation, "Event", {eventId: this.props.eventId})}>
+            <Card onPress={this.handleClick}>
                 <View>
                     {this.renderHeader(event)}
-                    {this.renderBody()}
+                    {this.renderBody(event, navigation)}
                 </View>
             </Card>
         )
     }
 
-    private renderHeader(event: EventEntity) {
+    private renderHeader = (event: EventEntity) => {
         return (
             <View style={styles.header}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={styles.liveText}>Live</Text>
@@ -56,15 +65,19 @@ class LiveCardComponent extends React.Component<Props> {
         )
     }
 
-    private renderBody() {
-        const {eventId, navigation, event} = this.props;
+    private renderBody = (event, navigation) => {
 
         return (
             <View style={styles.body}>
-                <LiveCardScore eventId={eventId} navigation={navigation}/>
-                {event.mainBetOfferId && <DefaultBetOfferItem betofferId={event.mainBetOfferId} navigation={navigation}/>}
+                <LiveCardScore eventId={event.id} navigation={navigation}/>
+                {event.mainBetOfferId &&
+                <DefaultBetOfferItem betofferId={event.mainBetOfferId} navigation={navigation}/>}
             </View>
         )
+    }
+
+    private handleClick = () => {
+        navigate(this.props.navigation, "Event", {eventId: this.props.eventId})
     }
 }
 

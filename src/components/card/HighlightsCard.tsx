@@ -4,21 +4,29 @@ import {Text, View, ViewStyle} from "react-native";
 import {NavigationScreenProp} from "react-navigation";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
-import {Card} from "components/Card";
-import {HighlightItem} from "components/HighlightItem";
-
+import {Card} from "components/card/Card";
+import {HighlightItem} from "components/card/HighlightItem"
+import deepEqual from "deep-equal"
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>,
 }
 
 interface StateProps {
-    events: number[]
+    eventIds: number[]
 }
 
 type Props = StateProps & ExternalProps
 
 class HighlightsCardComponent extends React.Component<Props> {
+
+    shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+        if (nextProps.eventIds.length !== this.props.eventIds.length) return true
+        if (!deepEqual(nextProps.eventIds, this.props.eventIds, {strict: true})) return true
+
+        return false
+    }
+
     public render() {
         return (
             <Card>
@@ -30,7 +38,7 @@ class HighlightsCardComponent extends React.Component<Props> {
         )
     }
 
-    private renderHeader() {
+    private renderHeader = () => {
         return (
             <View style={headerStyle}>
                 <Text style={{fontWeight: "500", flex: 1, color: "#333333"}}>HIGHLIGHTS</Text>
@@ -38,14 +46,15 @@ class HighlightsCardComponent extends React.Component<Props> {
         )
     }
 
-    private renderBody() {
-        const {events, navigation} = this.props;
+    private renderBody = () => {
+        const {eventIds, navigation} = this.props;
 
         const elements: React.ReactNode[] = []
         let count = 0;
-        for (let eventId of events) {
+        for (let eventId of eventIds) {
             if (count++ > 0) {
-                elements.push(<View key={`sep-${eventId}`} style={{borderBottomColor: 'rgba(0, 0, 0, 0.12)', borderBottomWidth: 1}}/>)
+                elements.push(<View key={`sep-${eventId}`}
+                                    style={{borderBottomColor: 'rgba(0, 0, 0, 0.12)', borderBottomWidth: 1}}/>)
             }
             elements.push(<HighlightItem key={eventId} navigation={navigation} eventId={eventId}/>)
 
@@ -74,7 +83,7 @@ const bodyStyle: ViewStyle = {
 }
 
 const mapStateToProps = (state: AppStore): StateProps => ({
-    events: state.landingStore.highlights.events
+    eventIds: state.landingStore.highlights.events || []
 })
 
 export const HighlightsCard: ComponentClass<ExternalProps> =

@@ -34,7 +34,23 @@ class MatchClockComponent extends React.Component<Props, State> {
         }
     }
 
-    componentWillMount(): void {
+    shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (nextProps.matchClock && !this.props.matchClock) return true
+        if (!nextProps.matchClock && this.props.matchClock) return true
+        if (nextProps.matchClock && this.props.matchClock) {
+            const mcNext = nextProps.matchClock
+            const mcThis = this.props.matchClock
+            if (mcNext.running !== mcThis.running) return true
+            if (mcNext.disabled !== mcThis.disabled) return true
+            if (mcNext.minute !== this.state.minute) return true
+            if (mcNext.second !== this.state.second) return true
+        }
+
+        return false
+    }
+
+    componentDidMount(): void {
         if (this.props.matchClock && this.props.matchClock.running) {
             this.timer = setInterval(this.increment, 1000);
         }

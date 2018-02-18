@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Card} from "components/Card";
+import {Card} from "components/card/Card";
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "entity/EventEntity";
@@ -10,6 +10,7 @@ import {EventPathItem} from "components/event/EventPathItem";
 import CountDown from "components/CountDown";
 import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {navigate} from "lib/navigate";
+import {objectPropEquals} from "lib/compareProp";
 
 interface ExternalProps {
     eventId: number
@@ -23,12 +24,21 @@ interface StateProps {
 type Props = StateProps & ExternalProps
 
 class StartingSoonCardComponent extends React.Component<Props> {
+
+    shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (!objectPropEquals(nextProps.event, this.props.event, e => e!.mainBetOfferId)) return true
+
+        return false
+    }
+
+
     public render() {
         const {event, navigation} = this.props
         if (!event) return null
 
         return (
-            <Card onPress={() => navigate(this.props.navigation, "Event", {eventId: this.props.eventId})}>
+            <Card onPress={this.handleClick}>
                 <View>
                     {this.renderHeader(event)}
                     {this.renderBody(event, navigation)}
@@ -37,7 +47,7 @@ class StartingSoonCardComponent extends React.Component<Props> {
         )
     }
 
-    private renderHeader(event: EventEntity) {
+    private renderHeader = (event: EventEntity) => {
         return (
             <View style={styles.header}>
                 <Text style={styles.headerText}>STARTING SOON</Text>
@@ -46,7 +56,7 @@ class StartingSoonCardComponent extends React.Component<Props> {
         )
     }
 
-    private renderBody(event: EventEntity, navigation: NavigationScreenProp<{}, {}>) {
+    private renderBody = (event: EventEntity, navigation: NavigationScreenProp<{}, {}>) => {
         return (
             <View style={styles.body}>
                 <Text style={styles.eventTitle}>{event.name}</Text>
@@ -55,6 +65,10 @@ class StartingSoonCardComponent extends React.Component<Props> {
                 <DefaultBetOfferItem betofferId={event.mainBetOfferId} navigation={navigation}/>}
             </View>
         )
+    }
+
+    private handleClick = () => {
+        navigate(this.props.navigation, "Event", {eventId: this.props.eventId})
     }
 }
 

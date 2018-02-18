@@ -9,7 +9,7 @@ import {loadLanding} from "store/landing/actions";
 import {EventCollection} from "store/landing/reducer";
 import connectAppState from "components/hoc/AppStateRefresh";
 import {StartingSoonCard} from "components/card/StartingSoonCard";
-import {TrendingCard} from "components/TrendingCard";
+import {TrendingCard} from "components/card/TrendingCard";
 import {LiveCard} from "components/card/LiveCard";
 import {HighlightsCard} from "components/card/HighlightsCard";
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen"

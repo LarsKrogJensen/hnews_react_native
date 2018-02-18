@@ -5,6 +5,7 @@ import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {MatchClockItem} from "components/MatchClockItem";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
+import deepEqual from "deep-equal";
 
 interface ExternalProps {
     eventId: number
@@ -14,7 +15,7 @@ interface ExternalProps {
 
 interface StateProps {
     score?: Score
-    eventStats?: EventStats
+    statistics?: EventStats
 }
 
 interface GameSummary {
@@ -26,16 +27,24 @@ interface GameSummary {
 
 type Props = ExternalProps & StateProps
 
-class EventScoreComponent extends React.PureComponent<Props> {
+class EventScoreComponent extends React.Component<Props> {
+
+    shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (!deepEqual(nextProps.statistics, this.props.statistics, {strict: true})) return true
+        if (!deepEqual(nextProps.score, this.props.score, {strict: true})) return true
+
+        return false
+    }
 
     public render() {
-        const {eventId, score, eventStats: stats} = this.props
+        const {eventId, score, statistics} = this.props
         const sport = this.props.sport
 
-        if (stats && stats.football && score) {
+        if (statistics && statistics.football && score) {
             return this.renderFootball(score, eventId)
-        } else if (stats && stats.sets && score) {
-            return this.renderSetBased(stats, score, sport === "TENNIS")
+        } else if (statistics && statistics.sets && score) {
+            return this.renderSetBased(statistics, score, sport === "TENNIS")
         } else if (score) {
             return this.renderFootball(score, eventId)
         }
@@ -137,7 +146,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     score: state.statsStore.scores.get(inputProps.eventId),
-    eventStats: state.statsStore.statistics.get(inputProps.eventId)
+    statistics: state.statsStore.statistics.get(inputProps.eventId)
 })
 
 export const EventScoreItem: ComponentClass<ExternalProps> =

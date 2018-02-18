@@ -24,7 +24,9 @@ type Props = StateProps & DispatchProps & ExternalProps
 
 class FavoriteItem extends React.Component<Props> {
 
-    shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
+    shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+
         return this.props.isFavorite !== nextProps.isFavorite
     }
 

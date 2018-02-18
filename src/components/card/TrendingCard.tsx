@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ComponentClass} from "react"
-import {Card} from "components/Card";
+import {Card} from "components/card/Card";
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 import {NavigationScreenProp} from "react-navigation";
 import {EventEntity} from "entity/EventEntity";
@@ -10,6 +10,7 @@ import {EventPathItem} from "components/event/EventPathItem";
 import {formatDateTime} from "lib/dates";
 import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {navigate} from "lib/navigate";
+import {objectPropEquals} from "lib/compareProp";
 
 interface ExternalProps {
     eventId: number
@@ -23,11 +24,18 @@ interface StateProps {
 type Props = StateProps & ExternalProps
 
 class TrendingCardComponent extends React.Component<Props> {
+    shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (!objectPropEquals(nextProps.event, this.props.event, e => e!.mainBetOfferId)) return true
+
+        return false
+    }
+
     public render() {
         const {event, navigation} = this.props
         if (!event) return null
         return (
-            <Card onPress={() => navigate(this.props.navigation, "Event", {eventId: this.props.eventId})}>
+            <Card onPress={this.handleClick}>
                 <View>
                     {this.renderHeader(event)}
                     {this.renderBody(event, navigation)}
@@ -36,7 +44,7 @@ class TrendingCardComponent extends React.Component<Props> {
         )
     }
 
-    private renderHeader(event: EventEntity) {
+    private renderHeader = (event: EventEntity) => {
         const {date, time} = formatDateTime(event.start)
         return (
             <View style={styles.header}>
@@ -46,15 +54,18 @@ class TrendingCardComponent extends React.Component<Props> {
         )
     }
 
-    private renderBody(event: EventEntity, navigation: NavigationScreenProp<{}, {}>) {
+    private renderBody = (event: EventEntity, navigation: NavigationScreenProp<{}, {}>) => {
         return (
             <View style={styles.body}>
                 <Text style={styles.eventTitle}>{event.name}</Text>
-                <EventPathItem path={event.path} style={{marginBottom: 8, marginTop: 4, alignSelf: "center"}}/>
+                <EventPathItem path={event.path} style={styles.path}/>
                 {event.mainBetOfferId &&
                 <DefaultBetOfferItem betofferId={event.mainBetOfferId} navigation={navigation}/>}
             </View>
         )
+    }
+    private handleClick = () => {
+        navigate(this.props.navigation, "Event", {eventId: this.props.eventId})
     }
 }
 
@@ -78,6 +89,11 @@ const styles = StyleSheet.create({
         marginTop: 8,
         textAlign: "center"
     } as TextStyle,
+    path: {
+        marginBottom: 8,
+        marginTop: 4,
+        alignSelf: "center"
+    } as ViewStyle,
     body: {
         padding: 8,
         justifyContent: "center",

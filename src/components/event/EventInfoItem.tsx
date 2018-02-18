@@ -7,6 +7,7 @@ import {EventEntity} from "entity/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import EventTimeItem from "components/event/EventTimeItem";
+import {objectPropEquals} from "lib/compareProp";
 
 interface ExternalProps {
     eventId: number,
@@ -20,7 +21,15 @@ interface StateProps {
 
 type Props = StateProps & ExternalProps
 
-class EventInfoItemComponent extends React.PureComponent<Props> {
+class EventInfoItemComponent extends React.Component<Props> {
+
+    shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (!objectPropEquals(nextProps.event, this.props.event, e => e.state)) return true
+
+        return false
+    }
+
     public render() {
         const {event, viewStyle, showFavorites} = this.props;
 

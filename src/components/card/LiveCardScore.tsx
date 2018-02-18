@@ -8,7 +8,7 @@ import {AppStore} from "store/store";
 import {EventStats, Score} from "api/typings";
 import {renderServe, renderTeamColors} from "components/RenderUtils";
 import {MatchClockItem} from "components/MatchClockItem";
-
+import deepEqual from "deep-equal";
 
 interface ExternalProps {
     eventId: number
@@ -27,6 +27,14 @@ interface StateProps {
 type Props = StateProps & ExternalProps
 
 export class LiveCardScoreComponent extends React.Component<Props> {
+
+    shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (!deepEqual(nextProps.statistics, this.props.statistics, {strict: true})) return true
+        if (!deepEqual(nextProps.score, this.props.score, {strict: true})) return true
+
+        return false
+    }
 
     public render() {
         const {event, statistics, score, asHeader, style, showMatchClock} = this.props;
@@ -50,7 +58,7 @@ export class LiveCardScoreComponent extends React.Component<Props> {
                     </View>
                 </View>
                 {this.renderScoreColumns(event.id, statistics, score)}
-                {showMatchClock && this.renderMatchClock(event)}
+                {showMatchClock && this.renderMatchClock(event.id)}
             </View>
         )
     }
@@ -96,9 +104,9 @@ export class LiveCardScoreComponent extends React.Component<Props> {
         return null;
     }
 
-    private renderMatchClock(event: EventEntity) {
+    private renderMatchClock(eventId: number) {
         return (
-            <MatchClockItem eventId={event.id} style={{marginLeft: 8, alignSelf: "center"}} asHeader/>
+            <MatchClockItem eventId={eventId} style={{marginLeft: 8, alignSelf: "center"}} asHeader/>
         )
     }
 }
@@ -134,7 +142,6 @@ const styles = StyleSheet.create({
     } as ViewStyle
 
 })
-
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     event: state.entityStore.events.get(inputProps.eventId),

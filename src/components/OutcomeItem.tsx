@@ -12,6 +12,7 @@ import {BetOfferEntity} from "entity/BetOfferEntity";
 import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
 import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
 import Snackbar from "react-native-snackbar";
+import {objectPropEquals} from "lib/compareProp";
 
 
 interface ExternalProps {
@@ -45,17 +46,16 @@ class OutcomeItem extends React.Component<Props, State> {
 
     private timer?: number;
 
-
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
         if (nextProps.outcomeId !== this.props.outcomeId) return true
         if (nextProps.orientation !== this.props.orientation) return true
-        if (nextProps.outcome.odds !== this.props.outcome.odds) return true
-        if (nextProps.betOffer !== this.props.betOffer) return true
-        if (nextProps.betOffer.suspended !== this.props.betOffer.suspended) return true
+        if (!objectPropEquals(nextProps.outcome, this.props.outcome, (o) => o.odds)) return true
+        if (!objectPropEquals(nextProps.betOffer, this.props.betOffer, (bo) => bo.suspended)) return true
         if (nextState.oddsChange !== this.state.oddsChange) return true
 
         return false
     }
+
 
     componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
         if (this.timer) {

@@ -8,6 +8,7 @@ import {EventStats} from "api/typings";
 import {renderServe} from "components/RenderUtils";
 import {connect} from "react-redux";
 import {AppStore} from "store/store";
+import deepEqual from "deep-equal"
 
 interface ExternalProps {
     style: ViewStyle
@@ -23,6 +24,15 @@ interface StateProps {
 type Props = ExternalProps & StateProps
 
 class EventDetailsComponent extends React.Component<Props> {
+
+    shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+        if (nextProps.eventId !== this.props.eventId) return true
+        if (!nextProps.event && this.props.event) return true
+        if (nextProps.event && !this.props.event) return true
+        if (!deepEqual(nextProps.statistics, this.props.statistics, {strict: true})) return true
+
+        return false
+    }
 
     public render() {
         const {event, style, statistics} = this.props;
