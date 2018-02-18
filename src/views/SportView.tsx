@@ -25,6 +25,7 @@ import {is, Set} from "immutable";
 import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {formatDateTime} from "lib/dates";
+import {arrayEquals} from "lib/equallity";
 
 
 interface ExternalProps {
@@ -86,12 +87,9 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         if (nextProps.sport !== this.props.sport) return true
         if (nextProps.league !== this.props.league) return true
         if (nextProps.participant !== this.props.participant) return true
-        if (nextProps.events.length !== this.props.events.length) {
-            // console.log("length diff: " + nextProps.events.length + " old " + this.props.events.length)
-            return true
-        }
-        if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) {
-            // console.log("Ids diffing")
+        if (!arrayEquals(nextProps.events, this.props.events, e => e.id)) {
+            console.log("Sportsview event diff: " + nextProps.events.length + " old " + this.props.events.length)
+            // console.log(JSON.stringify(nextProps.events.map()))
             return true
         }
         if (!is(nextState.expanded, this.state.expanded)) return true
@@ -116,16 +114,14 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
             nextProps.loadData(true)
         }
         if (!nextProps.loading &&
-            (nextProps.league !== this.props.league ||
-                nextProps.events.length !== this.props.events.length ||
-                nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join())
+            (nextProps.league !== this.props.league || !arrayEquals(nextProps.events, this.props.events))
         ) {
             this.prepareData(nextProps.events)
         }
     }
 
     public render() {
-        // console.log("Render SportView")
+        console.log("Render SportView")
 
         const {loading} = this.props;
         const {sections, expanded} = this.state
@@ -157,7 +153,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         )
     }
 
-    private prepareData(events: EventEntity[]) {
+    private prepareData = (events: EventEntity[]) => {
         const groupByLeague = this.props.league === "all"
         const sections = this.groupEvents(events,
             groupByLeague ? this.groupByLeague : this.groupByDate,
@@ -186,7 +182,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         }))
     }
 
-    private groupEvents(events: EventEntity[], groupBy: GroupBy, sortBy: SortBy): SportSection[] {
+    private groupEvents = (events: EventEntity[], groupBy: GroupBy, sortBy: SortBy): SportSection[] => {
         const sections: SportSection[] = []
 
         for (let event of events) {
@@ -199,7 +195,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         return sections.sort(sortBy)
     }
 
-    private groupByDate(event: EventEntity, sections: SportSection[]): SportSection {
+    private groupByDate = (event: EventEntity, sections: SportSection[]): SportSection => {
 
         const date = new Date(event.start)
         const isEventLive = event.state === "STARTED"
@@ -229,7 +225,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         return section
     }
 
-    private groupByLeague(event: EventEntity, sections: SportSection[]): SportSection {
+    private groupByLeague = (event: EventEntity, sections: SportSection[]): SportSection => {
 
         const date = new Date(event.start)
         const isEventLive = event.state === "STARTED"
@@ -294,7 +290,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
 
     private renderSectionHeader = (info: { section: SportSection }) => {
         const section = info.section
-        console.log("Render Header: " + section.key)
+        console.log("Render Header: ") // + section.key)
         return <SectionHeader key={section.key} section={section} toggleSection={this.toggleSection}/>
     }
 

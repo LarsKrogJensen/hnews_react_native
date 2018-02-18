@@ -25,6 +25,7 @@ import {is, Set} from "immutable"
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {formatDateTime} from "lib/dates";
+import {arrayEquals} from "lib/equallity";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -73,7 +74,7 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
-        if (this.hasPropsChanges(nextProps, this.props)) return true
+        if (!arrayEquals(nextProps.events, this.props.events, e => e.id)) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
         // noinspection RedundantIfStatementJS
         if (nextProps.orientation !== this.props.orientation) return true;
@@ -89,7 +90,7 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
     }
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
-        if (!nextProps.loading && this.hasPropsChanges(nextProps, this.props)) {
+        if (!nextProps.loading && !arrayEquals(nextProps.events, this.props.events, e => e.id)) {
             this.prepareData(nextProps.events)
         }
     }
@@ -131,12 +132,6 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
             />
         )
     }
-
-    private hasPropsChanges = (nextProps: ComponentProps, props: ComponentProps): boolean => {
-        return nextProps.events.length !== props.events.length ||
-            nextProps.events.map(e => e.id).join() !== props.events.map(e => e.id).join()
-    }
-
 
     private renderItem = (info: ListRenderItemInfo<EventEntity>) => {
         const {orientation, navigation} = this.props

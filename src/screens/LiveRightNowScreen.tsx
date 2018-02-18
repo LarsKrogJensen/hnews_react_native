@@ -22,6 +22,7 @@ import {EventEntity} from "entity/EventEntity";
 import Touchable from "components/Touchable";
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
+import {arrayEquals} from "lib/equallity";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -67,8 +68,7 @@ class LiveRightNowComponent extends React.Component<ComponentProps, State> {
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
-        if (nextProps.events.length !== this.props.events.length) return true
-        if (nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join()) return true
+        if (!arrayEquals(nextProps.events, this.props.events)) return true
         if (!is(nextProps.favorites, this.props.favorites)) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
         if (nextProps.orientation !== this.props.orientation) return true;
@@ -84,8 +84,7 @@ class LiveRightNowComponent extends React.Component<ComponentProps, State> {
 
     componentWillReceiveProps(nextProps: Readonly<ComponentProps>, nextContext: any): void {
         if (!nextProps.loading && (
-                nextProps.events.length !== this.props.events.length ||
-                nextProps.events.map(e => e.id).join() !== this.props.events.map(e => e.id).join() ||
+                !arrayEquals(nextProps.events, this.props.events, e => e.id) ||
                 !is(nextProps.favorites, this.props.favorites))
         ) {
             this.prepareData(nextProps.events, nextProps.groups, nextProps.favorites)
@@ -131,7 +130,7 @@ class LiveRightNowComponent extends React.Component<ComponentProps, State> {
             />
         )
     }
-    
+
     private renderItem = (info: ListRenderItemInfo<EventEntity>) => {
         const event: EventEntity = info.item;
 
@@ -174,7 +173,7 @@ class LiveRightNowComponent extends React.Component<ComponentProps, State> {
     private prepareData = (events: EventEntity[],
                            groups: EventGroup[],
                            favorites: Set<number>) => {
-        
+
         const sections: LiveSection[] = groups.map(group => ({
             title: group.name,
             sport: group.sport,
@@ -196,7 +195,7 @@ class LiveRightNowComponent extends React.Component<ComponentProps, State> {
                 data: []
             })
         }
-        
+
         for (let sec of sections) {
             sec.count = sec.events.length
         }

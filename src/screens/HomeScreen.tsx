@@ -15,6 +15,7 @@ import {HighlightsCard} from "components/card/HighlightsCard";
 import {CollapsableHeaderScreen, NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen"
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
 import {Orientation} from "lib/device";
+import {arrayEquals} from "lib/equallity";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>
@@ -49,18 +50,12 @@ class HomeScreenComponent extends React.Component<ComponentProps> {
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true;
         if (nextProps.orientation !== this.props.orientation) return true;
-        if (nextProps.liveRightNow.events.length !== this.props.liveRightNow.events.length) return true;
-        if (nextProps.popular.events.length !== this.props.popular.events.length) return true;
-        if (nextProps.shocker.events.length !== this.props.shocker.events.length) return true;
-        if (nextProps.nextOff.events.length !== this.props.nextOff.events.length) return true;
-        if (nextProps.startingSoon.events.length !== this.props.startingSoon.events.length) return true;
-        if (nextProps.highlights.events.length !== this.props.highlights.events.length) return true;
-
-        if (nextProps.popular.events.join() !== this.props.popular.events.join()) return true;
-        if (nextProps.shocker.events.join() !== this.props.shocker.events.join()) return true;
-        if (nextProps.nextOff.events.join() !== this.props.nextOff.events.join()) return true;
-        if (nextProps.startingSoon.events.join() !== this.props.startingSoon.events.join()) return true;
-        if (nextProps.highlights.events.join() !== this.props.highlights.events.join()) return true;
+        if (!arrayEquals(nextProps.liveRightNow.events, this.props.liveRightNow.events)) return true;
+        if (!arrayEquals(nextProps.popular.events, this.props.popular.events)) return true;
+        if (!arrayEquals(nextProps.shocker.events, this.props.shocker.events)) return true;
+        if (!arrayEquals(nextProps.nextOff.events,  this.props.nextOff.events)) return true;
+        if (!arrayEquals(nextProps.startingSoon.events, this.props.startingSoon.events)) return true;
+        if (!arrayEquals(nextProps.highlights.events, this.props.highlights.events)) return true;
 
         return false
     }

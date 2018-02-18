@@ -12,7 +12,7 @@ import {BetOfferEntity} from "entity/BetOfferEntity";
 import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
 import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
 import Snackbar from "react-native-snackbar";
-import {objectPropEquals} from "lib/compareProp";
+import {objectPropEquals} from "lib/equallity";
 
 
 interface ExternalProps {

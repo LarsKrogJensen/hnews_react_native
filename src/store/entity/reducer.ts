@@ -156,7 +156,7 @@ function mergeLiveEvents(state: Map<number, EventEntity>, events: LiveEvent[]): 
 
         state = state.set(liveEvent.event.id, {
             ...liveEvent.event,
-            mainBetOfferId: liveEvent.mainBetOffer && liveEvent.mainBetOffer.id,
+            mainBetOfferId: liveEvent.mainBetOffer && liveEvent.mainBetOffer.id || eventEntity && eventEntity.mainBetOfferId,
             betOffers: eventEntity && eventEntity.betOffers || []
         })
     }
@@ -170,7 +170,7 @@ function mergeEventWithBetOffers(state: Map<number, EventEntity>, events: EventW
 
         state = state.set(landingEvent.event.id, {
             ...landingEvent.event,
-            mainBetOfferId: landingEvent.betOffers && landingEvent.betOffers[0] && landingEvent.betOffers[0].id,
+            mainBetOfferId: landingEvent.betOffers && landingEvent.betOffers[0] && landingEvent.betOffers[0].id || eventEntity && eventEntity.mainBetOfferId,
             betOffers: eventEntity && eventEntity.betOffers || []
         })
     }

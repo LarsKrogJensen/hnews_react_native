@@ -28,10 +28,11 @@ import {BetOfferCategory, BetOfferType, Criterion} from "api/typings";
 import {loadBetOfferCategories} from "store/groups/actions";
 import {BetOfferTypes} from "components/betoffer/BetOfferTypes";
 import {BetOfferGroupItem} from "components/betoffer/BetOfferGroupItem";
-import * as _ from "lodash"
+import {flatMap} from "lodash"
 import {withPush} from "components/hoc/withPush";
 import {API} from "store/API";
 import connectAppState from "components/hoc/AppStateRefresh";
+import {arrayEquals} from "lib/equallity";
 
 
 interface ExternalProps {
@@ -92,8 +93,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<ComponentState>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
         if (nextProps.eventId !== this.props.eventId) return true
-        if (nextProps.betOffers.length !== this.props.betOffers.length) return true
-        if (nextProps.betOffers.map(e => e.id).join() !== this.props.betOffers.map(e => e.id).join()) return true
+        if (!arrayEquals(nextProps.betOffers, this.props.betOffers, bo => bo.id)) return true
         if (nextProps.event.state !== this.props.event.state) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
         if (nextProps.orientation !== this.props.orientation) return true;
@@ -121,8 +121,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
                 nextProps.categories.length !== this.props.categories.length ||
                 nextProps.selectedCategories.length !== this.props.selectedCategories.length ||
                 nextProps.instantCategories.length !== this.props.instantCategories.length ||
-                nextProps.betOffers.length !== this.props.betOffers.length ||
-                nextProps.betOffers.map(e => e.id).join() !== this.props.betOffers.map(e => e.id).join())
+                !arrayEquals(nextProps.betOffers, this.props.betOffers, bo => bo.id))
         ) {
             this.prepareData(nextProps.betOffers, nextProps.categories, nextProps.selectedCategories, nextProps.instantCategories)
         }
@@ -171,7 +170,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
                     count: 0
                 }
             ))
-            .map(section => ({...section, count: _.flatMap(section.betOfferGroups.map(g => g.betoffers)).length}))
+            .map(section => ({...section, count: flatMap(section.betOfferGroups.map(g => g.betoffers)).length}))
             .filter(section => section.betOfferGroups.length)
 
         if (!!instant.length) {
@@ -326,7 +325,7 @@ class EventMarketsViewComponent extends React.Component<ComponentProps, Componen
                 <BetOfferGroupItem eventId={this.props.eventId}
                                    type={group.type}
                                    betOfferIds={group.betoffers.map(bo => bo.id)}
-                                   outcomes={_.flatMap(group.betoffers.map(bo => bo.outcomes))}/>
+                                   outcomeIds={flatMap(group.betoffers.map(bo => bo.outcomes))}/>
             )
         }
 

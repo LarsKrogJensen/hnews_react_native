@@ -7,7 +7,7 @@ import {EventEntity} from "entity/EventEntity";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import EventTimeItem from "components/event/EventTimeItem";
-import {objectPropEquals} from "lib/compareProp";
+import {objectPropEquals} from "lib/equallity";
 
 interface ExternalProps {
     eventId: number,

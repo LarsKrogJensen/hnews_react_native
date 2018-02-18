@@ -10,7 +10,7 @@ import {EventPathItem} from "components/event/EventPathItem";
 import {formatDateTime} from "lib/dates";
 import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {navigate} from "lib/navigate";
-import {objectPropEquals} from "lib/compareProp";
+import {objectPropEquals} from "lib/equallity";
 
 interface ExternalProps {
     eventId: number

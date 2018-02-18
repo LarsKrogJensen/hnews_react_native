@@ -9,7 +9,7 @@ import {EventPathItem} from "components/event/EventPathItem";
 import Touchable from "components/Touchable";
 import {formatDateTime} from "lib/dates";
 import {navigate} from "lib/navigate";
-import {objectPropEquals} from "lib/compareProp";
+import {objectPropEquals} from "lib/equallity";
 
 interface ExternalProps {
     navigation: NavigationScreenProp<{}, {}>,

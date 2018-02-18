@@ -12,7 +12,7 @@ import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {LiveCardScore} from "components/card/LiveCardScore";
 import {navigate} from "lib/navigate";
 import deepEqual from "deep-equal";
-import {objectPropEquals} from "lib/compareProp";
+import {objectPropEquals} from "lib/equallity";
 
 
 interface ExternalProps {

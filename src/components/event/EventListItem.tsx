@@ -10,7 +10,7 @@ import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {DefaultBetOfferItem} from "components/betoffer/DefaultBetOfferItem";
 import {navigate} from "lib/navigate";
-import {objectPropEquals} from "lib/compareProp";
+import {objectPropEquals} from "lib/equallity";
 
 
 interface ExternalProps {
@@ -31,7 +31,10 @@ class EventListItem extends React.Component<Props> {
     public shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (nextProps.eventId !== this.props.eventId) return true
         if (nextProps.orientation !== this.props.orientation) return true
-        if (!objectPropEquals(nextProps.event, this.props.event, e => e.mainBetOfferId)) return true
+        if (!objectPropEquals(nextProps.event, this.props.event, e => e.mainBetOfferId)) {
+            console.log("main bo differs..?: " + nextProps.event.mainBetOfferId + ":" + this.props.event.mainBetOfferId)
+            return true
+        }
 
         return false
     }
@@ -40,7 +43,7 @@ class EventListItem extends React.Component<Props> {
         const {event, orientation, navigation} = this.props
         const viewStyle = orientation === Orientation.Portrait ? styles.portrait : styles.landscape;
 
-        // console.log("Rendering EventListItem")
+        console.log("Rendering EventListItem")
         return (
             <Touchable onPress={this.handleItemClick}>
                 <View style={[styles.item, viewStyle]}>

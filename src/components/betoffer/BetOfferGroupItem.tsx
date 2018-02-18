@@ -19,9 +19,10 @@ import {ThreeWayHandicapBetOfferGroupItem} from "components/betoffer/ThreeWayHan
 import {HandicapBetOfferGroupItem} from "components/betoffer/HandicapBetOfferGroupItem";
 import {YesNoBetOfferGroupItem} from "components/betoffer/YesNoBetOfferGroupItem";
 import {HeadToHeadBetOfferGroupItem} from "components/betoffer/HeadToHeadOfferGroupItem";
+import {arrayEquals} from "lib/equallity";
 
 interface ExternalProps {
-    outcomes: number[]
+    outcomeIds: number[]
     betOfferIds: number[],
     eventId: number,
     type: BetOfferType
@@ -38,7 +39,7 @@ type Props = StateProps & ExternalProps
 class BetOfferGroupComponent extends React.Component<Props> {
 
     shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
-        if (nextProps.outcomes.join() !== this.props.outcomes.join()) return true;
+        if (!arrayEquals(nextProps.outcomeIds, this.props.outcomeIds)) return true;
 
         return false
     }
@@ -79,7 +80,7 @@ class BetOfferGroupComponent extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
-    outcomes: inputProps.outcomes.map(outId => state.entityStore.outcomes.get(outId)).filter(o => o),
+    outcomes: inputProps.outcomeIds.map(outId => state.entityStore.outcomes.get(outId)).filter(o => o),
     betOffers: inputProps.betOfferIds.map(id => state.entityStore.betoffers.get(id)).filter(bo => bo),
     event: state.entityStore.events.get(inputProps.eventId)
 })
