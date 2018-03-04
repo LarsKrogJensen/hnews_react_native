@@ -20,7 +20,7 @@ import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
 import Touchable from "components/Touchable";
-import LiveEventListItem from "components/event/EventListItem";
+import {EventListItem} from "components/event/EventListItem";
 import {is, Set} from "immutable";
 import {NAVBAR_HEIGHT, ScrollHooks} from "screens/CollapsableHeaderScreen";
 import {OrientationProps, withOrientationChange} from "components/OrientationChange";
@@ -29,7 +29,7 @@ import {arrayEquals} from "lib/equallity";
 
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{ params: any }, {}>
+    navigation: NavigationScreenProp<{ params: any }>
     sport: string,
     region: string,
     league: string,
@@ -114,7 +114,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
             nextProps.loadData(true)
         }
         if (!nextProps.loading &&
-            (nextProps.league !== this.props.league || !arrayEquals(nextProps.events, this.props.events))
+            (nextProps.league !== this.props.league || !arrayEquals(nextProps.events, this.props.events, e => e.id))
         ) {
             this.prepareData(nextProps.events)
         }
@@ -148,10 +148,15 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
                 sections={sectionsView}
                 renderSectionHeader={this.renderSectionHeader}
                 keyExtractor={this.keyExtractor}
+                // getItemLayout={this.getItemLayout}
                 renderItem={this.renderItem}
             />
         )
     }
+
+    private getItemLayout = (data, index) => (
+        {length: 80, offset: 80 * index, index}
+    )
 
     private prepareData = (events: EventEntity[]) => {
         const groupByLeague = this.props.league === "all"
@@ -283,7 +288,7 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
         const {navigation, orientation} = this.props
         const event: EventEntity = info.item
         console.log("Render ListItem")
-        return <LiveEventListItem eventId={event.id}
+        return <EventListItem eventId={event.id}
                                   navigation={navigation}
                                   orientation={orientation}/>
     }
@@ -295,14 +300,16 @@ class SportViewComponent extends React.Component<ComponentProps, ComponentState>
     }
 
     private toggleSection = (key: string) => {
-        this.setState(prevState => {
-                let expanded: Set<string> = prevState.expanded
-                expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
-                return {
-                    expanded
+        requestAnimationFrame(() => {
+            this.setState(prevState => {
+                    let expanded: Set<string> = prevState.expanded
+                    expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
+                    return {
+                        expanded
+                    }
                 }
-            }
-        )
+            )
+        })
     }
 
     private keyExtractor = (event: EventEntity): string => {
@@ -385,6 +392,7 @@ function mapEvents(state: AppStore, key: string): EventEntity[] {
 
     return events
 }
+
 //
 // const getEventIds = (state: AppStore, props: ExternalProps): number[] => {
 //     let {sport, region, league, filter} = props

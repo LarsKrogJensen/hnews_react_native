@@ -9,7 +9,7 @@ import {HighlightItem} from "components/card/HighlightItem"
 import deepEqual from "deep-equal"
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>,
+    navigation: NavigationScreenProp<{}>,
 }
 
 interface StateProps {

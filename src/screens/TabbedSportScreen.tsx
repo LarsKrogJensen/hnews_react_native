@@ -5,7 +5,7 @@ import {Animated, Dimensions, StyleSheet, ViewStyle} from "react-native";
 import {SportScreen} from "screens/SportScreen";
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{ params: any }, {}>
+    navigation: NavigationScreenProp<{ params: any }>
 }
 
 const initialLayout = {

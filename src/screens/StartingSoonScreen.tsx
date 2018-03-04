@@ -13,7 +13,7 @@ import {
     ViewStyle
 } from "react-native"
 import {NavigationScreenProp} from "react-navigation";
-import LiveEventListItem from "components/event/EventListItem";
+import {EventListItem} from "components/event/EventListItem";
 import {AppStore} from "store/store";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
@@ -28,7 +28,7 @@ import {formatDateTime} from "lib/dates";
 import {arrayEquals} from "lib/equallity";
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{}>
 }
 
 interface DispatchProps {
@@ -76,7 +76,6 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
         if (nextProps.loading !== this.props.loading) return true
         if (!arrayEquals(nextProps.events, this.props.events, e => e.id)) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
-        // noinspection RedundantIfStatementJS
         if (nextProps.orientation !== this.props.orientation) return true;
 
         return false
@@ -96,6 +95,8 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
     }
 
     public render() {
+        console.log("SS ender body")
+
         return (
             <CollapsableHeaderScreen {...this.props}
                                      title={`Starting Soon`}
@@ -118,6 +119,7 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
 
         const sectionsView = sections.map(section => ({
             ...section,
+            // data: section.events
             data: expanded.has(section.key) ? section.events : []
         }));
 
@@ -137,9 +139,9 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
         const {orientation, navigation} = this.props
         const event: EventEntity = info.item;
 
-        return <LiveEventListItem eventId={event.id}
-                                  navigation={navigation}
-                                  orientation={orientation}/>
+        return <EventListItem eventId={event.id}
+                              navigation={navigation}
+                              orientation={orientation}/>
     }
 
     private renderSectionHeader = (info: { section: DateSection }) => {
@@ -155,7 +157,7 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
         }
 
         return (
-            <Touchable onPress={() => this.toggleSection(info.section.key)}>
+            <Touchable key={info.section.key} onPress={() => this.toggleSection(info.section.key)}>
                 <View style={styles.header}>
                     <Text style={styles.live}>{hour}</Text>
                     <Text style={styles.headerText}>{datum}</Text>
@@ -204,14 +206,18 @@ class StartingSoonComponent extends React.Component<ComponentProps, State> {
     }
 
     private toggleSection = (key: string) => {
-        this.setState(prevState => {
-                let expanded: Set<string> = prevState.expanded
-                expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
-                return {
-                    expanded
+
+        requestAnimationFrame(() => {
+            this.setState(prevState => {
+                    let expanded: Set<string> = prevState.expanded
+                    expanded = expanded.has(key) ? expanded.delete(key) : expanded.add(key)
+                    return {
+                        expanded
+                    }
                 }
-            }
-        )
+            )
+        })
+
     }
 
     private padHours = (hours: number): string => {
@@ -242,7 +248,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold"
     } as TextStyle,
-    headerText:  {
+    headerText: {
         fontSize: 16,
         fontWeight: "bold",
         marginLeft: 8,

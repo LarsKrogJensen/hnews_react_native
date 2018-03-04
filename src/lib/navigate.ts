@@ -1,7 +1,7 @@
 import {NavigationAction, NavigationParams, NavigationScreenProp} from "react-navigation";
 
 
-export function navigate(navigation: NavigationScreenProp<any, any>, routeName: string, params?: NavigationParams, action?: NavigationAction) {
+export function navigate(navigation: NavigationScreenProp<any>, routeName: string, params?: NavigationParams, action?: NavigationAction) {
     if (navigation) {
         try {
             navigation.navigate(routeName, params, action)
@@ -11,7 +11,7 @@ export function navigate(navigation: NavigationScreenProp<any, any>, routeName: 
     }
 }
 
-export function navigateBack(navigation: NavigationScreenProp<any, any>) {
+export function navigateBack(navigation: NavigationScreenProp<any>) {
     if (navigation) {
         try {
             navigation.goBack()
@@ -21,6 +21,6 @@ export function navigateBack(navigation: NavigationScreenProp<any, any>) {
     }
 }
 
-export function navigateDrawerOpen(navigation: NavigationScreenProp<any, any>) {
+export function navigateDrawerOpen(navigation: NavigationScreenProp<any>) {
     navigate(navigation, "DrawerOpen")
 }

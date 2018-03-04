@@ -18,7 +18,7 @@ import {Orientation} from "lib/device";
 import {arrayEquals} from "lib/equallity";
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{}>
 }
 
 interface StateProps {

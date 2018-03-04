@@ -36,7 +36,7 @@ import {arrayEquals} from "lib/equallity";
 
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{ params: any }, {}>
+    navigation: NavigationScreenProp<{ params: any }>
     eventId: number
     eventGroupid: number
     live: boolean

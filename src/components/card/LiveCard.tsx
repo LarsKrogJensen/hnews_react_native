@@ -17,7 +17,7 @@ import {objectPropEquals} from "lib/equallity";
 
 interface ExternalProps {
     eventId: number
-    navigation: NavigationScreenProp<{}, {}>,
+    navigation: NavigationScreenProp<{}>,
 }
 
 interface StateProps {

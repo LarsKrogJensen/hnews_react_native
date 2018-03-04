@@ -4,7 +4,7 @@ import {SportView} from "views/SportView";
 import {CollapsableHeaderScreen, ScrollHooks} from "screens/CollapsableHeaderScreen";
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{ params: any }, {}>
+    navigation: NavigationScreenProp<{ params: any }>
     sport: string
     region: string
     league: string

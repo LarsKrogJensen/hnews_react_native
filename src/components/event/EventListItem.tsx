@@ -16,8 +16,9 @@ import {objectPropEquals} from "lib/equallity";
 interface ExternalProps {
     eventId: number
     orientation: Orientation
-    navigation: NavigationScreenProp<{}, {}>,
+    navigation: NavigationScreenProp<{}>,
     showFavorites?: boolean
+    style?: ViewStyle
 }
 
 interface StateProps {
@@ -26,7 +27,7 @@ interface StateProps {
 
 type Props = StateProps & ExternalProps
 
-class EventListItem extends React.Component<Props> {
+class EventListItemComponent extends React.Component<Props> {
 
     public shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
         if (nextProps.eventId !== this.props.eventId) return true
@@ -40,12 +41,12 @@ class EventListItem extends React.Component<Props> {
     }
 
     public render() {
-        const {event, orientation, navigation} = this.props
+        const {event, orientation, navigation,style} = this.props
         const viewStyle = orientation === Orientation.Portrait ? styles.portrait : styles.landscape;
 
         console.log("Rendering EventListItem")
         return (
-            <Touchable onPress={this.handleItemClick}>
+            <Touchable onPress={this.handleItemClick} style={style}>
                 <View style={[styles.item, viewStyle]}>
                     <EventInfoItem eventId={event.id}
                                    viewStyle={{flex: 1, height: 68}}
@@ -83,7 +84,5 @@ const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps
     event: state.entityStore.events.get(inputProps.eventId)
 })
 
-const WithData: ComponentClass<ExternalProps> =
-    connect<StateProps, {}, ExternalProps>(mapStateToProps)(EventListItem)
-
-export default WithData
+export const EventListItem: ComponentClass<ExternalProps> =
+    connect<StateProps, {}, ExternalProps>(mapStateToProps)(EventListItemComponent)

@@ -16,7 +16,7 @@ import {navigate} from "lib/navigate";
 interface ExternalProps {
     betofferId: number
     orientation?: Orientation
-    navigation: NavigationScreenProp<{}, {}>,
+    navigation: NavigationScreenProp<{}>,
 }
 
 interface StateProps {
@@ -82,6 +82,7 @@ class DefaultBetOfferItemComponent extends React.Component<Props> {
             items.push((
                 <WinnerBetOfferItem key="12" eventId={event.id} outcomes={[...outcomes]} limit={4}/>
             ))
+            // items.push(<Text key="12">Winner</Text>)
 
             items.push((
                 <Touchable key={123345} onPress={() => navigate(navigation, "Event",{eventId: event.id})}>

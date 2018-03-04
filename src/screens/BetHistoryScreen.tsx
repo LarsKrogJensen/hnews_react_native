@@ -3,7 +3,7 @@ import {Button, Text, View} from "react-native"
 import {NavigationScreenProp} from "react-navigation";
 
 interface Props {
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{}>
 }
 
 export class BetHistoryScreen extends React.Component<Props> {

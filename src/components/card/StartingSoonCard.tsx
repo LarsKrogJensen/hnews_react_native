@@ -14,7 +14,7 @@ import {objectPropEquals} from "lib/equallity";
 
 interface ExternalProps {
     eventId: number
-    navigation: NavigationScreenProp<{}, {}>,
+    navigation: NavigationScreenProp<{}>,
 }
 
 interface StateProps {
@@ -56,7 +56,7 @@ class StartingSoonCardComponent extends React.Component<Props> {
         )
     }
 
-    private renderBody = (event: EventEntity, navigation: NavigationScreenProp<{}, {}>) => {
+    private renderBody = (event: EventEntity, navigation: NavigationScreenProp<{}>) => {
         return (
             <View style={styles.body}>
                 <Text style={styles.eventTitle}>{event.name}</Text>

@@ -12,7 +12,7 @@ import {navigate} from "lib/navigate";
 import {objectPropEquals} from "lib/equallity";
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>,
+    navigation: NavigationScreenProp<{}>,
     eventId: number
 }
 

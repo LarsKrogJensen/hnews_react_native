@@ -20,7 +20,7 @@ import {Dispatch} from "redux";
 import {search} from "store/search/actions";
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{}>
     searchText: string
     style: ViewStyle
 }

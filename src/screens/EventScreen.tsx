@@ -14,7 +14,7 @@ import {EventPrematchStatsView} from "views/EventPrematchStatsView";
 import {EventLiveStatsView} from "views/EventLiveStatsView";
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{ params: NavigationParams }, {}>
+    navigation: NavigationScreenProp<{ params: NavigationParams }>
     eventId: number
     style?: ViewStyle
 }

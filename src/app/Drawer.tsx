@@ -24,7 +24,7 @@ import {navigate} from "lib/navigate";
 import absoluteFill = StyleSheet.absoluteFill;
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{}>
 }
 
 interface StateProps {
@@ -229,7 +229,7 @@ class DrawerComp extends React.Component<Props> {
         return item.name
     }
 
-    private onItemClick = (navigation: NavigationScreenProp<any, any>, item: Item) => {
+    private onItemClick = (navigation: NavigationScreenProp<any>, item: Item) => {
         if (navigation && item.path) {
             if (item.action) {
                 let action = NavigationActions.reset({

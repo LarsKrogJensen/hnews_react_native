@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {is, Set} from "immutable"
 import {NavigationScreenProp} from "react-navigation";
 import {EventGroup} from "api/typings";
-import EventListItem from "components/event/EventListItem";
+import {EventListItem} from "components/event/EventListItem";
 import {AppStore} from "store/store";
 import {connect} from "react-redux";
 import {EventEntity} from "entity/EventEntity";
@@ -25,7 +25,7 @@ import {OrientationProps, withOrientationChange} from "components/OrientationCha
 import {arrayEquals} from "lib/equallity";
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{}>
 }
 
 interface StateProps {
@@ -68,7 +68,7 @@ class LiveRightNowComponent extends React.Component<ComponentProps, State> {
 
     shouldComponentUpdate(nextProps: Readonly<ComponentProps>, nextState: Readonly<State>, nextContext: any): boolean {
         if (nextProps.loading !== this.props.loading) return true
-        if (!arrayEquals(nextProps.events, this.props.events)) return true
+        if (!arrayEquals(nextProps.events, this.props.events, e => e.id)) return true
         if (!is(nextProps.favorites, this.props.favorites)) return true
         if (!is(nextState.expanded, this.state.expanded)) return true
         if (nextProps.orientation !== this.props.orientation) return true;
@@ -101,6 +101,7 @@ class LiveRightNowComponent extends React.Component<ComponentProps, State> {
     }
 
     private renderBody = (scrollHooks: ScrollHooks) => {
+        console.log("LRN: Render Body")
         const {loading} = this.props;
         let {expanded, sections} = this.state
 

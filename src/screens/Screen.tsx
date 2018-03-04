@@ -10,7 +10,7 @@ import absoluteFill = StyleSheet.absoluteFill;
 interface Props {
     title: string | JSX.Element
     rootScreen?: boolean
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{}>
 }
 
 interface State {

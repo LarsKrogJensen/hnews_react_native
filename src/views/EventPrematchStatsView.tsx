@@ -8,7 +8,7 @@ import {ScrollView} from "react-native";
 
 
 interface ExternalProps {
-    navigation: NavigationScreenProp<{ params: any }, {}>
+    navigation: NavigationScreenProp<{ params: any }>
     eventId: number
     eventGroupid: number
     scrollHooks?: ScrollHooks

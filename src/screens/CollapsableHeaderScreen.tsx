@@ -35,7 +35,7 @@ interface State {
 interface Props {
     title: string
     rootScreen?: boolean
-    navigation: NavigationScreenProp<{}, {}>
+    navigation: NavigationScreenProp<{}>
     renderBody: (scrollHooks: ScrollHooks) => ReactNode
 }
 

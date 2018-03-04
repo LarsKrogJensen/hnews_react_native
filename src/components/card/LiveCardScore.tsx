@@ -12,7 +12,7 @@ import deepEqual from "deep-equal";
 
 interface ExternalProps {
     eventId: number
-    navigation: NavigationScreenProp<{}, {}>,
+    navigation: NavigationScreenProp<{}>,
     asHeader?: boolean,
     style?: ViewStyle,
     showMatchClock?: boolean
