@@ -4175,9 +4175,9 @@ react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-circular-progress@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/react-native-circular-progress/-/react-native-circular-progress-0.1.2.tgz#49bf297fe58c1431e08c09bf653d283680abda9f"
+react-native-circular-progress@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-circular-progress/-/react-native-circular-progress-0.2.0.tgz#b6ad5aa89e473cd796582dcdab4ba6e91ee9575b"
   dependencies:
     art "^0.10.1"
     prop-types "^15.6.0"
@@ -4252,9 +4252,9 @@ react-native-vector-icons@^4.5.0:
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-react-native@0.54.0:
-  version "0.54.0"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.54.0.tgz#1582cc2b2a639d46e39c44bcc50e051d0061820a"
+react-native@0.54.1:
+  version "0.54.1"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.54.1.tgz#d8c30d83c9f84d7941cf9c8d3d9f8ebca1c53e48"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -4315,9 +4315,9 @@ react-native@0.54.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.4.0.tgz#2e1ec70a5d37af78d4b2cab588caf179b2b16859"
+react-navigation@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.5.1.tgz#3fc2efa76c773b9dd4a148d45cab3abbe864dbae"
   dependencies:
     clamp "^1.0.1"
     hoist-non-react-statics "^2.2.0"

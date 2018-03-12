@@ -210,10 +210,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "bold"
     } as TextStyle
-
-
 })
-
 
 const mapStateToProps = (state: AppStore, inputProps: ExternalProps): StateProps => ({
     outcome: state.entityStore.outcomes.get(inputProps.outcomeId),
