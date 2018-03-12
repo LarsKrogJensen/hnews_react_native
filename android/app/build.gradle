@@ -2,19 +2,19 @@ apply plugin: "com.android.application"
 
 
 import com.android.build.OutputFile
-import groovy.json.JsonSlurper
-
-def getNpmVersion() {
-    def inputFile =  rootProject.file("../package.json")
-    def packageJson = new JsonSlurper().parseText(inputFile.text)
-    return packageJson["version"]
-}
-/* calculated from git commits to give sequential integers */
-
-def getGitVersion() {
-    def process = "git rev-list master --first-parent --count".execute()
-    return process.text.toInteger()
-}
+//import groovy.json.JsonSlurper
+//
+//def getNpmVersion() {
+//    def inputFile = rootProject.file("../package.json")
+//    def packageJson = new JsonSlurper().parseText(inputFile.text)
+//    return packageJson["version"]
+//}
+///* calculated from git commits to give sequential integers */
+//
+//def getGitVersion() {
+//    def process = "git rev-list master --first-parent --count".execute()
+//    return process.text.toInteger()
+//}
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -93,8 +93,8 @@ project.ext.vectoricons = [
     iconFontNames: ['MaterialIcons.ttf', 'Ionicons.ttf'] // Name of the font files you want to copy
 ]
 project.ext.react = [
-    entryFile: "index.js",
-    extraPackagerArgs: [ "--sourcemap-output", file("$buildDir/android-release.bundle.map")]
+    entryFile        : "index.js",
+    extraPackagerArgs: ["--sourcemap-output", file("$buildDir/android-release.bundle.map")]
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -123,8 +123,8 @@ android {
         applicationId "com.hackernews"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode googleVer
-        versionName userVer
+        versionCode 1
+        versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
