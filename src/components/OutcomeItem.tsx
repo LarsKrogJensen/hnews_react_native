@@ -188,13 +188,11 @@ const styles = StyleSheet.create({
         borderRadius: 3
     } as ViewStyle,
     portrait: {
-        //...viewBaseStyle,
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center'
     }  as ViewStyle,
     landscape: {
-        //...viewBaseStyle,
         flex: 1,
         flexDirection: "column-reverse",
         alignItems: 'center'

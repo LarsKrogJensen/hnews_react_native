@@ -86,8 +86,8 @@ import com.android.build.OutputFile
  * ]
  */
 
-def userVer = getNpmVersion()
-def googleVer = getGitVersion()
+//def userVer = getNpmVersion()
+//def googleVer = getGitVersion()
 
 project.ext.vectoricons = [
     iconFontNames: ['MaterialIcons.ttf', 'Ionicons.ttf'] // Name of the font files you want to copy
