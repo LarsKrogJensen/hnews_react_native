@@ -14,7 +14,6 @@ import {OutcomeTypes} from "components/betoffer/OutcomeTypes";
 import Snackbar from "react-native-snackbar";
 import {objectPropEquals} from "lib/equallity";
 
-
 interface ExternalProps {
     outcomeId: number
     eventId: number
