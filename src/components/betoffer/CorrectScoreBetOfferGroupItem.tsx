@@ -16,7 +16,7 @@ export class CorrectScoreOfferGroupItem extends React.Component<Props> {
         const {outcomes, event} = this.props
         // render 3 columns first with home win, second draw and third away win
         type OutcomeWithScore = OutcomeEntity & { homeScore: number, awayScore: number }
-        const outcomesWithScore: OutcomeWithScore[] = outcomes.map(outcome => ({...outcome, ...this.parseScore(outcome.label)}))
+        const outcomesWithScore: OutcomeWithScore[] = outcomes.map(outcome => ({...outcome, ...this.parseScoreLabel(outcome.label)}))
 
         const home = outcomesWithScore.filter(o => o.homeScore > o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
         const draw = outcomesWithScore.filter(o => o.homeScore === o.awayScore).sort((o1, o2) => o1.homeScore - o2.homeScore)
@@ -59,7 +59,7 @@ export class CorrectScoreOfferGroupItem extends React.Component<Props> {
         )
     }
 
-    private parseScore = (scoreLabel: string): { homeScore: number, awayScore: number } => {
+    private parseScoreLabel = (scoreLabel: string): { homeScore: number, awayScore: number } => {
         let scoreParts: string[] = scoreLabel.split("-");
 
         if (scoreParts.length !== 2) {
@@ -67,9 +67,16 @@ export class CorrectScoreOfferGroupItem extends React.Component<Props> {
         }
 
         return {
-            homeScore: parseInt(scoreParts[0].trim()),
-            awayScore: parseInt(scoreParts[1].trim())
+            homeScore: this.parseScore(scoreParts[0].trim()),
+            awayScore: this.parseScore(scoreParts[1].trim())
         }
+    }
+
+    private parseScore = (value: string): number => {
+        if (value === "W") return Number.MAX_VALUE
+
+        return parseInt(value)
+
     }
 }
 

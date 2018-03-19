@@ -98,7 +98,7 @@ class OutcomeItem extends React.Component<Props, State> {
             return (
                 <View style={touchStyle}>
                     <View
-                        style={[styles.viewBase, viewStyle, {backgroundColor: outcome.odds === 1000 ? "transparent" : "#BBBBBB"}]}>
+                        style={[styles.viewBase, viewStyle, {backgroundColor:  "#BBBBBB"}]}>
                         {outcome.odds !== 1000 && <Text numberOfLines={1} ellipsizeMode="tail"
                               style={[styles.label, {color: "#959595"}]}>{outcomeLabel}</Text> }
                     </View>
