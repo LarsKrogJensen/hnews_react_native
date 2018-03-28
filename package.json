@@ -18,10 +18,10 @@
     "lodash": "^4.17.5",
     "moment": "^2.21.0",
     "react": "16.3.0-alpha.1",
-    "react-native": "0.54.2",
+    "react-native": "0.54.3",
     "react-native-animatable": "^1.2.4",
     "react-native-circular-progress": "^0.2.0",
-    "react-native-material-ui": "^1.20.0",
+    "react-native-material-ui": "^1.22.0",
     "react-native-snackbar": "^0.4.6",
     "react-native-svg": "6.3.1",
     "react-native-tab-view": "^0.0.75",
@@ -39,11 +39,11 @@
     "@types/deep-equal": "^1.0.1",
     "@types/lodash": "^4.14.106",
     "@types/react": "16.0.31",
-    "@types/react-native": "0.52.19",
-    "@types/react-native-material-ui": "^1.19.1",
+    "@types/react-native": "0.52.20",
+    "@types/react-native-material-ui": "^1.19.2",
     "@types/react-native-tab-view": "^0.0.3",
     "@types/react-native-vector-icons": "^4.4.3",
-    "@types/react-navigation": "^1.2.3",
+    "@types/react-navigation": "^1.5.0",
     "@types/react-redux": "^5.0.15",
     "@types/socket.io-client": "^1.4.32",
     "babel-jest": "22.4.3",
@@ -55,7 +55,7 @@
     "react-test-renderer": "16.2.0",
     "redux-devtools-extension": "^2.13.2",
     "tslint": "^5.9.1",
-    "typescript": "^2.7.2"
+    "typescript": "^2.8.1"
   },
   "jest": {
     "preset": "react-native"

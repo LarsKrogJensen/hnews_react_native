@@ -353,9 +353,9 @@
   version "4.14.106"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.106.tgz#6093e9a02aa567ddecfe9afadca89e53e5dce4dd"
 
-"@types/react-native-material-ui@^1.19.1":
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/@types/react-native-material-ui/-/react-native-material-ui-1.19.1.tgz#95f4a7815ac34487c328facbb1d215dcf0a9e389"
+"@types/react-native-material-ui@^1.19.2":
+  version "1.19.2"
+  resolved "https://registry.yarnpkg.com/@types/react-native-material-ui/-/react-native-material-ui-1.19.2.tgz#b4bae43983d8f8ee3567be00a3bf6b51a304dcae"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -380,15 +380,15 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.52.19":
-  version "0.52.19"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.19.tgz#28655fa82751e5bdb9d2bef7d03c1ddb75fe4c68"
+"@types/react-native@0.52.20":
+  version "0.52.20"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.20.tgz#ab47fd2de3fd81c398da1253ddf7cea5f798e17d"
   dependencies:
     "@types/react" "*"
 
-"@types/react-navigation@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.2.3.tgz#3783fd9a93932403164d0a90d6888058e8a6653a"
+"@types/react-navigation@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.5.0.tgz#83684d0224abfffc90105c6d373ad93a9da6df70"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -4234,9 +4234,9 @@ react-native-material-design-styles@^0.2.6:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/react-native-material-design-styles/-/react-native-material-design-styles-0.2.7.tgz#428560ef4d0659db1163c9f9b5476d886ed22d57"
 
-react-native-material-ui@^1.20.0:
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/react-native-material-ui/-/react-native-material-ui-1.20.0.tgz#7a953ee87f2b80adadff3d7d62bda1e7aac06afd"
+react-native-material-ui@^1.22.0:
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/react-native-material-ui/-/react-native-material-ui-1.22.0.tgz#adfb62b252fcbc09850eff3cc1d13869fa830124"
   dependencies:
     color "2.0.1"
     lodash.merge "^4.0.0"
@@ -4290,9 +4290,9 @@ react-native-vector-icons@^4.5.0:
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-react-native@0.54.2:
-  version "0.54.2"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.54.2.tgz#73786e7bf3f80b0b060ca0bfe5b192f9c2f253da"
+react-native@0.54.3:
+  version "0.54.3"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.54.3.tgz#e32807ab7ddc70811418101b73a482639d09ccca"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -5238,9 +5238,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
+typescript@^2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.8.1.tgz#6160e4f8f195d5ba81d4876f9c0cc1fbc0820624"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"
