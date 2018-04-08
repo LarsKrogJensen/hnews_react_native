@@ -41,7 +41,7 @@ class EventListItemComponent extends React.Component<Props> {
     }
 
     public render() {
-        const {event, orientation, navigation,style} = this.props
+        const {event, orientation, navigation, style} = this.props
         const viewStyle = orientation === Orientation.Portrait ? styles.portrait : styles.landscape;
 
         console.log("Rendering EventListItem")

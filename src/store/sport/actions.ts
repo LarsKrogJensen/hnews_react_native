@@ -39,7 +39,8 @@ export function loadSport(
         fireStartLoad && dispatch<SportAction>({type: SportActions.START_LOADING, key})
 
         try {
-            console.time(`Fetching sport (${sport}/${region}/${league}/${participant}/${filter})`)
+            const label = `Fetching sport (${sport}/${region}/${league}/${participant}/${filter})`;
+            console.time(label)
             let url = `${API.host}/offering/api/v3/${API.offering}/listView/${sport}/${region}/${league}/${participant}/${filter}.json?lang=${API.lang}&market=${API.market}&categoryGroup=COMBINED&displayDefault=true`;
             const response = await fetch(url);
             const responseJson = await response.json();
@@ -53,7 +54,7 @@ export function loadSport(
                 console.warn("Bad status code on sports load: " + response.status + " url: " + url);
                 dispatch<SportFailedAction>({type: SportActions.LOAD_FAILED, key})
             }
-            console.timeEnd(`Fetching sport (${sport}/${region}/${league}/${participant}/${filter})`)
+            console.timeEnd(label)
         } catch (error) {
             console.error(error);
             dispatch<SportFailedAction>({type: SportActions.LOAD_FAILED, key})

@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ReactNode} from "react"
-import {debounce} from  "lodash"
+import {debounce} from "lodash"
 import {
     Animated,
     ImageStyle,
@@ -142,7 +142,8 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
         return (
             <View style={styles.fill}>
                 {!searchOpen && this.props.renderBody(scrollHooks)}
-                {searchOpen && <SearchView navigation={this.props.navigation} searchText={searchText} style={styles.contentContainer}/>}
+                {searchOpen && <SearchView navigation={this.props.navigation} searchText={searchText}
+                                           style={styles.contentContainer}/>}
                 <Animated.View style={[styles.navbar, {transform: [{translateY: navbarTranslate}]}]}>
                     <StatusBar backgroundColor="transparent" translucent hidden={this.statusBarHidden}/>
 
@@ -180,7 +181,7 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
     }
 
     private debounceSearch: (text: string) => void = debounce(
-        (searchText) => this.setState({ searchText}),
+        (searchText) => this.setState({searchText}),
         200
     )
 
@@ -224,55 +225,46 @@ export class CollapsableHeaderScreen extends React.Component<Props, State> {
     }
 }
 
-interface Styles {
-    fill: ViewStyle,
-    navbar: ViewStyle,
-    // statusbar: ViewStyle,
-    contentContainer: ViewStyle,
-    toolbar: ViewStyle,
-    rowText: TextStyle,
-    row: ImageStyle
-}
-
-const styles: Styles = {
-    fill: {
-        flex: 1,
-    },
-    navbar: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        alignItems: 'center',
-        borderBottomColor: '#dedede',
-        borderBottomWidth: 0,
-        backgroundColor: "transparent",
-        height: NAVBAR_HEIGHT,
-        justifyContent: 'center',
-        paddingTop: STATUS_BAR_HEIGHT,
-    },
-    // statusbar: {
-    //     position: 'absolute',
-    //     top: 0,
-    //     left: 0,
-    //     right: 0,
-    //     height: STATUS_BAR_HEIGHT
-    // },
-    contentContainer: {
-        paddingTop: NAVBAR_HEIGHT,
-    },
-    toolbar: {
-        alignSelf: "stretch"
-    },
-    row: {
-        height: 300,
-        width: undefined,
-        marginBottom: 1,
-        padding: 16,
-        backgroundColor: 'transparent',
-    },
-    rowText: {
-        color: 'white',
-        fontSize: 18,
-    },
-}
+const styles = StyleSheet.create({
+        fill: {
+            flex: 1,
+        },
+        navbar: {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            alignItems: 'center',
+            borderBottomColor: '#dedede',
+            borderBottomWidth: 0,
+            backgroundColor: "transparent",
+            height: NAVBAR_HEIGHT,
+            justifyContent: 'center',
+            paddingTop: STATUS_BAR_HEIGHT,
+        },
+        // statusbar: {
+        //     position: 'absolute',
+        //     top: 0,
+        //     left: 0,
+        //     right: 0,
+        //     height: STATUS_BAR_HEIGHT
+        // },
+        contentContainer: {
+            paddingTop: NAVBAR_HEIGHT,
+        },
+        toolbar: {
+            alignSelf: "stretch"
+        },
+        row: {
+            height: 300,
+            width: undefined,
+            marginBottom: 1,
+            padding: 16,
+            backgroundColor: 'transparent',
+        },
+        rowText: {
+            color: 'white',
+            fontSize: 18,
+        },
+    }
+)
