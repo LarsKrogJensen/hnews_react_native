@@ -458,9 +458,9 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/deep-equal/-/deep-equal-1.0.1.tgz#71cfabb247c22bcc16d536111f50c0ed12476b03"
 
-"@types/lodash@^4.14.106":
-  version "4.14.106"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.106.tgz#6093e9a02aa567ddecfe9afadca89e53e5dce4dd"
+"@types/lodash@^4.14.107":
+  version "4.14.107"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.107.tgz#b2d2ae3958bfb8ff828495cbe12214af9e4d035e"
 
 "@types/react-native-material-ui@^1.19.2":
   version "1.19.2"
@@ -476,9 +476,9 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native-vector-icons@^4.4.3":
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-4.4.3.tgz#37f6d5dd06418a144c7c082dbca9ce37c14f033f"
+"@types/react-native-vector-icons@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-4.6.0.tgz#121bfcedffca18ffdf25f7db8ab9a8d88c932666"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -489,22 +489,22 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.52.20":
-  version "0.52.20"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.52.20.tgz#ab47fd2de3fd81c398da1253ddf7cea5f798e17d"
+"@types/react-native@0.55.4":
+  version "0.55.4"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.55.4.tgz#866005d86490e2fd60543b143b2a5ac208aa925b"
   dependencies:
     "@types/react" "*"
 
-"@types/react-navigation@^1.5.5":
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.5.5.tgz#ce6034cf4e285a4702dcc656033ec44a850b64a8"
+"@types/react-navigation@^1.5.7":
+  version "1.5.7"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.5.7.tgz#58acf549a65ec5d5c50602dcf705358c257251b2"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-redux@^5.0.15":
-  version "5.0.15"
-  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-5.0.15.tgz#420af2c702ac7aab321cf45bb7d3cb2503dd24d5"
+"@types/react-redux@^5.0.16":
+  version "5.0.16"
+  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-5.0.16.tgz#46f1b2043abd2b4364a857100abf5e5a6ef94bf0"
   dependencies:
     "@types/react" "*"
     redux "^3.6.0"
